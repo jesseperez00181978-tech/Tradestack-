@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeStack</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f1720;
+  color: white;
+}
+
+header {
+  background: linear-gradient(135deg, #ff8c00, #ff3c00);
+  padding: 25px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.container {
+  padding: 18px;
+  max-width: 900px;
+  margin: auto;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  margin-bottom: 18px;
+}
+
+.result {
+  background: #1f2a36;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-left: 5px solid #ff8c00;
+  cursor: pointer;
+}
+
+.result:hover {
+  background: #2c3a49;
+}
+
+.result h2 {
+  margin: 0 0 6px;
+  color: #ffb347;
+}
+
+.tag {
+  color: #bbb;
+  font-size: 0.9rem;
+}
+
+.panel {
+  display: none;
+  background: #182430;
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 20px;
+}
+
+.panel h2 {
+  color: #ffb347;
+}
+
+.section {
+  background: #223140;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🛠️ TradeStack</h1>
+  <p>Search troubleshooting guides for skilled trades.</p>
+</header>
+
+<div class="container">
+  <input id="searchBox" placeholder="Search problem, trade, symptom, tool..." onkeyup="searchGuides()">
+
+  <div id="results"></div>
+
+  <div class="panel" id="guidePanel">
+    <h2 id="guideTitle"></h2>
+    <div id="guideContent"></div>
+  </div>
+</div>
+
+<footer>
+  TradeStack v0.2 - Built by Jesse Perez - With assistance from ChatGPT
+</footer>
+
+<script>
+const guides = [
+  {
+    trade: "Irrigation",
+    title: "Zone Will Not Turn On",
+    keywords: "irrigation sprinkler valve solenoid wire controller timer zone no water",
+    symptoms: [
+      "Sprinklers do not pop up.",
+      "Other zones work normally.",
+      "Timer appears to run."
+    ],
+    tools: [
+      "Multimeter",
+      "Valve key",
+      "Screwdriver",
+      "Wire connectors"
+    ],
+    steps: [
+      "Check that the controller has power.",
+      "Make sure the correct program and start time are set.",
+      "Turn the valve on manually.",
+      "Listen for solenoid clicking.",
+      "Check for 24 VAC at the valve wires.",
+      "Inspect the diaphragm for debris or damage.",
+      "Check for broken common wire."
+    ],
+    causes: [
+      "Bad solenoid",
+      "Broken wire",
+      "Bad controller",
+      "Clogged valve",
+      "Torn diaphragm"
+    ]
+  },
+  {
+    trade: "Irrigation",
+    title: "Drip Line Has Low Pressure",
+    keywords: "drip line emitter low pressure clogged filter irrigation tubing",
+    symptoms: [
+      "Emitters barely drip.",
+      "Plants are not getting enough water.",
+      "One section works better than another."
+    ],
+    tools: [
+      "Flush cap",
+      "Replacement emitters",
+      "Filter",
+      "Tubing cutter"
+    ],
+    steps: [
+      "Check if the filter is clogged.",
+      "Flush the drip line.",
+      "Inspect emitters for dirt or mineral buildup.",
+      "Look for crushed or kinked tubing.",
+      "Check pressure regulator.",
+      "Replace clogged emitters."
+    ],
+    causes: [
+      "Clogged filter",
+      "Blocked emitters",
+      "Kinked tubing",
+      "Bad pressure regulator"
+    ]
+  },
+  {
+    trade: "HVAC",
+    title: "A/C Not Cooling",
+    keywords: "hvac ac not cooling air conditioner filter capacitor thermostat compressor",
+    symptoms: [
+      "Air is blowing warm.",
+      "Outdoor unit may not be running.",
+      "House stays hot."
+    ],
+    tools: [
+      "Thermostat",
+      "Multimeter",
+      "Air filter",
+      "Basic hand tools"
+    ],
+    steps: [
+      "Check thermostat setting.",
+      "Check breaker and disconnect.",
+      "Inspect air filter.",
+      "Listen for outdoor unit running.",
+      "Check if condenser fan spins.",
+      "If unit hums but will not start, capacitor may be bad.",
+      "Call licensed HVAC tech for refrigerant or compressor issues."
+    ],
+    causes: [
+      "Dirty filter",
+      "Bad capacitor",
+      "Tripped breaker",
+      "Low refrigerant",
+      "Bad compressor"
+    ]
+  },
+  {
+    trade: "Electrical",
+    title: "Outlet Has No Power",
+    keywords: "electrical outlet no power breaker gfci receptacle wire",
+    symptoms: [
+      "Outlet does not work.",
+      "Nearby outlets may also be dead.",
+      "Breaker may look normal."
+    ],
+    tools: [
+      "Outlet tester",
+      "Multimeter",
+      "Screwdriver"
+    ],
+    steps: [
+      "Check breaker panel.",
+      "Reset GFCI outlets nearby.",
+      "Test nearby outlets.",
+      "Look for burned smell or damaged outlet.",
+      "Do not work on live wiring unless qualified.",
+      "Call electrician if wiring damage is suspected."
+    ],
+    causes: [
+      "Tripped breaker",
+      "Tripped GFCI",
+      "Loose wire",
+      "Bad outlet"
+    ]
+  },
+  {
+    trade: "Plumbing",
+    title: "Slow Drain",
+    keywords: "plumbing slow drain clog sink shower trap pipe",
+    symptoms: [
+      "Water drains slowly.",
+      "Gurgling sound.",
+      "Bad smell from drain."
+    ],
+    tools: [
+      "Plunger",
+      "Drain snake",
+      "Bucket",
+      "Channel locks"
+    ],
+    steps: [
+      "Remove visible debris.",
+      "Try plunging the drain.",
+      "Check the trap under the sink.",
+      "Use a small drain snake.",
+      "Avoid mixing chemical cleaners.",
+      "If multiple drains are backing up, main line may be clogged."
+    ],
+    causes: [
+      "Hair clog",
+      "Grease buildup",
+      "Blocked trap",
+      "Main line clog"
+    ]
+  },
+  {
+    trade: "Landscaping",
+    title: "Rose Bush Not Blooming",
+    keywords: "landscaping rose bush not blooming flowers prune deadhead fertilizer sun",
+    symptoms: [
+      "Lots of leaves but few flowers.",
+      "Old blooms remain on plant.",
+      "Plant looks crowded."
+    ],
+    tools: [
+      "Pruners",
+      "Gloves",
+      "Rose fertilizer"
+    ],
+    steps: [
+      "Check that the rose gets at least 6 hours of sun.",
+      "Deadhead old flowers.",
+      "Remove dead, damaged, or crossing branches.",
+      "Open the center for airflow.",
+      "Water deeply.",
+      "Fertilize during growing season."
+    ],
+    causes: [
+      "Not enough sun",
+      "Needs deadheading",
+      "Poor pruning",
+      "Low nutrients",
+      "Water stress"
+    ]
+  }
+];
+
+function searchGuides() {
+  const query = document.getElementById("searchBox").value.toLowerCase();
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  const matches = guides.filter(g =>
+    g.title.toLowerCase().includes(query) ||
+    g.trade.toLowerCase().includes(query) ||
+    g.keywords.toLowerCase().includes(query) ||
+    g.symptoms.join(" ").toLowerCase().includes(query) ||
+    g.steps.join(" ").toLowerCase().includes(query)
+  );
+
+  if (query === "") {
+    results.innerHTML = "<p>Type a problem like <b>valve</b>, <b>AC not cooling</b>, <b>slow drain</b>, or <b>rose bush</b>.</p>";
+    return;
+  }
+
+  if (matches.length === 0) {
+    results.innerHTML = "<p>No guide found yet. Add this problem to TradeStack later.</p>";
+    return;
+  }
+
+  matches.forEach((guide, index) => {
+    const div = document.createElement("div");
+    div.className = "result";
+    div.onclick = () => showGuide(guide);
+    div.innerHTML = `
+      <h2>${guide.title}</h2>
+      <div class="tag">${guide.trade}</div>
+    `;
+    results.appendChild(div);
+  });
+}
+
+function showGuide(guide) {
+  const panel = document.getElementById("guidePanel");
+  const title = document.getElementById("guideTitle");
+  const content = document.getElementById("guideContent");
+
+  title.textContent = guide.trade + " - " + guide.title;
+
+  content.innerHTML = `
+    <div class="section"><b>Symptoms:</b><br>${guide.symptoms.map(x => "• " + x).join("<br>")}</div>
+    <div class="section"><b>Tools Needed:</b><br>${guide.tools.map(x => "• " + x).join("<br>")}</div>
+    <div class="section"><b>Step-by-Step:</b><br>${guide.steps.map((x,i) => (i+1) + ". " + x).join("<br>")}</div>
+    <div class="section"><b>Possible Causes:</b><br>${guide.causes.map(x => "• " + x).join("<br>")}</div>
+  `;
+
+  panel.style.display = "block";
+  panel.scrollIntoView({ behavior: "smooth" });
+}
+
+searchGuides();
+</script>
+
+</body>
+</html>
