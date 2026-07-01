@@ -232,12 +232,8 @@ function showGuide(type) {
   panel.style.display = "block";
   panel.scrollIntoView({ behavior: "smooth" });
 }
-
 function filterCards() {
-
-
-function filterCards() {
-  const input = document.getElementById("search").value.toLowerCase();
+  const input = document.getElementById("searchInput").value.toLowerCase();
   const cards = document.querySelectorAll(".card");
 
   cards.forEach(card => {
@@ -245,6 +241,8 @@ function filterCards() {
     card.style.display = text.includes(input) ? "block" : "none";
   });
 }
+
+
 </script>
 
 </body>
