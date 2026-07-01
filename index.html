@@ -217,19 +217,24 @@ function showGuide(type) {
   const title = document.getElementById("guideTitle");
   const steps = document.getElementById("guideSteps");
 
-  title.textContent = guides[type].title;
+  const trade = guides[type];
+
+  title.textContent = trade.title;
   steps.innerHTML = "";
 
-  guides[type].steps.forEach((step, index) => {
+  trade.steps.forEach((step, index) => {
     const div = document.createElement("div");
     div.className = "step";
-    div.textContent = (index + 1) + ". " + step;
+    div.innerHTML = `<strong>${index + 1}.</strong> ${step}`;
     steps.appendChild(div);
   });
 
   panel.style.display = "block";
   panel.scrollIntoView({ behavior: "smooth" });
 }
+
+function filterCards() {
+
 
 function filterCards() {
   const input = document.getElementById("search").value.toLowerCase();
