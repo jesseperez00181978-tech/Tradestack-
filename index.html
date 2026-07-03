@@ -146,14 +146,33 @@
 const guides = {
   irrigation: {
     title: "💧 Irrigation Troubleshooting",
-    steps: [
-      "Check if the timer/controller is powered on.",
-      "Make sure the correct program and start time are set.",
-      "Check if the zone valve is opening.",
-      "Listen for solenoid clicking.",
-      "Inspect diaphragm for tears, debris, or blockage.",
-      "Check emitters, drip lines, and sprinkler heads for clogs or leaks."
-    ]
+steps: [
+  {
+    problem: "Zone won't turn on",
+    symptom: "Nothing happens when the zone starts.",
+    fix: "Check controller programming, wiring, solenoid, and valve."
+  },
+  {
+    problem: "Low water pressure",
+    symptom: "Sprinklers barely spray.",
+    fix: "Inspect for leaks, broken pipe, partially closed valve, or clogged filter."
+  },
+  {
+    problem: "Valve won't close",
+    symptom: "Zone continues running after timer shuts off.",
+    fix: "Inspect diaphragm, debris inside valve, and solenoid."
+  },
+  {
+    problem: "Broken sprinkler head",
+    symptom: "Water shoots straight up or floods.",
+    fix: "Replace damaged sprinkler head or nozzle."
+  },
+  {
+    problem: "Drip system not working",
+    symptom: "Plants stay dry.",
+    fix: "Check filter, pressure regulator, emitters, tubing, and timer."
+  }
+]    
   },
   hvac: {
     title: "❄️ HVAC Troubleshooting",
