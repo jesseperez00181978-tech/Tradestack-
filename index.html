@@ -145,35 +145,110 @@
 <script>
 const guides = {
   irrigation: {
-    title: "💧 Irrigation Troubleshooting",
-steps: [
-  {
-    problem: "Zone won't turn on",
-    symptom: "Nothing happens when the zone starts.",
-    fix: "Check controller programming, wiring, solenoid, and valve."
-  },
-  {
-    problem: "Low water pressure",
-    symptom: "Sprinklers barely spray.",
-    fix: "Inspect for leaks, broken pipe, partially closed valve, or clogged filter."
-  },
-  {
-    problem: "Valve won't close",
-    symptom: "Zone continues running after timer shuts off.",
-    fix: "Inspect diaphragm, debris inside valve, and solenoid."
-  },
-  {
-    problem: "Broken sprinkler head",
-    symptom: "Water shoots straight up or floods.",
-    fix: "Replace damaged sprinkler head or nozzle."
-  },
-  {
-    problem: "Drip system not working",
-    symptom: "Plants stay dry.",
-    fix: "Check filter, pressure regulator, emitters, tubing, and timer."
-  }
-]    
-  },
+  title: "💧 Irrigation Troubleshooting",
+  steps: [
+    {
+      problem: "Zone won't turn on",
+      symptom: "Nothing happens when the zone starts.",
+      fix: "Check controller programming, wiring, solenoid, and valve."
+    },
+    {
+      problem: "Zone won't turn off",
+      symptom: "Sprinklers continue running after the timer ends.",
+      fix: "Inspect the diaphragm, solenoid, and valve for debris or damage."
+    },
+    {
+      problem: "Low water pressure",
+      symptom: "Sprinklers barely spray or don't fully pop up.",
+      fix: "Inspect for leaks, broken pipe, partially closed valve, clogged filter, or low water supply."
+    },
+    {
+      problem: "High water pressure",
+      symptom: "Sprinklers mist heavily or heads blow apart.",
+      fix: "Check the pressure regulator and verify water pressure is within specifications."
+    },
+    {
+      problem: "Broken sprinkler head",
+      symptom: "Water shoots straight up or floods one area.",
+      fix: "Replace the damaged sprinkler head or nozzle."
+    },
+    {
+      problem: "Clogged nozzle",
+      symptom: "Weak spray pattern or uneven coverage.",
+      fix: "Remove the nozzle, clean debris, and flush the line before reinstalling."
+    },
+    {
+      problem: "Valve won't close",
+      symptom: "Zone continues running after timer shuts off.",
+      fix: "Inspect the diaphragm, remove debris, and test the solenoid."
+    },
+    {
+      problem: "Valve leaking",
+      symptom: "Water leaks around the valve even when off.",
+      fix: "Inspect the diaphragm, O-rings, fittings, and valve body for cracks."
+    },
+    {
+      problem: "Solenoid failure",
+      symptom: "Valve does not activate even with controller signal.",
+      fix: "Test the solenoid with a multimeter and replace if defective."
+    },
+    {
+      problem: "Controller not working",
+      symptom: "No zones activate or controller display is blank.",
+      fix: "Check power supply, transformer, fuse, programming, and wiring."
+    },
+    {
+      problem: "Broken lateral line",
+      symptom: "Wet ground, low pressure, or water bubbling from soil.",
+      fix: "Locate the break, excavate carefully, and repair with proper fittings."
+    },
+    {
+      problem: "Broken mainline",
+      symptom: "Constant water leak even when the controller is off.",
+      fix: "Shut off the water immediately and repair the damaged mainline."
+    },
+    {
+      problem: "Drip system not working",
+      symptom: "Plants remain dry while the timer is running.",
+      fix: "Inspect filter, pressure regulator, emitters, tubing, and timer programming."
+    },
+    {
+      problem: "Emitter clogged",
+      symptom: "One or more plants receive little or no water.",
+      fix: "Clean or replace the clogged emitter and flush the tubing."
+    },
+    {
+      problem: "Rotor won't rotate",
+      symptom: "Rotor pops up but stays in one direction.",
+      fix: "Clean the rotor, inspect internal gears, and replace if damaged."
+    },
+    {
+      problem: "Spray head won't pop up",
+      symptom: "Head stays below ground while water is on.",
+      fix: "Clean around the stem, check for low pressure, and replace if necessary."
+    },
+    {
+      problem: "Wire short",
+      symptom: "Controller reports a fault or blows a fuse.",
+      fix: "Locate damaged wiring, repair insulation, and waterproof all splices."
+    },
+    {
+      problem: "Open wire",
+      symptom: "One valve never receives power.",
+      fix: "Check wire continuity and repair any broken connections."
+    },
+    {
+      problem: "Rain sensor failure",
+      symptom: "System waters during rain or never waters at all.",
+      fix: "Inspect sensor wiring, settings, and bypass switch."
+    },
+    {
+      problem: "Backflow preventer leaking",
+      symptom: "Water leaks from the backflow assembly.",
+      fix: "Inspect check valves, seals, and relief valve. Rebuild if necessary."
+    }
+  ]
+},
   hvac: {
     title: "❄️ HVAC Troubleshooting",
     steps: [
