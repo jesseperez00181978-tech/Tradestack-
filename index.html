@@ -11,37 +11,45 @@
     background: #101820;
     color: white;
   }
+
   header {
     background: linear-gradient(135deg, #ff8c00, #ff3c00);
     padding: 25px;
     text-align: center;
   }
+
   header h1 {
     margin: 0;
     font-size: 2.2rem;
   }
+
   header p {
     margin-top: 8px;
     font-size: 1rem;
   }
+
   .container {
     padding: 18px;
     max-width: 900px;
     margin: auto;
   }
+
   .search-box {
     width: 100%;
+    box-sizing: border-box;
     padding: 14px;
     border-radius: 10px;
     border: none;
     font-size: 1rem;
     margin-bottom: 20px;
   }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 15px;
   }
+
   .card {
     background: #1f2a36;
     border: 1px solid #334;
@@ -49,17 +57,23 @@
     padding: 18px;
     text-align: center;
     cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease;
   }
+
   .card:hover {
     background: #263747;
+    transform: translateY(-2px);
   }
+
   .card h2 {
     font-size: 1.1rem;
     margin: 10px 0 5px;
   }
+
   .emoji {
     font-size: 2rem;
   }
+
   .panel {
     margin-top: 25px;
     background: #182430;
@@ -67,15 +81,23 @@
     padding: 18px;
     display: none;
   }
+
   .panel h2 {
     color: #ffb347;
   }
+
   .step {
     background: #223140;
     padding: 12px;
     border-radius: 10px;
     margin: 10px 0;
   }
+
+  .step p {
+    margin: 8px 0 0;
+    line-height: 1.45;
+  }
+
   footer {
     text-align: center;
     padding: 20px;
@@ -92,7 +114,13 @@
 </header>
 
 <div class="container">
-  <input class="search-box" id="search" placeholder="Search trade or problem..." onkeyup="filterCards()" />
+  <input
+    class="search-box"
+    id="search"
+    type="search"
+    placeholder="Search trade or problem..."
+    oninput="filterCards()"
+  />
 
   <div class="grid" id="tradeGrid">
     <div class="card" onclick="showGuide('irrigation')">
@@ -139,160 +167,224 @@
 </div>
 
 <footer>
-  TradeStack v0.1 - Built by Jesse Perez - With assistance from ChatGPT
+  TradeStack v0.4 - Built by Jesse Perez - With assistance from ChatGPT
 </footer>
 
 <script>
 const guides = {
   irrigation: {
-  title: "💧 Irrigation Troubleshooting",
-  steps: [
-    {
-      problem: "Zone won't turn on",
-      symptom: "Nothing happens when the zone starts.",
-      fix: "Check controller programming, wiring, solenoid, and valve."
-    },
-    {
-      problem: "Zone won't turn off",
-      symptom: "Sprinklers continue running after the timer ends.",
-      fix: "Inspect the diaphragm, solenoid, and valve for debris or damage."
-    },
-    {
-      problem: "Low water pressure",
-      symptom: "Sprinklers barely spray or don't fully pop up.",
-      fix: "Inspect for leaks, broken pipe, partially closed valve, clogged filter, or low water supply."
-    },
-    {
-      problem: "High water pressure",
-      symptom: "Sprinklers mist heavily or heads blow apart.",
-      fix: "Check the pressure regulator and verify water pressure is within specifications."
-    },
-    {
-      problem: "Broken sprinkler head",
-      symptom: "Water shoots straight up or floods one area.",
-      fix: "Replace the damaged sprinkler head or nozzle."
-    },
-    {
-      problem: "Clogged nozzle",
-      symptom: "Weak spray pattern or uneven coverage.",
-      fix: "Remove the nozzle, clean debris, and flush the line before reinstalling."
-    },
-    {
-      problem: "Valve won't close",
-      symptom: "Zone continues running after timer shuts off.",
-      fix: "Inspect the diaphragm, remove debris, and test the solenoid."
-    },
-    {
-      problem: "Valve leaking",
-      symptom: "Water leaks around the valve even when off.",
-      fix: "Inspect the diaphragm, O-rings, fittings, and valve body for cracks."
-    },
-    {
-      problem: "Solenoid failure",
-      symptom: "Valve does not activate even with controller signal.",
-      fix: "Test the solenoid with a multimeter and replace if defective."
-    },
-    {
-      problem: "Controller not working",
-      symptom: "No zones activate or controller display is blank.",
-      fix: "Check power supply, transformer, fuse, programming, and wiring."
-    },
-    {
-      problem: "Broken lateral line",
-      symptom: "Wet ground, low pressure, or water bubbling from soil.",
-      fix: "Locate the break, excavate carefully, and repair with proper fittings."
-    },
-    {
-      problem: "Broken mainline",
-      symptom: "Constant water leak even when the controller is off.",
-      fix: "Shut off the water immediately and repair the damaged mainline."
-    },
-    {
-      problem: "Drip system not working",
-      symptom: "Plants remain dry while the timer is running.",
-      fix: "Inspect filter, pressure regulator, emitters, tubing, and timer programming."
-    },
-    {
-      problem: "Emitter clogged",
-      symptom: "One or more plants receive little or no water.",
-      fix: "Clean or replace the clogged emitter and flush the tubing."
-    },
-    {
-      problem: "Rotor won't rotate",
-      symptom: "Rotor pops up but stays in one direction.",
-      fix: "Clean the rotor, inspect internal gears, and replace if damaged."
-    },
-    {
-      problem: "Spray head won't pop up",
-      symptom: "Head stays below ground while water is on.",
-      fix: "Clean around the stem, check for low pressure, and replace if necessary."
-    },
-    {
-      problem: "Wire short",
-      symptom: "Controller reports a fault or blows a fuse.",
-      fix: "Locate damaged wiring, repair insulation, and waterproof all splices."
-    },
-    {
-      problem: "Open wire",
-      symptom: "One valve never receives power.",
-      fix: "Check wire continuity and repair any broken connections."
-    },
-    {
-      problem: "Rain sensor failure",
-      symptom: "System waters during rain or never waters at all.",
-      fix: "Inspect sensor wiring, settings, and bypass switch."
-    },
-    {
-      problem: "Backflow preventer leaking",
-      symptom: "Water leaks from the backflow assembly.",
-      fix: "Inspect check valves, seals, and relief valve. Rebuild if necessary."
-    }
-  ]
-},
+    title: "💧 Irrigation Troubleshooting",
+    steps: [
+      {
+        problem: "Zone won't turn on",
+        symptom: "Nothing happens when the zone starts.",
+        fix: "Check controller programming, station output, field wiring, wire splices, solenoid resistance, and whether the valve is receiving water."
+      },
+      {
+        problem: "Zone won't turn off",
+        symptom: "Sprinklers continue running after the timer ends.",
+        fix: "Shut off the water if needed. Inspect the diaphragm, solenoid, bleed screw, and valve body for debris or damage."
+      },
+      {
+        problem: "Low water pressure",
+        symptom: "Sprinklers barely spray or do not fully pop up.",
+        fix: "Inspect for leaks, broken pipe, partially closed valves, clogged filters, too many heads on one zone, or low supply pressure."
+      },
+      {
+        problem: "High water pressure",
+        symptom: "Sprinklers mist heavily or heads separate.",
+        fix: "Check the pressure regulator and verify the zone is using pressure-regulated bodies or nozzles where required."
+      },
+      {
+        problem: "Broken sprinkler head",
+        symptom: "Water shoots straight up or floods one area.",
+        fix: "Turn off the zone, expose the fitting, remove the damaged head, flush debris, and install a matching replacement."
+      },
+      {
+        problem: "Clogged nozzle",
+        symptom: "Weak spray pattern or uneven coverage.",
+        fix: "Remove the nozzle and screen, clean debris, briefly flush the line, then reinstall and adjust the pattern."
+      },
+      {
+        problem: "Valve leaking",
+        symptom: "Water leaks around the valve or downstream heads seep when the zone is off.",
+        fix: "Inspect the diaphragm, O-rings, bonnet screws, fittings, and valve body. Clean debris and replace damaged parts."
+      },
+      {
+        problem: "Solenoid failure",
+        symptom: "The valve does not activate even though the controller is sending voltage.",
+        fix: "Confirm wiring first, measure solenoid resistance, and replace the solenoid if it is open, shorted, swollen, or mechanically stuck."
+      },
+      {
+        problem: "Controller not working",
+        symptom: "No zones activate or the display is blank.",
+        fix: "Check the outlet, transformer, fuse, rain-delay settings, programming, common wire, and station outputs."
+      },
+      {
+        problem: "Broken lateral line",
+        symptom: "Wet ground, low pressure, or water bubbling from the soil only while one zone runs.",
+        fix: "Locate the break, excavate carefully, cut out damaged pipe, install correct fittings, allow curing time if glued, and pressure-test."
+      },
+      {
+        problem: "Broken mainline",
+        symptom: "Water leaks continuously even when the controller is off.",
+        fix: "Shut off the irrigation supply immediately, expose the damaged section, repair with pressure-rated fittings, and test before backfilling."
+      },
+      {
+        problem: "Drip system not working",
+        symptom: "Plants remain dry while the timer is running.",
+        fix: "Inspect the filter, pressure regulator, control valve, tubing, emitters, end flush, and controller runtime."
+      },
+      {
+        problem: "Emitter clogged",
+        symptom: "One or more plants receive little or no water.",
+        fix: "Remove and replace the emitter, flush the tubing, and inspect the filter so the same debris does not clog it again."
+      },
+      {
+        problem: "Rotor won't rotate",
+        symptom: "The rotor pops up but stays aimed in one direction.",
+        fix: "Confirm adequate pressure, clean debris around the riser, verify arc adjustment, and replace the rotor if the internal gears are stripped."
+      },
+      {
+        problem: "Spray head won't pop up",
+        symptom: "The head remains below grade while water is on.",
+        fix: "Clean around the stem, inspect for low pressure or a pinched riser, and replace the body if the stem is damaged."
+      },
+      {
+        problem: "Wire short",
+        symptom: "The controller reports a fault, skips a station, or blows a fuse.",
+        fix: "Disconnect the field wire, isolate the short with resistance tests, repair damaged insulation, and waterproof every splice."
+      },
+      {
+        problem: "Open wire",
+        symptom: "One valve never receives power.",
+        fix: "Check continuity from controller to valve, inspect wire nuts and splices, and repair the broken conductor or common wire."
+      },
+      {
+        problem: "Rain sensor failure",
+        symptom: "The system waters during rain or never waters at all.",
+        fix: "Inspect sensor wiring, dry-out setting, bypass switch, controller sensor setting, and wireless sensor battery if equipped."
+      },
+      {
+        problem: "Backflow preventer leaking",
+        symptom: "Water leaks from the backflow assembly.",
+        fix: "Identify the exact discharge point. Shut off water before disassembly, inspect seals and check assemblies, and use a certified tester where local rules require one."
+      }
+    ]
+  },
+
   hvac: {
     title: "❄️ HVAC Troubleshooting",
     steps: [
-      "Check thermostat settings.",
-      "Check breaker and power disconnect.",
-      "Inspect air filter.",
-      "Check airflow from vents.",
-      "Listen for outdoor unit running.",
-      "If the unit hums but won't start, capacitor may be bad."
+      {
+        problem: "AC is running but not cooling",
+        symptom: "Air comes from the vents, but the indoor temperature does not drop.",
+        fix: "Confirm thermostat mode and setpoint, replace a dirty filter, verify indoor and outdoor fans are operating, inspect the outdoor coil for blockage, and check for ice. Refrigerant diagnosis should be performed by a qualified technician."
+      },
+      {
+        problem: "Outdoor unit will not run",
+        symptom: "The indoor blower may run, but the condenser fan and compressor stay off.",
+        fix: "Check the thermostat call, breaker, service disconnect, condensate safety switch, contactor coil voltage, low-voltage wiring, capacitor condition, and motor or compressor overloads."
+      },
+      {
+        problem: "Frozen evaporator coil",
+        symptom: "Ice appears on the refrigerant line or indoor coil and airflow becomes weak.",
+        fix: "Turn cooling off and run the fan to thaw the system. Check the filter, blower operation, return-air restrictions, closed registers, dirty coil, and possible low refrigerant."
+      },
+      {
+        problem: "Weak airflow from vents",
+        symptom: "The system runs, but little air reaches one or more rooms.",
+        fix: "Inspect the filter, blower wheel, evaporator coil, return grilles, dampers, collapsed flex duct, disconnected ductwork, and closed or blocked registers."
+      },
+      {
+        problem: "Bad capacitor symptoms",
+        symptom: "The outdoor unit hums, the fan starts slowly, the motor overheats, or the unit starts only after being pushed.",
+        fix: "Disconnect power and verify the capacitor is discharged. Inspect for swelling or leakage and test capacitance against the rated microfarads. Replace only with the correct capacitance and voltage rating."
+      },
+      {
+        problem: "Contactor failure",
+        symptom: "The outdoor unit chatters, will not start, or remains running after the thermostat stops calling.",
+        fix: "Disconnect power. Inspect contacts for burning or welding, confirm coil voltage, check low-voltage controls, and replace a damaged contactor with an equivalent rated part."
+      },
+      {
+        problem: "Compressor will not start",
+        symptom: "The condenser fan runs, but the compressor hums, clicks, or stays silent.",
+        fix: "Check supply voltage, capacitor, contactor, wiring, overload temperature, winding resistance, and shorts to ground. Compressor testing involves hazardous voltage and should be performed by a qualified HVAC technician."
+      },
+      {
+        problem: "Thermostat calls but nothing happens",
+        symptom: "The display is on and cooling or heating is requested, but the equipment does not respond.",
+        fix: "Check thermostat batteries, breaker, furnace switch, access-panel interlock, transformer output, low-voltage fuse, condensate float switch, and thermostat wiring."
+      },
+      {
+        problem: "Indoor blower will not run",
+        symptom: "The outdoor equipment may run, but no air moves through the vents.",
+        fix: "Check the filter, blower door switch, control-board output, motor capacitor if used, motor module, wiring, wheel obstruction, and motor overheating."
+      },
+      {
+        problem: "System short cycles",
+        symptom: "The equipment starts and stops every few minutes.",
+        fix: "Check thermostat placement, dirty filter, restricted airflow, frozen coil, oversized equipment, pressure safety trips, condensate switch operation, and loose low-voltage wiring."
+      },
+      {
+        problem: "Water leaking near indoor unit",
+        symptom: "Water collects around the furnace, air handler, or ceiling drain pan.",
+        fix: "Turn the system off if water threatens electrical parts. Clear the condensate drain, inspect the trap, verify the pump works, check pan damage, and look for coil icing."
+      },
+      {
+        problem: "Heat pump blows cool air in heating mode",
+        symptom: "Supply air feels cool or the home does not warm sufficiently.",
+        fix: "Verify thermostat mode, outdoor unit operation, defrost cycle, reversing-valve control, auxiliary heat, filter condition, and outdoor temperature. Heat-pump supply air can feel cooler than gas-furnace air even when operating normally."
+      },
+      {
+        problem: "Gas furnace will not ignite",
+        symptom: "The inducer may run, but the burners do not light or shut off quickly.",
+        fix: "Check the thermostat call, furnace switch, gas supply, error code, pressure switch tubing, igniter, flame sensor, and condensate drainage. Stop immediately if gas odor is present."
+      },
+      {
+        problem: "Burners light then shut off",
+        symptom: "Flame starts but drops out after a few seconds.",
+        fix: "Turn off power, clean the flame sensor carefully, inspect grounding and wiring, confirm burner flame carries across properly, and check the control-board fault code."
+      }
     ]
   },
+
   plumbing: {
     title: "🚿 Plumbing Troubleshooting",
     steps: [
       "Identify where the leak or clog starts.",
       "Check shutoff valves.",
       "Inspect visible pipes and fittings.",
-      "For slow drains, check trap first.",
+      "For slow drains, check the trap first.",
       "For low pressure, check aerators and supply valves.",
-      "If water is backing up in multiple drains, main line may be clogged."
+      "If water is backing up in multiple drains, the main line may be clogged."
     ]
   },
+
   electrical: {
     title: "⚡ Electrical Troubleshooting",
     steps: [
-      "Check breaker panel first.",
-      "Reset tripped breaker once.",
+      "Check the breaker panel first.",
+      "Reset a tripped breaker once only.",
       "Test nearby outlets.",
       "Check GFCI outlets and reset if needed.",
-      "Look for damaged cords or burned smell.",
-      "Do not work on live wires unless trained and qualified."
+      "Look for damaged cords, heat, discoloration, or a burned smell.",
+      "Do not work on live wiring unless trained, qualified, and using proper test equipment."
     ]
   },
+
   landscaping: {
     title: "🌱 Landscaping Troubleshooting",
     steps: [
       "Identify the plant, grass, or problem area.",
-      "Check watering schedule.",
-      "Look for pests, disease, or heat stress.",
+      "Check the watering schedule.",
+      "Look for pests, disease, heat stress, and drainage problems.",
       "Remove dead or damaged growth.",
       "Check soil moisture before adding more water.",
       "Trim carefully and avoid over-pruning."
     ]
   },
+
   automotive: {
     title: "🚗 Automotive Basic Troubleshooting",
     steps: [
@@ -301,7 +393,7 @@ const guides = {
       "Check oil, coolant, and brake fluid.",
       "Inspect tires and air pressure.",
       "Check dashboard warning lights.",
-      "If overheating, stop driving and let engine cool."
+      "If the engine overheats, stop driving and let it cool."
     ]
   }
 };
@@ -310,43 +402,57 @@ function showGuide(type) {
   const panel = document.getElementById("guidePanel");
   const title = document.getElementById("guideTitle");
   const steps = document.getElementById("guideSteps");
-
   const trade = guides[type];
+
+  if (!trade) {
+    return;
+  }
 
   title.textContent = trade.title;
   steps.innerHTML = "";
 
-trade.steps.forEach((step, index) => {
-  const div = document.createElement("div");
-  div.className = "step";
+  trade.steps.forEach((step, index) => {
+    const div = document.createElement("div");
+    div.className = "step";
 
-  if (typeof step === "string") {
-    div.innerHTML = `<strong>${index + 1}.</strong> ${step}`;
-  } else {
-    div.innerHTML = `
-      <strong>${index + 1}. ${step.problem}</strong>
-      <p><b>Symptom:</b> ${step.symptom}</p>
-      <p><b>Fix:</b> ${step.fix}</p>
-    `;
-  }
+    if (typeof step === "string") {
+      div.innerHTML = `<strong>${index + 1}.</strong> ${step}`;
+    } else {
+      div.innerHTML = `
+        <strong>${index + 1}. ${step.problem}</strong>
+        <p><b>Symptom:</b> ${step.symptom}</p>
+        <p><b>Fix:</b> ${step.fix}</p>
+      `;
+    }
 
-  steps.appendChild(div);
-});
+    steps.appendChild(div);
+  });
+
   panel.style.display = "block";
-  panel.scrollIntoView({ behavior: "smooth" });
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
 function filterCards() {
-  const input = document.getElementById("searchInput").value.toLowerCase();
+  const input = document.getElementById("search").value.trim().toLowerCase();
   const cards = document.querySelectorAll(".card");
 
   cards.forEach(card => {
-    const text = card.innerText.toLowerCase();
-    card.style.display = text.includes(input) ? "block" : "none";
+    const cardText = card.innerText.toLowerCase();
+    const type = card.getAttribute("onclick")?.match(/'([^']+)'/)?.[1];
+    const guide = type ? guides[type] : null;
+
+    const guideText = guide
+      ? JSON.stringify(guide).toLowerCase()
+      : "";
+
+    card.style.display =
+      cardText.includes(input) || guideText.includes(input)
+        ? "block"
+        : "none";
   });
 }
-
-
 </script>
 
 </body>
-</html>
+  </html>
+  
