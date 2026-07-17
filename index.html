@@ -1,1 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TradeStack</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #101820;
+    color: white;
+  }
 
+  header {
+    background: linear-gradient(135deg, #ff8c00, #ff3c00);
+    padding: 25px;
+    text-align: center;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+  }
+
+  header p {
+    margin-top: 8px;
+    font-size: 1rem;
+  }
+
+  .container {
+    padding: 18px;
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .search-box {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+  }
+
+  .card {
+    background: #1f2a36;
+    border: 1px solid #334;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease;
+  }
+
+  .card:hover {
+    background: #263747;
+    transform: translateY(-2px);
+  }
+
+  .card h2 {
+    font-size: 1.1rem;
+    margin: 10px 0 5px;
+  }
+
+  .emoji {
+    font-size: 2rem;
+  }
+
+  .panel {
+    margin-top: 25px;
+    background: #182430;
+    border-radius: 14px;
+    padding: 18px;
+    display: none;
+  }
+
+  .panel h2 {
+    color: #ffb347;
+  }
+
+  .guide-count {
+    color: #c9d3dc;
+    margin-top: -8px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+  }
+
+  .step {
+    background: #223140;
+    padding: 12px;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+
+  .step p {
+    margin: 8px 0 0;
+    line-height: 1.45;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🛠️ TradeStack</h1>
+  <p>Troubleshooting guides for trades, repairs, and job site problems.</p>
+</header>
+
+<div class="container">
+  <input
+    class="search-box"
+    id="search"
+    type="search"
+    placeholder="Search trade or problem..."
+    oninput="filterCards()"
+  />
+
+  <div class="grid" id="tradeGrid">
+    <div class="card" data-trade="irrigation" onclick="showGuide('irrigation')">
+      <div class="emoji">💧</div>
+      <h2>Irrigation</h2>
+      <p>Valves, timers, leaks, zones</p>
+    </div>
+
+    <div class="card" data-trade="hvac" onclick="showGuide('hvac')">
+      <div class="emoji">❄️</div>
+      <h2>HVAC</h2>
+      <p>Cooling, heating, airflow</p>
+    </div>
+
+    <div class="card" data-trade="plumbing" onclick="showGuide('plumbing')">
+      <div class="emoji">🚿</div>
+      <h2>Plumbing</h2>
+      <p>Leaks, clogs, pressure</p>
+    </div>
+
+    <div class="card" data-trade="electrical" onclick="showGuide('electrical')">
+      <div class="emoji">⚡</div>
+      <h2>Electrical</h2>
+      <p>Power, breakers, outlets</p>
+    </div>
+
+    <div class="card" data-trade="landscaping" onclick="showGuide('landscaping')">
+      <div class="emoji">🌱</div>
+      <h2>Landscaping</h2>
+      <p>Plants, trimming, cleanup</p>
+    </div>
+
+    <div class="card" data-trade="automotive" onclick="showGuide('automotive')">
+      <div class="emoji">🚗</div>
+      <h2>Automotive</h2>
+      <p>Basic vehicle checks</p>
+    </div>
+  </div>
+
+  <div class="panel" id="guidePanel">
+    <h2 id="guideTitle"></h2>
+    <div class="guide-count" id="guideCount"></div>
+    <div id="guideSteps"></div>
+  </div>
+</div>
+
+<footer>
+  TradeStack v0.5 - Built by Jesse Perez - With assistance from ChatGPT
+</footer>
+
+<script>
+const guides = {
+  irrigation: {
+    title: "💧 Irrigation Troubleshooting",
+    steps: [
+      { problem: "Zone won't turn on", symptom: "Nothing happens when the zone starts.", fix: "Check controller programming, station output, field wiring, waterproof splices, solenoid resistance, flow control, and water supply." },
+      { problem: "Zone won't turn off", symptom: "Sprinklers continue running after the timer ends.", fix: "Shut off water if needed. Inspect the diaphragm, solenoid, bleed screw, debris under the diaphragm, and damaged valve body." },
+      { problem: "Low water pressure", symptom: "Heads barely spray or do not fully pop up.", fix: "Inspect for leaks, broken pipe, partially closed valves, clogged filters, too many heads, undersized pipe, or low supply pressure." },
+      { problem: "High water pressure", symptom: "Heads mist heavily, fog, or separate.", fix: "Check the pressure regulator and use pressure-regulated bodies or nozzles where required." },
+      { problem: "Broken sprinkler head", symptom: "Water shoots straight up or floods one area.", fix: "Turn off the zone, expose the fitting, remove the damaged head, flush debris, and install a matching replacement at grade." },
+      { problem: "Clogged nozzle", symptom: "Weak spray pattern or uneven coverage.", fix: "Remove the nozzle and screen, clean debris, briefly flush the line, reinstall, and adjust the spray pattern." },
+      { problem: "Valve leaking", symptom: "Water leaks around the valve or heads seep while off.", fix: "Inspect the diaphragm, O-rings, bonnet screws, fittings, flow control, and valve body. Clean debris and replace damaged parts." },
+      { problem: "Solenoid failure", symptom: "The valve does not activate even though voltage is present.", fix: "Confirm wiring, measure resistance, and replace the solenoid if it is open, shorted, swollen, overheated, or mechanically stuck." },
+      { problem: "Controller not working", symptom: "No zones activate or the display is blank.", fix: "Check the outlet, transformer, fuse, breaker, rain-delay setting, programming, common wire, and station outputs." },
+      { problem: "Broken lateral line", symptom: "Wet ground or bubbling appears only while one zone runs.", fix: "Locate the break, excavate carefully, cut out damaged pipe, install correct fittings, allow glue to cure, and pressure-test." },
+      { problem: "Broken mainline", symptom: "Water leaks continuously even when the controller is off.", fix: "Shut off the irrigation supply immediately, expose the damaged section, repair with pressure-rated fittings, and test before backfilling." },
+      { problem: "Drip system not working", symptom: "Plants remain dry while the timer is running.", fix: "Inspect the filter, pressure regulator, control valve, tubing, emitters, end flush, and controller runtime." },
+      { problem: "Emitter clogged", symptom: "One or more plants receive little or no water.", fix: "Remove and replace the emitter, flush the tubing, and clean the filter so debris does not return." },
+      { problem: "Rotor won't rotate", symptom: "The rotor pops up but stays aimed in one direction.", fix: "Confirm pressure, clean around the riser, verify arc adjustment, and replace the rotor if the internal gears are stripped." },
+      { problem: "Spray head won't pop up", symptom: "The head remains below grade while water is on.", fix: "Clean around the stem, inspect for low pressure or a pinched riser, and replace the body if the stem is damaged." },
+      { problem: "Wire short", symptom: "The controller reports a fault, skips a station, or blows a fuse.", fix: "Disconnect field wires, isolate the short with resistance tests, repair damaged insulation, and waterproof every splice." },
+      { problem: "Open wire", symptom: "One valve never receives power.", fix: "Check continuity from controller to valve, inspect splices, and repair the broken station conductor or common wire." },
+      { problem: "Rain sensor failure", symptom: "The system waters during rain or never waters.", fix: "Inspect sensor wiring, dry-out setting, bypass switch, controller sensor setting, and wireless battery if equipped." },
+      { problem: "Backflow preventer leaking", symptom: "Water leaks or discharges from the backflow assembly.", fix: "Identify the discharge point, shut off water before service, inspect seals and checks, and use certified testing where required." },
+      { problem: "Uneven sprinkler coverage", symptom: "Dry spots remain while nearby areas are overwatered.", fix: "Check head spacing, matched precipitation nozzles, pressure, blocked spray, tilted heads, arc settings, and plant growth obstructing coverage." }
+    ]
+  },
+
+  hvac: {
+    title: "❄️ HVAC Troubleshooting",
+    steps: [
+      { problem: "AC running but not cooling", symptom: "Air moves, but indoor temperature does not drop.", fix: "Confirm thermostat mode, replace a dirty filter, verify both fans, inspect coils, and check for ice. Refrigerant work requires qualified service." },
+      { problem: "Outdoor unit will not run", symptom: "Indoor blower runs, but condenser stays off.", fix: "Check the breaker, disconnect, thermostat call, float switch, contactor coil voltage, capacitor, low-voltage wiring, and overloads." },
+      { problem: "Frozen evaporator coil", symptom: "Ice appears on the suction line or indoor coil.", fix: "Turn cooling off and run fan to thaw. Check filter, blower, return restrictions, dirty coil, closed registers, and possible low refrigerant." },
+      { problem: "Weak airflow from vents", symptom: "Little air reaches one or more rooms.", fix: "Inspect filter, blower wheel, evaporator coil, return grilles, dampers, flex duct, disconnected ducts, and blocked registers." },
+      { problem: "Bad capacitor", symptom: "Motor hums, starts slowly, overheats, or will not start.", fix: "Disconnect power, discharge safely, test capacitance, and replace only with the correct microfarad and voltage rating." },
+      { problem: "Contactor failure", symptom: "Outdoor unit chatters, will not start, or stays running.", fix: "Disconnect power, inspect contacts, confirm coil voltage, check control wiring, and replace with an equivalent rated contactor." },
+      { problem: "Compressor will not start", symptom: "Fan runs, but compressor hums, clicks, or stays silent.", fix: "Check voltage, capacitor, contactor, overload, winding resistance, and shorts to ground. Compressor testing involves hazardous voltage." },
+      { problem: "Thermostat calls but nothing happens", symptom: "Display is on, but equipment does not respond.", fix: "Check batteries, breakers, furnace switch, door interlock, transformer output, fuse, float switch, and thermostat wiring." },
+      { problem: "Indoor blower will not run", symptom: "Equipment may run, but no air moves.", fix: "Check filter, door switch, board output, motor capacitor, ECM module, wiring, wheel obstruction, and overheating." },
+      { problem: "System short cycles", symptom: "Equipment starts and stops every few minutes.", fix: "Check thermostat placement, airflow, frozen coil, equipment sizing, pressure switches, condensate safeties, and loose low-voltage wiring." },
+      { problem: "Water leaking near indoor unit", symptom: "Water collects around furnace, air handler, or ceiling pan.", fix: "Shut down if electrical parts are threatened. Clear drain and trap, inspect pump and pan, and check for coil icing." },
+      { problem: "Heat pump blows cool air", symptom: "Supply air feels cool in heating mode.", fix: "Verify thermostat mode, outdoor unit, defrost cycle, reversing valve, auxiliary heat, filter, and outdoor temperature." },
+      { problem: "Gas furnace will not ignite", symptom: "Inducer runs, but burners do not light.", fix: "Check gas supply, error code, pressure-switch tubing, igniter, flame sensor, condensate drain, and venting. Stop if gas odor is present." },
+      { problem: "Burners light then shut off", symptom: "Flame drops out after a few seconds.", fix: "Clean the flame sensor, inspect grounding and wiring, confirm flame carryover, and read the control-board fault code." },
+      { problem: "Furnace overheating", symptom: "Burners shut off while blower keeps running.", fix: "Check filter, blower speed, closed vents, dirty coil, return restrictions, limit switch, and excessive temperature rise." },
+      { problem: "Reversing valve problem", symptom: "Heat pump stays in heating or cooling regardless of thermostat mode.", fix: "Check thermostat O/B setup, control voltage at the solenoid, coil resistance, wiring, and refrigerant pressure differences." },
+      { problem: "Dirty condenser coil", symptom: "Cooling is weak and head pressure may rise.", fix: "Turn off power, remove debris, gently rinse from inside out, straighten severe fin damage, and restore proper clearance." },
+      { problem: "Duct leak", symptom: "Rooms stay uncomfortable and airflow is weak.", fix: "Inspect accessible ducts for separation, torn flex, loose boots, and failed mastic. Seal with approved mastic or foil HVAC tape." },
+      { problem: "High superheat", symptom: "Evaporator appears starved and suction temperature is high.", fix: "Verify airflow first, then check refrigerant charge, restrictions, metering device feeding, and liquid-line condition using manufacturer data." },
+      { problem: "High subcooling", symptom: "Liquid refrigerant backs up in the condenser.", fix: "Confirm airflow and clean coils, then check for overcharge, liquid-line restriction, or metering-device restriction using manufacturer specifications." }
+    ]
+  },
+
+  plumbing: {
+    title: "🚿 Plumbing Troubleshooting",
+    steps: [
+      { problem: "Leaking faucet", symptom: "Water drips from the spout after shutoff.", fix: "Shut off supplies, identify cartridge or washer type, inspect seats and O-rings, replace worn parts, and test." },
+      { problem: "Slow sink drain", symptom: "Water drains slowly but does not fully back up.", fix: "Remove and clean the stopper, inspect the trap, use a hand auger, and avoid mixing chemical drain cleaners." },
+      { problem: "Clogged toilet", symptom: "Bowl rises or drains slowly after flushing.", fix: "Stop repeated flushing, use a flange plunger, then a toilet auger. Inspect the main line if multiple fixtures back up." },
+      { problem: "Running toilet", symptom: "Tank refills repeatedly or water runs into the bowl.", fix: "Inspect flapper, chain, fill valve, float level, flush-valve seal, and overflow tube." },
+      { problem: "Low water pressure", symptom: "Flow is weak at one or more fixtures.", fix: "Clean aerators, confirm supply valves are open, check pressure regulator, leaks, filter blockage, and municipal supply pressure." },
+      { problem: "High water pressure", symptom: "Pipes bang, fixtures fail early, or pressure exceeds normal limits.", fix: "Test static pressure and inspect or replace the pressure-reducing valve and thermal expansion tank." },
+      { problem: "Water heater not heating", symptom: "Hot taps remain cold.", fix: "For electric units, check breaker, reset, thermostats, and elements. For gas units, check pilot, gas supply, venting, and controls." },
+      { problem: "Water heater leaking", symptom: "Water appears under or around the tank.", fix: "Check drain valve, relief valve, fittings, and tank body. Shut off power or gas and water if the tank itself leaks." },
+      { problem: "Noisy pipes", symptom: "Banging, rattling, or whistling occurs during use.", fix: "Secure loose pipe, check pressure, inspect failing valves, and add arrestors where quick-closing valves cause water hammer." },
+      { problem: "Leaking pipe joint", symptom: "Water beads or sprays from a fitting.", fix: "Shut off water, relieve pressure, identify pipe material, cut out or remake the joint with the correct fitting and method." },
+      { problem: "Garbage disposal jammed", symptom: "Unit hums but does not spin.", fix: "Turn off power, use the manufacturer wrench from below, remove obstruction with tongs, reset overload, and test." },
+      { problem: "Garbage disposal dead", symptom: "No sound when switched on.", fix: "Check GFCI, breaker, plug, wall switch, reset button, and wiring before replacing the unit." },
+      { problem: "Sewer odor indoors", symptom: "Persistent sewage smell near a fixture.", fix: "Fill dry traps, inspect wax rings, cleanouts, venting, cracked drain pipe, and loose caps." },
+      { problem: "Multiple drains backing up", symptom: "Several fixtures gurgle or overflow together.", fix: "Stop water use and inspect the building sewer or main drain with proper cleanout access and a suitable auger." },
+      { problem: "Leaking hose bib", symptom: "Outdoor faucet drips from spout or stem.", fix: "Replace washer, packing, cartridge, vacuum breaker, or entire frost-free sillcock if split or freeze-damaged." },
+      { problem: "Sump pump not working", symptom: "Pit rises but pump does not start.", fix: "Check power, float movement, intake blockage, discharge line, check valve, and pump motor." },
+      { problem: "Water hammer", symptom: "Pipes slam when valves close.", fix: "Check house pressure, secure piping, drain old air chambers if present, and install arrestors near quick-closing valves." },
+      { problem: "Leaking shower valve", symptom: "Water drips from showerhead or behind trim.", fix: "Shut off water, replace cartridge or seals, inspect valve body, and verify no hidden wall leak." },
+      { problem: "Toilet leaking at base", symptom: "Water appears around the toilet after flushing.", fix: "Stop use, inspect mounting and flange, replace wax or gasket seal, reset the toilet level, and repair damaged flooring or flange." },
+      { problem: "Frozen pipe", symptom: "Little or no flow during freezing weather.", fix: "Keep faucet open, warm pipe gradually, inspect for splits, and shut off water immediately if leakage begins." }
+    ]
+  },
+
+  electrical: {
+    title: "⚡ Electrical Troubleshooting",
+    steps: [
+      { problem: "Breaker keeps tripping", symptom: "Breaker trips repeatedly after reset.", fix: "Unplug loads, identify overload or short, inspect connected equipment, and do not keep resetting a breaker that trips immediately." },
+      { problem: "Outlet has no power", symptom: "A receptacle is dead while others work.", fix: "Check breaker, upstream GFCI, loose connections, switched outlets, and damaged receptacle with power verified off." },
+      { problem: "GFCI will not reset", symptom: "Reset button will not latch.", fix: "Remove connected loads, verify line voltage and correct line-load wiring, inspect for moisture, and replace a failed GFCI." },
+      { problem: "Lights flicker", symptom: "Lights dim or flicker intermittently.", fix: "Check lamp, fixture, switch, loose neutral, overloaded circuit, and utility service issues. Widespread flicker needs prompt professional inspection." },
+      { problem: "Switch does not work", symptom: "Light or device does not respond.", fix: "Verify breaker and bulb, then inspect switch wiring, continuity, loose terminals, and downstream connections with power off." },
+      { problem: "Burning smell", symptom: "Hot plastic or electrical odor is present.", fix: "Turn off the circuit immediately, avoid use, inspect for heat damage, and have qualified repair before re-energizing." },
+      { problem: "Warm outlet or switch", symptom: "Device plate feels unusually hot.", fix: "Stop use, turn off power, inspect load, wire size, terminal tightness, and device condition. Replace damaged components." },
+      { problem: "Half the room lost power", symptom: "Several outlets or lights on one path are dead.", fix: "Check breaker, GFCI, first failed device, last working device, loose backstab connections, and open neutral." },
+      { problem: "Breaker will not reset", symptom: "Handle will not stay in the on position.", fix: "Move fully off first, disconnect loads, then reset once. Immediate trip indicates a fault requiring isolation." },
+      { problem: "Ceiling fan will not run", symptom: "Fan is silent or hums.", fix: "Check wall switch, pull chain, remote battery, receiver, capacitor, wiring, and motor obstruction." },
+      { problem: "Light fixture stays on", symptom: "Fixture remains energized despite switch position.", fix: "Inspect switch failure, incorrect wiring, smart-control settings, and switched-hot conductor routing." },
+      { problem: "Doorbell not working", symptom: "Button produces no chime.", fix: "Check button contacts, transformer voltage, chime mechanism, low-voltage wiring, and smart-doorbell power requirements." },
+      { problem: "Smoke detector chirping", symptom: "Detector chirps periodically.", fix: "Replace battery, clean dust, check age and expiration, verify hardwired power, and replace units at end of service life." },
+      { problem: "Outdoor outlet dead", symptom: "Exterior receptacle has no power.", fix: "Check indoor or garage GFCI protection, breaker, weather damage, moisture, and in-use cover condition." },
+      { problem: "Generator not feeding circuits", symptom: "Generator runs but selected loads remain off.", fix: "Check transfer switch position, generator breaker, inlet connection, cord rating, and interlock operation. Never backfeed a panel." },
+      { problem: "Open neutral", symptom: "Lights brighten and dim or outlets test abnormally.", fix: "De-energize the circuit, inspect neutral connections, wirenuts, receptacles, panel terminations, and service neutral if multiple circuits are affected." },
+      { problem: "Reversed polarity", symptom: "Tester shows hot and neutral reversed.", fix: "Turn off power and correct conductor placement at the affected receptacle and upstream devices." },
+      { problem: "No ground", symptom: "Tester indicates open ground.", fix: "Inspect equipment grounding conductor continuity, metal-box bonding, and upstream connections. Do not fake a ground with a neutral jumper." },
+      { problem: "Appliance shocks user", symptom: "Tingle or shock occurs when touching equipment.", fix: "Disconnect immediately, check grounding, leakage current, cord damage, moisture, and GFCI protection before reuse." },
+      { problem: "Panel buzzing", symptom: "Buzzing or crackling comes from breaker panel.", fix: "Do not remove covers unless qualified. Reduce load, shut off affected circuit if safe, and arrange urgent inspection for loose or arcing connections." }
+    ]
+  },
+
+  landscaping: {
+    title: "🌱 Landscaping Troubleshooting",
+    steps: [
+      { problem: "Brown lawn patches", symptom: "Irregular brown areas appear in turf.", fix: "Check irrigation coverage, soil moisture, pet damage, fungus, grubs, compaction, and mowing height before treating." },
+      { problem: "Grass will not grow", symptom: "Seed or sod remains thin or bare.", fix: "Test light, soil condition, irrigation, seed timing, traffic, compaction, and species suitability." },
+      { problem: "Yellow leaves", symptom: "Plant foliage turns pale or yellow.", fix: "Check watering, drainage, root health, soil pH, nutrient deficiency, pests, and seasonal dormancy." },
+      { problem: "Wilting plants", symptom: "Leaves droop during or after heat.", fix: "Check soil moisture at root depth, emitter flow, transplant shock, root damage, heat exposure, and overwatering." },
+      { problem: "Overwatered plants", symptom: "Soil stays wet and leaves yellow or drop.", fix: "Reduce frequency, improve drainage, repair irrigation leaks, and allow oxygen back into the root zone." },
+      { problem: "Underwatered plants", symptom: "Leaves curl, scorch, or become brittle.", fix: "Deep-water the root zone, confirm emitter output, add mulch, and adjust timing for heat and soil type." },
+      { problem: "Tree leaning", symptom: "Trunk shifts or root ball moves.", fix: "Check planting depth, root-ball stability, soil saturation, wind exposure, and stake correctly without strangling the trunk." },
+      { problem: "Tree planted too deep", symptom: "Root flare is buried and trunk stays wet.", fix: "Expose the root flare carefully, remove excess soil or mulch, and replant if the root ball is severely buried." },
+      { problem: "Shrub not flowering", symptom: "Healthy foliage grows but blooms are absent.", fix: "Check sunlight, pruning timing, nitrogen excess, plant maturity, frost damage, and cultivar requirements." },
+      { problem: "Plant pest damage", symptom: "Leaves have holes, stippling, webs, or sticky residue.", fix: "Identify the pest before treatment, remove severe damage, encourage beneficial insects, and use the least-toxic control." },
+      { problem: "Fungal disease", symptom: "Spots, mildew, rot, or dieback appears.", fix: "Improve airflow, avoid wetting foliage late, remove infected material, sanitize tools, and use labeled treatment only when needed." },
+      { problem: "Weeds returning", symptom: "Beds or turf refill quickly after removal.", fix: "Remove roots before seed set, correct bare soil, add mulch, improve turf density, and use appropriate pre-emergent timing." },
+      { problem: "Mulch washing away", symptom: "Mulch moves during rain or irrigation.", fix: "Reduce slope runoff, repair spray overshoot, use heavier mulch, add edging, and improve drainage." },
+      { problem: "Soil compaction", symptom: "Water ponds and roots struggle.", fix: "Core-aerate turf, loosen planting beds carefully, add organic matter, and reduce foot or equipment traffic." },
+      { problem: "Poor drainage", symptom: "Water stands after irrigation or rain.", fix: "Verify grading, clean drain paths, reduce irrigation, amend soil where suitable, or install approved drainage." },
+      { problem: "Mower cutting unevenly", symptom: "Turf shows ridges or one side is lower.", fix: "Check tire pressure, deck level, bent blades, spindle wear, buildup under deck, and mowing speed." },
+      { problem: "Scalped lawn", symptom: "Mower removes too much grass and exposes soil.", fix: "Raise cutting height, level deck, avoid mowing wet or uneven ground too fast, and repair low spots." },
+      { problem: "Hedge has bare interior", symptom: "Outer growth is green but inside is woody.", fix: "Thin selectively, avoid shearing only the exterior, maintain a wider base, and restore sunlight gradually." },
+      { problem: "Salt damage", symptom: "Leaf edges burn and soil develops white crust.", fix: "Confirm water quality, improve drainage, flush salts deeply when appropriate, and choose salt-tolerant plants." },
+      { problem: "New sod failing", symptom: "Sod dries, lifts, or does not root.", fix: "Ensure soil contact, water consistently without flooding, roll lightly, avoid traffic, and check heat and installation timing." }
+    ]
+  },
+
+  automotive: {
+    title: "🚗 Automotive Basic Troubleshooting",
+    steps: [
+      { problem: "Engine will not crank", symptom: "Turning the key produces silence or one click.", fix: "Check battery voltage, terminals, ground cable, starter relay, park-neutral switch, ignition signal, and starter." },
+      { problem: "Engine cranks but will not start", symptom: "Starter turns engine, but it never fires.", fix: "Check fuel level, security light, spark, fuel pressure, injector pulse, crank sensor signal, and diagnostic codes." },
+      { problem: "Battery keeps dying", symptom: "Vehicle needs frequent jump-starts.", fix: "Test battery condition, charging voltage, terminal connections, belt condition, and parasitic draw after modules go to sleep." },
+      { problem: "Alternator not charging", symptom: "Battery light is on or voltage drops while running.", fix: "Check belt, battery connections, alternator output, main fuse, wiring, and control-circuit commands." },
+      { problem: "Engine overheating", symptom: "Temperature gauge rises or coolant boils.", fix: "Stop driving, allow engine to cool, check coolant level, leaks, fans, thermostat, water pump, radiator flow, and head-gasket signs." },
+      { problem: "Coolant leak", symptom: "Coolant level drops or colored fluid appears below vehicle.", fix: "Pressure-test when cool and inspect hoses, radiator, reservoir, water pump, thermostat housing, heater core, and engine gaskets." },
+      { problem: "Oil pressure warning", symptom: "Oil light stays on or engine ticks.", fix: "Shut off engine immediately, verify oil level, inspect leaks, and test actual oil pressure before continued operation." },
+      { problem: "Check engine light", symptom: "Warning lamp is on.", fix: "Scan codes, record freeze-frame data, inspect obvious wiring and vacuum issues, and diagnose the system named by the code rather than replacing parts blindly." },
+      { problem: "Rough idle", symptom: "Engine shakes or RPM fluctuates at idle.", fix: "Check vacuum leaks, ignition misfire, throttle body, idle control, fuel trims, injector balance, compression, and mounts." },
+      { problem: "Engine misfire", symptom: "Vehicle shakes, lacks power, or flashes check-engine light.", fix: "Stop hard driving if the light flashes. Check plugs, coils, injectors, compression, vacuum leaks, and fuel pressure." },
+      { problem: "Brake pedal feels soft", symptom: "Pedal travels too far or feels spongy.", fix: "Do not drive until checked. Inspect fluid level, leaks, air in system, hose expansion, calipers, wheel cylinders, and master cylinder." },
+      { problem: "Vehicle pulls while braking", symptom: "Car moves left or right during braking.", fix: "Inspect tire pressure, caliper operation, pads, hoses, rotors, suspension, and alignment." },
+      { problem: "Grinding brakes", symptom: "Metallic grinding occurs when braking.", fix: "Stop driving when possible and inspect pads, rotors, calipers, backing plates, and wheel bearings." },
+      { problem: "Steering wheel vibration", symptom: "Wheel shakes at speed or while braking.", fix: "Check tire balance, tire damage, wheel runout, alignment, suspension joints, bearings, and brake rotors." },
+      { problem: "Transmission slipping", symptom: "RPM rises without matching acceleration.", fix: "Check fluid level and condition using the correct procedure, scan codes, inspect leaks, and avoid continued heavy driving." },
+      { problem: "Car will not shift from park", symptom: "Shifter remains locked.", fix: "Check brake lights, brake-switch operation, shift interlock fuse, interlock solenoid, and manual release procedure." },
+      { problem: "AC not cold", symptom: "Cabin air stays warm.", fix: "Check compressor engagement, cooling fans, cabin filter, refrigerant pressures, blend door operation, and leaks." },
+      { problem: "Tire losing air", symptom: "One tire repeatedly becomes low.", fix: "Inspect tread and sidewall, valve stem, bead seal, wheel damage, and punctures. Repair only within approved tread area." },
+      { problem: "Suspension clunk", symptom: "Clunking occurs over bumps or during turns.", fix: "Inspect sway-bar links, bushings, ball joints, struts, mounts, control arms, tie rods, and loose hardware." },
+      { problem: "Fuel smell", symptom: "Gasoline odor is present near or inside vehicle.", fix: "Do not smoke or create sparks. Stop driving if strong, inspect for leaks, loose fuel cap, injector seals, lines, tank, and evaporative system." }
+    ]
+  }
+};
+
+function showGuide(type) {
+  const panel = document.getElementById("guidePanel");
+  const title = document.getElementById("guideTitle");
+  const count = document.getElementById("guideCount");
+  const steps = document.getElementById("guideSteps");
+  const trade = guides[type];
+
+  if (!trade) return;
+
+  title.textContent = trade.title;
+  count.textContent = `${trade.steps.length} troubleshooting guides`;
+  steps.innerHTML = "";
+
+  trade.steps.forEach((step, index) => {
+    const div = document.createElement("div");
+    div.className = "step";
+    div.innerHTML = `
+      <strong>${index + 1}. ${step.problem}</strong>
+      <p><b>Symptom:</b> ${step.symptom}</p>
+      <p><b>Fix:</b> ${step.fix}</p>
+    `;
+    steps.appendChild(div);
+  });
+
+  panel.style.display = "block";
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function filterCards() {
+  const input = document.getElementById("search").value.trim().toLowerCase();
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    const type = card.dataset.trade;
+    const guide = guides[type];
+    const searchableText = `${card.innerText} ${JSON.stringify(guide)}`.toLowerCase();
+    card.style.display = searchableText.includes(input) ? "block" : "none";
+  });
+}
+
+Object.entries(guides).forEach(([trade, data]) => {
+  if (data.steps.length !== 20) {
+    console.error(`${trade} has ${data.steps.length} guides instead of 20.`);
+  }
+});
+</script>
+
+</body>
+</html>
