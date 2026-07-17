@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TradeStack</title>
+<title>TradeStack v0.7</title>
 <style>
   body {
     margin: 0;
@@ -175,6 +175,73 @@
     line-height: 1.45;
   }
 
+  .guide-card {
+    overflow: hidden;
+    border: 1px solid #34485a;
+  }
+
+  .guide-top {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .part-picture {
+    min-height: 130px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #31485b, #16222d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  .part-picture svg {
+    width: 100%;
+    height: 100%;
+    max-height: 130px;
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 12px;
+  }
+
+  .detail-box {
+    background: #182631;
+    border-left: 4px solid #ff8c00;
+    border-radius: 8px;
+    padding: 10px;
+    line-height: 1.4;
+  }
+
+  .detail-box b {
+    display: block;
+    color: #ffbf69;
+    margin-bottom: 4px;
+  }
+
+  .safety-low { border-left-color: #55c98a; }
+  .safety-medium { border-left-color: #ffd166; }
+  .safety-high { border-left-color: #ff5a5f; }
+
+  .repair-note {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background: #2b3742;
+    color: #e7edf2;
+  }
+
+  @media (max-width: 620px) {
+    .guide-top { grid-template-columns: 1fr; }
+    .part-picture { min-height: 160px; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+
   footer {
     text-align: center;
     padding: 20px;
@@ -187,7 +254,7 @@
 
 <header>
   <h1>🛠️ TradeStack</h1>
-  <p>Troubleshooting guides for trades, repairs, and job site problems.</p>
+  <p>Visual troubleshooting guides with likely causes, parts, tools, and repair steps.</p>
 </header>
 
 <div class="container">
@@ -249,7 +316,7 @@
 </div>
 
 <footer>
-  TradeStack v0.6 - Built by Jesse Perez - With assistance from ChatGPT
+  TradeStack v0.7 - Built by Jesse Perez - With assistance from ChatGPT
 </footer>
 
 <script>
@@ -411,6 +478,115 @@ const guides = {
   }
 };
 
+const tradeIcons = {
+  irrigation: "💧",
+  hvac: "❄️",
+  plumbing: "🚿",
+  electrical: "⚡",
+  landscaping: "🌱",
+  automotive: "🚗"
+};
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getGuideDetails(step, tradeKey) {
+  const text = `${step.problem} ${step.symptom} ${step.fix}`.toLowerCase();
+  let cause = "Wear, damage, loose connections, blockage, incorrect adjustment, or loss of power/flow.";
+  let parts = "Inspect first; replace only the failed component.";
+  let tools = "Flashlight, gloves, basic hand tools, and the correct test tool for the trade.";
+  let safety = "Medium";
+  let note = "Confirm the failure before buying parts. Compare model numbers, sizes, ratings, and connection types.";
+  let picture = step.problem;
+
+  const rules = [
+    [/solenoid/, "Failed irrigation solenoid or damaged waterproof splice.", "Replacement solenoid, waterproof wire connectors.", "Multimeter, wire strippers, adjustable pliers, screwdriver.", "Medium", "Solenoid"],
+    [/diaphragm|zone won't turn off|valve leaking/, "Debris under the diaphragm, torn diaphragm, or damaged valve seal.", "Valve diaphragm kit, O-rings, bonnet screws if damaged.", "Screwdriver, small brush, channel-lock pliers.", "Medium", "Valve diaphragm"],
+    [/sprinkler head|spray head|rotor/, "Broken body, clogged nozzle, low pressure, or stripped internal gears.", "Matching spray head/rotor, nozzle, swing pipe fitting, riser.", "Shovel, sprinkler key, pliers, thread tape.", "Low", "Sprinkler head"],
+    [/controller|timer|station output/, "Power loss, failed transformer/fuse, bad programming, or damaged station output.", "Controller fuse, transformer, compatible controller if board failed.", "Multimeter, screwdriver, wire labels.", "High", "Irrigation controller"],
+    [/capacitor/, "Capacitor has weakened, opened, shorted, or bulged from heat and age.", "Correct µF-rated run/start capacitor with equal or higher voltage rating.", "Multimeter with capacitance, insulated screwdriver, needle-nose pliers.", "High", "HVAC capacitor"],
+    [/contactor/, "Burned contacts, weak coil, low control voltage, or loose wiring.", "Equivalent contactor with matching poles, coil voltage, and amp rating.", "Multimeter, insulated screwdriver, nut driver.", "High", "HVAC contactor"],
+    [/filter|airflow|blower|frozen evaporator/, "Restricted airflow from a dirty filter, coil, blower wheel, duct, or closed register.", "Correct air filter; blower/coil parts only after testing.", "Manometer if available, flashlight, nut driver, coil brush.", "High", "Air filter and blower"],
+    [/flame sensor|burners light then shut off/, "Flame sensor contamination, poor grounding, or weak flame signal.", "Flame sensor only if cleaning and electrical checks fail.", "Nut driver, fine abrasive pad, multimeter with microamp function.", "High", "Flame sensor"],
+    [/faucet|cartridge/, "Worn cartridge, washer, seat, O-ring, or mineral buildup.", "Matching faucet cartridge/washer kit and O-rings.", "Adjustable wrench, screwdriver, hex keys, cartridge puller if needed.", "Low", "Faucet cartridge"],
+    [/toilet|flapper|fill valve/, "Worn flapper, faulty fill valve, poor chain adjustment, or leaking seal.", "Flapper, fill valve, tank bolts, gasket as needed.", "Adjustable pliers, sponge, screwdriver.", "Low", "Toilet repair parts"],
+    [/drain|clog|backup/, "Hair, grease, roots, foreign material, or a blocked vent/main line.", "Trap washers or cleanout cap; cable head chosen for blockage.", "Plunger, hand auger/drain snake, bucket, gloves.", "Medium", "Drain snake"],
+    [/gfci|outlet|receptacle/, "Tripped protection, loose terminal, failed device, moisture, or upstream open connection.", "Correctly rated GFCI/receptacle and cover if testing confirms failure.", "Non-contact tester, multimeter, insulated screwdriver, outlet tester.", "High", "GFCI outlet"],
+    [/breaker|panel/, "Overload, short circuit, ground fault, loose connection, or failed breaker.", "Exact panel-listed breaker only after circuit fault is isolated.", "Clamp meter, multimeter, insulated tools, PPE.", "High", "Circuit breaker"],
+    [/battery|will not crank|alternator/, "Weak battery, corroded terminals, poor ground, charging failure, or starter circuit fault.", "Battery, terminal ends, alternator, fuse, or starter only after test results.", "Digital multimeter, battery tester, socket set, wire brush.", "High", "Car battery"],
+    [/brake|grinding brakes/, "Worn pads, damaged rotor, seized caliper, fluid leak, or air in hydraulic system.", "Pads, rotors, caliper/hose, brake fluid as confirmed.", "Jack stands, lug wrench, socket set, caliper tool, torque wrench.", "High", "Brake parts"],
+    [/overheating|coolant/, "Low coolant, leak, failed thermostat, fan, water pump, radiator restriction, or engine fault.", "Coolant, hose, thermostat, fan assembly, water pump, or radiator as tested.", "Cooling-system pressure tester, scan tool, basic hand tools.", "High", "Cooling system"],
+    [/mower|blade|scalped lawn/, "Dull/bent blade, incorrect deck height, uneven terrain, or excessive mowing speed.", "Correct mower blade, spindle/belt if damaged.", "Socket set, blade holder, torque wrench, safety glasses.", "Medium", "Mower blade"],
+    [/plant|shrub|tree|sod|lawn|grass/, "Watering, soil, heat, pest, disease, planting-depth, or root-zone problem.", "Plant-specific treatment, mulch, soil amendment, replacement plant only if necessary.", "Soil probe, pruners, shovel, moisture meter.", "Low", "Plant and soil"],
+    [/leak|broken mainline|broken lateral/, "Cracked pipe/fitting, failed seal, freeze damage, movement, or excessive pressure.", "Matching pipe, pressure-rated coupling, primer/cement or approved repair fitting.", "Shovel, pipe cutter, deburring tool, wrenches.", "Medium", "Pipe repair fitting"]
+  ];
+
+  for (const [pattern, c, p, t, s, pic] of rules) {
+    if (pattern.test(text)) {
+      cause = c; parts = p; tools = t; safety = s; picture = pic; break;
+    }
+  }
+
+  if (text.includes("gas") || text.includes("fuel smell") || text.includes("shock") || text.includes("panel buzzing")) {
+    safety = "High";
+    note = "Stop work if there is gas odor, active arcing, smoke, severe heat, or exposed live conductors. Use qualified service.";
+  }
+
+  return { cause, parts, tools, safety, note, picture };
+}
+
+function createPartPicture(label, tradeKey) {
+  const safeLabel = escapeHtml(label.length > 24 ? `${label.slice(0, 24)}…` : label);
+  const icon = tradeIcons[tradeKey] || "🛠️";
+  return `
+    <svg viewBox="0 0 320 190" role="img" aria-label="${safeLabel} part illustration">
+      <defs>
+        <linearGradient id="partGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ff9d2e" />
+          <stop offset="100%" stop-color="#ff3c00" />
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="312" height="182" rx="18" fill="#14212b" stroke="#4b6172" stroke-width="3" />
+      <circle cx="80" cy="83" r="49" fill="url(#partGrad)" />
+      <text x="80" y="100" text-anchor="middle" font-size="49">${icon}</text>
+      <rect x="146" y="46" width="137" height="18" rx="9" fill="#405568" />
+      <rect x="146" y="76" width="111" height="13" rx="6" fill="#2c3f50" />
+      <rect x="146" y="101" width="128" height="13" rx="6" fill="#2c3f50" />
+      <text x="160" y="151" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">${safeLabel}</text>
+      <text x="160" y="174" text-anchor="middle" fill="#b8c8d4" font-size="13">PART / COMPONENT GUIDE</text>
+    </svg>`;
+}
+
+function renderGuideCard(step, index, tradeKey, tradeTitle = "") {
+  const details = getGuideDetails(step, tradeKey);
+  const safetyClass = `safety-${details.safety.toLowerCase()}`;
+  const tradeLabel = tradeTitle ? `<span class="trade-label">${escapeHtml(tradeTitle)}</span>` : "";
+
+  return `
+    ${tradeLabel}
+    <div class="guide-top">
+      <div class="part-picture">${createPartPicture(details.picture, tradeKey)}</div>
+      <div>
+        <strong>${index + 1}. ${escapeHtml(step.problem)}</strong>
+        <p><b>Symptom:</b> ${escapeHtml(step.symptom)}</p>
+        <p><b>Repair steps:</b> ${escapeHtml(step.fix)}</p>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-box"><b>🎯 Most likely cause</b>${escapeHtml(details.cause)}</div>
+      <div class="detail-box"><b>🧩 Parts possibly needed</b>${escapeHtml(details.parts)}</div>
+      <div class="detail-box"><b>🧰 Tools needed</b>${escapeHtml(details.tools)}</div>
+      <div class="detail-box ${safetyClass}"><b>⚠️ Safety level: ${details.safety}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing." : "Use PPE and isolate the system before repair."}</div>
+    </div>
+    <div class="repair-note"><b>📋 Field note:</b> ${escapeHtml(details.note)}</div>`;
+}
+
 function showGuide(type) {
   const panel = document.getElementById("guidePanel");
   const title = document.getElementById("guideTitle");
@@ -426,12 +602,8 @@ function showGuide(type) {
 
   trade.steps.forEach((step, index) => {
     const div = document.createElement("div");
-    div.className = "step";
-    div.innerHTML = `
-      <strong>${index + 1}. ${step.problem}</strong>
-      <p><b>Symptom:</b> ${step.symptom}</p>
-      <p><b>Fix:</b> ${step.fix}</p>
-    `;
+    div.className = "step guide-card";
+    div.innerHTML = renderGuideCard(step, index, type);
     steps.appendChild(div);
   });
 
@@ -455,18 +627,8 @@ function renderSteps(titleText, matchingSteps, countText) {
 
   matchingSteps.forEach((result, index) => {
     const div = document.createElement("div");
-    div.className = "step";
-
-    const tradeLabel = result.tradeTitle
-      ? `<span class="trade-label">${result.tradeTitle}</span>`
-      : "";
-
-    div.innerHTML = `
-      ${tradeLabel}
-      <strong>${index + 1}. ${result.step.problem}</strong>
-      <p><b>Symptom:</b> ${result.step.symptom}</p>
-      <p><b>Fix:</b> ${result.step.fix}</p>
-    `;
+    div.className = "step guide-card";
+    div.innerHTML = renderGuideCard(result.step, index, result.tradeKey, result.tradeTitle);
 
     steps.appendChild(div);
   });
@@ -501,7 +663,8 @@ function searchGuides() {
     const tradeMatches = normalizeText(`${tradeKey} ${trade.title}`).includes(query);
 
     trade.steps.forEach(step => {
-      const stepText = normalizeText(`${step.problem} ${step.symptom} ${step.fix}`);
+      const detail = getGuideDetails(step, tradeKey);
+      const stepText = normalizeText(`${step.problem} ${step.symptom} ${step.fix} ${detail.cause} ${detail.parts} ${detail.tools} ${detail.picture}`);
 
       if (tradeMatches || stepText.includes(query)) {
         matches.push({
