@@ -44,6 +44,76 @@
     margin-bottom: 20px;
   }
 
+
+  .search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .search-row .search-box {
+    margin-bottom: 0;
+    flex: 1;
+  }
+
+  .search-button,
+  .clear-button {
+    border: none;
+    border-radius: 10px;
+    padding: 0 18px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .search-button {
+    background: linear-gradient(135deg, #ff8c00, #ff3c00);
+    color: white;
+  }
+
+  .clear-button {
+    background: #334454;
+    color: white;
+  }
+
+  .search-button:active,
+  .clear-button:active {
+    transform: scale(0.98);
+  }
+
+  .no-results {
+    background: #223140;
+    border-radius: 10px;
+    padding: 16px;
+    line-height: 1.5;
+  }
+
+  .trade-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #ffb347;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 600px) {
+    .search-row {
+      flex-wrap: wrap;
+    }
+
+    .search-row .search-box {
+      flex-basis: 100%;
+    }
+
+    .search-button,
+    .clear-button {
+      min-height: 46px;
+      flex: 1;
+    }
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -121,13 +191,17 @@
 </header>
 
 <div class="container">
-  <input
-    class="search-box"
-    id="search"
-    type="search"
-    placeholder="Search trade or problem..."
-    oninput="filterCards()"
-  />
+  <div class="search-row">
+    <input
+      class="search-box"
+      id="search"
+      type="search"
+      placeholder="Search all 120 troubleshooting guides..."
+      aria-label="Search TradeStack troubleshooting guides"
+    />
+    <button class="search-button" type="button" onclick="searchGuides()">Search</button>
+    <button class="clear-button" type="button" onclick="clearSearch()">Clear</button>
+  </div>
 
   <div class="grid" id="tradeGrid">
     <div class="card" data-trade="irrigation" onclick="showGuide('irrigation')">
@@ -175,7 +249,7 @@
 </div>
 
 <footer>
-  TradeStack v0.5 - Built by Jesse Perez - With assistance from ChatGPT
+  TradeStack v0.6 - Built by Jesse Perez - With assistance from ChatGPT
 </footer>
 
 <script>
@@ -365,17 +439,131 @@ function showGuide(type) {
   panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function filterCards() {
-  const input = document.getElementById("search").value.trim().toLowerCase();
+function normalizeText(value) {
+  return String(value || "").toLowerCase().trim();
+}
+
+function renderSteps(titleText, matchingSteps, countText) {
+  const panel = document.getElementById("guidePanel");
+  const title = document.getElementById("guideTitle");
+  const count = document.getElementById("guideCount");
+  const steps = document.getElementById("guideSteps");
+
+  title.textContent = titleText;
+  count.textContent = countText;
+  steps.innerHTML = "";
+
+  matchingSteps.forEach((result, index) => {
+    const div = document.createElement("div");
+    div.className = "step";
+
+    const tradeLabel = result.tradeTitle
+      ? `<span class="trade-label">${result.tradeTitle}</span>`
+      : "";
+
+    div.innerHTML = `
+      ${tradeLabel}
+      <strong>${index + 1}. ${result.step.problem}</strong>
+      <p><b>Symptom:</b> ${result.step.symptom}</p>
+      <p><b>Fix:</b> ${result.step.fix}</p>
+    `;
+
+    steps.appendChild(div);
+  });
+
+  panel.style.display = "block";
+  panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function searchGuides() {
+  const searchInput = document.getElementById("search");
+  const query = normalizeText(searchInput.value);
   const cards = document.querySelectorAll(".card");
+  const panel = document.getElementById("guidePanel");
+  const title = document.getElementById("guideTitle");
+  const count = document.getElementById("guideCount");
+  const steps = document.getElementById("guideSteps");
+
+  if (!query) {
+    clearSearch();
+    return;
+  }
+
+  const matches = [];
+  const matchingTrades = new Set();
+
+  Object.entries(guides).forEach(([tradeKey, trade]) => {
+    const tradeName = trade.title
+      .replace(/^[^\w]+/, "")
+      .replace(" Troubleshooting", "")
+      .replace(" Basic", "");
+
+    const tradeMatches = normalizeText(`${tradeKey} ${trade.title}`).includes(query);
+
+    trade.steps.forEach(step => {
+      const stepText = normalizeText(`${step.problem} ${step.symptom} ${step.fix}`);
+
+      if (tradeMatches || stepText.includes(query)) {
+        matches.push({
+          tradeKey,
+          tradeTitle: tradeName,
+          step
+        });
+        matchingTrades.add(tradeKey);
+      }
+    });
+  });
 
   cards.forEach(card => {
-    const type = card.dataset.trade;
-    const guide = guides[type];
-    const searchableText = `${card.innerText} ${JSON.stringify(guide)}`.toLowerCase();
-    card.style.display = searchableText.includes(input) ? "block" : "none";
+    card.style.display = matchingTrades.has(card.dataset.trade) ? "block" : "none";
   });
+
+  if (matches.length === 0) {
+    title.textContent = "🔎 No Results";
+    count.textContent = `No troubleshooting guides matched “${searchInput.value.trim()}”`;
+    steps.innerHTML = `
+      <div class="no-results">
+        Try a broader term such as <b>leak</b>, <b>pressure</b>, <b>breaker</b>,
+        <b>cooling</b>, <b>battery</b>, or <b>watering</b>.
+      </div>
+    `;
+    panel.style.display = "block";
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  renderSteps(
+    "🔎 Search Results",
+    matches,
+    `${matches.length} matching guide${matches.length === 1 ? "" : "s"} across ${matchingTrades.size} trade${matchingTrades.size === 1 ? "" : "s"}`
+  );
 }
+
+function clearSearch() {
+  const searchInput = document.getElementById("search");
+  const cards = document.querySelectorAll(".card");
+  const panel = document.getElementById("guidePanel");
+
+  searchInput.value = "";
+
+  cards.forEach(card => {
+    card.style.display = "block";
+  });
+
+  panel.style.display = "none";
+  searchInput.focus();
+}
+
+document.getElementById("search").addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchGuides();
+  }
+
+  if (event.key === "Escape") {
+    clearSearch();
+  }
+});
 
 Object.entries(guides).forEach(([trade, data]) => {
   if (data.steps.length !== 20) {
