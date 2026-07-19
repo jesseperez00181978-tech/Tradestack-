@@ -3,192 +3,306 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#ff5a00" />
 <title>TradeStack v0.9</title>
 <style>
+  :root {
+    --bg: #0d151d;
+    --surface: #182430;
+    --surface-2: #223140;
+    --surface-3: #2b3a47;
+    --border: #34485a;
+    --text: #f5f7f9;
+    --muted: #b8c8d4;
+    --orange: #ff6a00;
+    --orange-2: #ff3c00;
+    --gold: #ffbf69;
+    --green: #55c98a;
+    --yellow: #ffd166;
+    --red: #ff5a5f;
+    --blue: #66b3ff;
+    --shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
   body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #101820;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  button, input, select { font: inherit; }
+
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid rgba(255, 191, 105, 0.55);
+    outline-offset: 2px;
+  }
+
+  .release-bar {
+    background: #1f7a3d;
     color: white;
+    padding: 11px 16px;
+    text-align: center;
+    font-weight: 800;
+    line-height: 1.35;
   }
 
   header {
     background: linear-gradient(135deg, #ff8c00, #ff3c00);
-    padding: 25px;
+    padding: 28px 18px;
     text-align: center;
+    box-shadow: var(--shadow);
   }
 
   header h1 {
     margin: 0;
-    font-size: 2.2rem;
+    font-size: clamp(2rem, 7vw, 2.8rem);
   }
 
   header p {
-    margin-top: 8px;
-    font-size: 1rem;
+    margin: 9px auto 0;
+    max-width: 720px;
+    line-height: 1.5;
   }
 
   .container {
     padding: 18px;
-    max-width: 900px;
+    max-width: 1050px;
     margin: auto;
   }
 
-  .search-box {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    font-size: 1rem;
-    margin-bottom: 20px;
+  .status-row,
+  .stats-grid,
+  .filter-row,
+  .grid {
+    display: grid;
+    gap: 12px;
   }
 
+  .status-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 14px;
+  }
+
+  .status-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 13px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .status-chip strong { color: var(--text); }
+  .status-chip.online { border-left: 5px solid var(--green); }
+  .status-chip.offline { border-left: 5px solid var(--yellow); }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 18px;
+  }
+
+  .stat-card {
+    background: linear-gradient(145deg, #223140, #182430);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .stat-value {
+    display: block;
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+
+  .stat-label {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
 
   .search-row {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
 
-  .search-row .search-box {
-    margin-bottom: 0;
-    flex: 1;
+  .search-box {
+    width: 100%;
+    min-width: 0;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: white;
+    color: #111;
+    font-size: 1rem;
   }
 
-  .search-button,
-  .clear-button {
+  .primary-button,
+  .secondary-button,
+  .filter-button,
+  .small-button,
+  .favorite-button,
+  .close-button {
     border: none;
     border-radius: 10px;
-    padding: 0 18px;
-    font-size: 1rem;
-    font-weight: bold;
     cursor: pointer;
+    font-weight: 800;
+    min-height: 44px;
   }
 
-  .search-button {
+  .primary-button {
+    padding: 0 18px;
     background: linear-gradient(135deg, #ff8c00, #ff3c00);
     color: white;
   }
 
-  .clear-button {
+  .secondary-button,
+  .close-button {
+    padding: 0 16px;
     background: #334454;
     color: white;
   }
 
-  .search-button:active,
-  .clear-button:active {
-    transform: scale(0.98);
+  .primary-button:active,
+  .secondary-button:active,
+  .filter-button:active,
+  .small-button:active,
+  .favorite-button:active,
+  .close-button:active { transform: scale(0.98); }
+
+  .filter-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 18px;
   }
 
-  .no-results {
-    background: #223140;
+  .filter-row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .filter-button,
+  .filter-select {
+    width: 100%;
+    min-height: 44px;
     border-radius: 10px;
-    padding: 16px;
-    line-height: 1.5;
+    border: 1px solid var(--border);
+    background: #263746;
+    color: white;
+    padding: 0 10px;
   }
 
-  .trade-label {
-    display: inline-block;
-    margin-bottom: 8px;
-    color: #ffb347;
-    font-size: 0.85rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+  .filter-button.active {
+    background: linear-gradient(135deg, #ff8c00, #ff3c00);
+    border-color: transparent;
   }
 
-  @media (max-width: 600px) {
-    .search-row {
-      flex-wrap: wrap;
-    }
-
-    .search-row .search-box {
-      flex-basis: 100%;
-    }
-
-    .search-button,
-    .clear-button {
-      min-height: 46px;
-      flex: 1;
-    }
+  .filter-hint {
+    margin: 10px 2px 0;
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.45;
   }
 
   .grid {
-    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
   }
 
-  .card {
+  .trade-card {
     background: #1f2a36;
-    border: 1px solid #334;
+    border: 1px solid var(--border);
     border-radius: 14px;
     padding: 18px;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease;
+    color: white;
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
   }
 
-  .card:hover {
+  .trade-card:hover {
     background: #263747;
+    border-color: #58738a;
     transform: translateY(-2px);
   }
 
-  .card h2 {
+  .trade-card h2 {
     font-size: 1.1rem;
     margin: 10px 0 5px;
   }
 
-  .emoji {
-    font-size: 2rem;
+  .trade-card p {
+    color: var(--muted);
+    margin-bottom: 0;
   }
+
+  .emoji { font-size: 2rem; }
 
   .panel {
     margin-top: 25px;
-    background: #182430;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 14px;
     padding: 18px;
     display: none;
+    box-shadow: var(--shadow);
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
   }
 
   .panel h2 {
-    color: #ffb347;
+    color: var(--gold);
+    margin: 0 0 8px;
   }
 
   .guide-count {
     color: #c9d3dc;
-    margin-top: -8px;
-    margin-bottom: 16px;
     font-size: 0.95rem;
+    line-height: 1.4;
   }
 
-  .step {
-    background: #223140;
-    padding: 12px;
+  .no-results {
+    background: var(--surface-2);
     border-radius: 10px;
-    margin: 10px 0;
-  }
-
-  .step p {
-    margin: 8px 0 0;
-    line-height: 1.45;
+    padding: 16px;
+    line-height: 1.55;
   }
 
   .guide-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 12px 0;
     overflow: hidden;
-    border: 1px solid #34485a;
   }
 
-  .guide-top {
+  .guide-summary {
     display: grid;
-    grid-template-columns: 150px 1fr;
+    grid-template-columns: 145px 1fr;
     gap: 14px;
+    padding: 12px;
     align-items: stretch;
   }
 
   .part-picture {
-    min-height: 130px;
+    min-height: 125px;
     border-radius: 10px;
     background: linear-gradient(145deg, #31485b, #16222d);
     display: flex;
@@ -203,133 +317,278 @@
     max-height: 130px;
   }
 
+  .guide-heading-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .guide-title {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+
+  .trade-label {
+    display: inline-block;
+    margin-bottom: 7px;
+    color: var(--gold);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .guide-symptom {
+    margin: 8px 0 0;
+    color: #e7edf2;
+    line-height: 1.45;
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 11px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 0.77rem;
+    font-weight: 900;
+    border: 1px solid rgba(255,255,255,0.13);
+    background: #182631;
+  }
+
+  .difficulty-easy { color: #8ce6b0; }
+  .difficulty-moderate { color: #ffe29a; }
+  .difficulty-advanced { color: #ff8f93; }
+  .cost-badge { color: #9dd1ff; }
+
+  .guide-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .small-button,
+  .favorite-button {
+    padding: 0 12px;
+    background: #334454;
+    color: white;
+  }
+
+  .small-button.open {
+    background: linear-gradient(135deg, #ff8c00, #ff3c00);
+  }
+
+  .favorite-button {
+    min-width: 46px;
+    font-size: 1.1rem;
+  }
+
+  .favorite-button.saved {
+    background: #6d5013;
+    color: #ffd166;
+  }
+
+  .guide-body {
+    border-top: 1px solid var(--border);
+    padding: 12px;
+    background: #1b2a36;
+  }
+
   .detail-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
-    margin-top: 12px;
   }
 
   .detail-box {
     background: #182631;
-    border-left: 4px solid #ff8c00;
+    border-left: 4px solid var(--orange);
     border-radius: 8px;
     padding: 10px;
-    line-height: 1.4;
+    line-height: 1.45;
   }
 
   .detail-box b {
     display: block;
-    color: #ffbf69;
+    color: var(--gold);
     margin-bottom: 4px;
   }
 
-  .safety-low { border-left-color: #55c98a; }
-  .safety-medium { border-left-color: #ffd166; }
-  .safety-high { border-left-color: #ff5a5f; }
+  .safety-low { border-left-color: var(--green); }
+  .safety-medium { border-left-color: var(--yellow); }
+  .safety-high { border-left-color: var(--red); }
 
   .repair-note {
     margin-top: 10px;
     padding: 10px;
     border-radius: 8px;
-    background: #2b3742;
+    background: var(--surface-3);
     color: #e7edf2;
+    line-height: 1.45;
   }
 
-  @media (max-width: 620px) {
-    .guide-top { grid-template-columns: 1fr; }
-    .part-picture { min-height: 160px; }
-    .detail-grid { grid-template-columns: 1fr; }
+  .body-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: #111c25;
+    color: white;
+    border: 1px solid #4b6172;
+    box-shadow: var(--shadow);
+    border-radius: 10px;
+    padding: 12px 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s ease;
+    z-index: 20;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 
   footer {
     text-align: center;
-    padding: 20px;
+    padding: 22px;
     color: #aaa;
     font-size: 0.9rem;
   }
 
-#topBtn{position:fixed;right:18px;bottom:18px;background:#ff6a00;color:#fff;border:none;
-border-radius:50%;width:54px;height:54px;font-size:24px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.4);}
+  #topBtn {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4);
+    z-index: 10;
+  }
 
+  @media (max-width: 760px) {
+    .filter-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filter-row > :last-child { grid-column: span 2; }
+  }
 
-.favorite-btn{background:#ffb347;color:#111;border:none;border-radius:8px;padding:6px 10px;font-weight:bold;cursor:pointer;margin-top:10px}
+  @media (max-width: 620px) {
+    .search-row { flex-wrap: wrap; }
+    .search-box { flex-basis: 100%; }
+    .primary-button, .secondary-button { flex: 1; min-height: 46px; }
+    .guide-summary { grid-template-columns: 1fr; }
+    .part-picture { min-height: 155px; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .status-row { grid-template-columns: 1fr; }
+  }
 
+  @media (max-width: 430px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .filter-row { grid-template-columns: 1fr; }
+    .filter-row > :last-child { grid-column: auto; }
+    .panel-header { flex-direction: column; }
+    .close-button { width: 100%; }
+  }
 </style>
 </head>
 <body>
 
-<div style="background:#1f7a3d;color:white;padding:12px;text-align:center;font-weight:bold">
-🚀 TradeStack v0.9 Preview • Faster Search • Ready for Upcoming Favorites, Costs, Difficulty & Offline Mode
+<div class="release-bar">
+  🚀 TradeStack v0.9 • Favorites • DIY Cost Ranges • Difficulty Filters • Recent Guides • Offline-Ready Data
 </div>
-
 
 <header>
   <h1>🛠️ TradeStack</h1>
-  <p>Visual troubleshooting guides with likely causes, parts, tools, and repair steps.</p>
+  <p>120 visual troubleshooting guides with likely causes, parts, tools, repair steps, safety levels, cost ranges, and difficulty ratings.</p>
 </header>
 
-<div class="container">
+<main class="container">
+  <div class="status-row">
+    <div class="status-chip" id="networkStatus"><strong>Checking connection…</strong></div>
+    <div class="status-chip"><strong>Offline-ready:</strong> All 120 guide records are stored inside this file.</div>
+  </div>
+
+  <section class="stats-grid" aria-label="TradeStack statistics">
+    <div class="stat-card"><span class="stat-value" id="totalStat">120</span><span class="stat-label">Total guides</span></div>
+    <div class="stat-card"><span class="stat-value" id="favoriteStat">0</span><span class="stat-label">Saved favorites</span></div>
+    <div class="stat-card"><span class="stat-value" id="recentStat">0</span><span class="stat-label">Recently opened</span></div>
+  </section>
+
   <div class="search-row">
-    <input
-      class="search-box"
-      id="search"
-      type="search"
-      placeholder="Search all 120 troubleshooting guides..."
-      aria-label="Search TradeStack troubleshooting guides"
-    />
-    <button class="search-button" type="button" onclick="searchGuides()">Search</button>
-    <button class="clear-button" type="button" onclick="clearSearch()">Clear</button>
+    <input class="search-box" id="search" type="search" placeholder="Search problem, symptom, part, tool, or cause…" aria-label="Search all TradeStack troubleshooting guides" autocomplete="off" />
+    <button class="primary-button" type="button" id="searchButton">Search</button>
+    <button class="secondary-button" type="button" id="clearButton">Clear</button>
   </div>
 
-  <div class="grid" id="tradeGrid">
-    <div class="card" data-trade="irrigation" onclick="showGuide('irrigation')">
-      <div class="emoji">💧</div>
-      <h2>Irrigation</h2>
-      <p>Valves, timers, leaks, zones</p>
+  <section class="filter-panel" aria-label="Guide filters">
+    <div class="filter-row">
+      <button class="filter-button active" type="button" data-view="all">All Guides</button>
+      <button class="filter-button" type="button" data-view="favorites">⭐ Favorites</button>
+      <button class="filter-button" type="button" data-view="recent">🕘 Recent</button>
+      <select class="filter-select" id="difficultyFilter" aria-label="Filter by difficulty">
+        <option value="all">All Difficulty</option>
+        <option value="Easy">Easy</option>
+        <option value="Moderate">Moderate</option>
+        <option value="Advanced">Advanced</option>
+      </select>
+      <select class="filter-select" id="costFilter" aria-label="Filter by cost">
+        <option value="all">All DIY Costs</option>
+        <option value="$">$ Lower cost</option>
+        <option value="$$">$$ Mid-range</option>
+        <option value="$$$">$$$ Higher cost</option>
+      </select>
     </div>
+    <p class="filter-hint">Cost ranges are rough DIY parts/material estimates, not labor quotes. Diagnose first, because replacing random parts is merely shopping with extra steps.</p>
+  </section>
 
-    <div class="card" data-trade="hvac" onclick="showGuide('hvac')">
-      <div class="emoji">❄️</div>
-      <h2>HVAC</h2>
-      <p>Cooling, heating, airflow</p>
+  <section class="grid" id="tradeGrid" aria-label="Trade categories">
+    <button class="trade-card" type="button" data-trade="irrigation"><div class="emoji">💧</div><h2>Irrigation</h2><p>Valves, timers, leaks, zones</p></button>
+    <button class="trade-card" type="button" data-trade="hvac"><div class="emoji">❄️</div><h2>HVAC</h2><p>Cooling, heating, airflow</p></button>
+    <button class="trade-card" type="button" data-trade="plumbing"><div class="emoji">🚿</div><h2>Plumbing</h2><p>Leaks, clogs, pressure</p></button>
+    <button class="trade-card" type="button" data-trade="electrical"><div class="emoji">⚡</div><h2>Electrical</h2><p>Power, breakers, outlets</p></button>
+    <button class="trade-card" type="button" data-trade="landscaping"><div class="emoji">🌱</div><h2>Landscaping</h2><p>Plants, trimming, cleanup</p></button>
+    <button class="trade-card" type="button" data-trade="automotive"><div class="emoji">🚗</div><h2>Automotive</h2><p>Basic vehicle checks</p></button>
+  </section>
+
+  <section class="panel" id="guidePanel" aria-live="polite">
+    <div class="panel-header">
+      <div>
+        <h2 id="guideTitle"></h2>
+        <div class="guide-count" id="guideCount"></div>
+      </div>
+      <button class="close-button" type="button" id="closePanel">Close Guides</button>
     </div>
-
-    <div class="card" data-trade="plumbing" onclick="showGuide('plumbing')">
-      <div class="emoji">🚿</div>
-      <h2>Plumbing</h2>
-      <p>Leaks, clogs, pressure</p>
-    </div>
-
-    <div class="card" data-trade="electrical" onclick="showGuide('electrical')">
-      <div class="emoji">⚡</div>
-      <h2>Electrical</h2>
-      <p>Power, breakers, outlets</p>
-    </div>
-
-    <div class="card" data-trade="landscaping" onclick="showGuide('landscaping')">
-      <div class="emoji">🌱</div>
-      <h2>Landscaping</h2>
-      <p>Plants, trimming, cleanup</p>
-    </div>
-
-    <div class="card" data-trade="automotive" onclick="showGuide('automotive')">
-      <div class="emoji">🚗</div>
-      <h2>Automotive</h2>
-      <p>Basic vehicle checks</p>
-    </div>
-  </div>
-
-  <div class="panel" id="guidePanel">
-    <h2 id="guideTitle"></h2>
-    <div class="guide-count" id="guideCount"></div>
     <div id="guideSteps"></div>
-  </div>
-</div>
+  </section>
+</main>
 
-<footer>
-  TradeStack v0.9 - Built by Jesse Perez - With assistance from ChatGPT
-</footer>
+<footer>TradeStack v0.9 - Built by Jesse Perez - With assistance from ChatGPT</footer>
+<div class="toast" id="toast" role="status"></div>
+<button id="topBtn" type="button" aria-label="Back to top">↑</button>
 
 <script>
 const guides = {
@@ -499,8 +758,44 @@ const tradeIcons = {
   automotive: "🚗"
 };
 
+const STORAGE = {
+  favorites: "tradestack-v09-favorites",
+  recent: "tradestack-v09-recent"
+};
+
+const state = {
+  view: "all",
+  trade: null,
+  query: "",
+  difficulty: "all",
+  cost: "all"
+};
+
+let favorites = new Set(loadList(STORAGE.favorites));
+let recent = loadList(STORAGE.recent).slice(0, 12);
+let toastTimer;
+let searchTimer;
+
+function loadList(key) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch (error) {
+    console.warn(`Could not load ${key}`, error);
+    return [];
+  }
+}
+
+function saveList(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn(`Could not save ${key}`, error);
+  }
+}
+
 function escapeHtml(value) {
-  return String(value || "")
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -508,64 +803,105 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function normalizeText(value) {
+  return String(value ?? "").toLowerCase().trim();
+}
+
+function slugify(value) {
+  return normalizeText(value)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function guideId(tradeKey, step) {
+  return `${tradeKey}::${slugify(step.problem)}`;
+}
+
+function tradeName(tradeKey) {
+  const trade = guides[tradeKey];
+  if (!trade) return tradeKey;
+  return trade.title
+    .replace(/^[^A-Za-z0-9]+/, "")
+    .replace(" Troubleshooting", "")
+    .replace(" Basic", "");
+}
+
 function getGuideDetails(step, tradeKey) {
-  const text = `${step.problem} ${step.symptom} ${step.fix}`.toLowerCase();
+  const text = normalizeText(`${step.problem} ${step.symptom} ${step.fix}`);
   let cause = "Wear, damage, loose connections, blockage, incorrect adjustment, or loss of power/flow.";
   let parts = "Inspect first; replace only the failed component.";
   let tools = "Flashlight, gloves, basic hand tools, and the correct test tool for the trade.";
   let safety = "Medium";
   let note = "Confirm the failure before buying parts. Compare model numbers, sizes, ratings, and connection types.";
   let picture = step.problem;
+  let cost = "$10-$75";
+  let costTier = "$$";
+  let difficulty = "Moderate";
 
   const rules = [
-    [/solenoid/, "Failed irrigation solenoid or damaged waterproof splice.", "Replacement solenoid, waterproof wire connectors.", "Multimeter, wire strippers, adjustable pliers, screwdriver.", "Medium", "Solenoid"],
-    [/diaphragm|zone won't turn off|valve leaking/, "Debris under the diaphragm, torn diaphragm, or damaged valve seal.", "Valve diaphragm kit, O-rings, bonnet screws if damaged.", "Screwdriver, small brush, channel-lock pliers.", "Medium", "Valve diaphragm"],
-    [/sprinkler head|spray head|rotor/, "Broken body, clogged nozzle, low pressure, or stripped internal gears.", "Matching spray head/rotor, nozzle, swing pipe fitting, riser.", "Shovel, sprinkler key, pliers, thread tape.", "Low", "Sprinkler head"],
-    [/controller|timer|station output/, "Power loss, failed transformer/fuse, bad programming, or damaged station output.", "Controller fuse, transformer, compatible controller if board failed.", "Multimeter, screwdriver, wire labels.", "High", "Irrigation controller"],
-    [/capacitor/, "Capacitor has weakened, opened, shorted, or bulged from heat and age.", "Correct µF-rated run/start capacitor with equal or higher voltage rating.", "Multimeter with capacitance, insulated screwdriver, needle-nose pliers.", "High", "HVAC capacitor"],
-    [/contactor/, "Burned contacts, weak coil, low control voltage, or loose wiring.", "Equivalent contactor with matching poles, coil voltage, and amp rating.", "Multimeter, insulated screwdriver, nut driver.", "High", "HVAC contactor"],
-    [/filter|airflow|blower|frozen evaporator/, "Restricted airflow from a dirty filter, coil, blower wheel, duct, or closed register.", "Correct air filter; blower/coil parts only after testing.", "Manometer if available, flashlight, nut driver, coil brush.", "High", "Air filter and blower"],
-    [/flame sensor|burners light then shut off/, "Flame sensor contamination, poor grounding, or weak flame signal.", "Flame sensor only if cleaning and electrical checks fail.", "Nut driver, fine abrasive pad, multimeter with microamp function.", "High", "Flame sensor"],
-    [/faucet|cartridge/, "Worn cartridge, washer, seat, O-ring, or mineral buildup.", "Matching faucet cartridge/washer kit and O-rings.", "Adjustable wrench, screwdriver, hex keys, cartridge puller if needed.", "Low", "Faucet cartridge"],
-    [/toilet|flapper|fill valve/, "Worn flapper, faulty fill valve, poor chain adjustment, or leaking seal.", "Flapper, fill valve, tank bolts, gasket as needed.", "Adjustable pliers, sponge, screwdriver.", "Low", "Toilet repair parts"],
-    [/drain|clog|backup/, "Hair, grease, roots, foreign material, or a blocked vent/main line.", "Trap washers or cleanout cap; cable head chosen for blockage.", "Plunger, hand auger/drain snake, bucket, gloves.", "Medium", "Drain snake"],
-    [/gfci|outlet|receptacle/, "Tripped protection, loose terminal, failed device, moisture, or upstream open connection.", "Correctly rated GFCI/receptacle and cover if testing confirms failure.", "Non-contact tester, multimeter, insulated screwdriver, outlet tester.", "High", "GFCI outlet"],
-    [/breaker|panel/, "Overload, short circuit, ground fault, loose connection, or failed breaker.", "Exact panel-listed breaker only after circuit fault is isolated.", "Clamp meter, multimeter, insulated tools, PPE.", "High", "Circuit breaker"],
-    [/battery|will not crank|alternator/, "Weak battery, corroded terminals, poor ground, charging failure, or starter circuit fault.", "Battery, terminal ends, alternator, fuse, or starter only after test results.", "Digital multimeter, battery tester, socket set, wire brush.", "High", "Car battery"],
-    [/brake|grinding brakes/, "Worn pads, damaged rotor, seized caliper, fluid leak, or air in hydraulic system.", "Pads, rotors, caliper/hose, brake fluid as confirmed.", "Jack stands, lug wrench, socket set, caliper tool, torque wrench.", "High", "Brake parts"],
-    [/overheating|coolant/, "Low coolant, leak, failed thermostat, fan, water pump, radiator restriction, or engine fault.", "Coolant, hose, thermostat, fan assembly, water pump, or radiator as tested.", "Cooling-system pressure tester, scan tool, basic hand tools.", "High", "Cooling system"],
-    [/mower|blade|scalped lawn/, "Dull/bent blade, incorrect deck height, uneven terrain, or excessive mowing speed.", "Correct mower blade, spindle/belt if damaged.", "Socket set, blade holder, torque wrench, safety glasses.", "Medium", "Mower blade"],
-    [/plant|shrub|tree|sod|lawn|grass/, "Watering, soil, heat, pest, disease, planting-depth, or root-zone problem.", "Plant-specific treatment, mulch, soil amendment, replacement plant only if necessary.", "Soil probe, pruners, shovel, moisture meter.", "Low", "Plant and soil"],
-    [/leak|broken mainline|broken lateral/, "Cracked pipe/fitting, failed seal, freeze damage, movement, or excessive pressure.", "Matching pipe, pressure-rated coupling, primer/cement or approved repair fitting.", "Shovel, pipe cutter, deburring tool, wrenches.", "Medium", "Pipe repair fitting"]
+    [/solenoid/, "Failed irrigation solenoid or damaged waterproof splice.", "Replacement solenoid and waterproof wire connectors.", "Multimeter, wire strippers, adjustable pliers, screwdriver.", "Medium", "Solenoid", "$15-$45", "$$", "Moderate"],
+    [/diaphragm|zone won't turn off|valve leaking/, "Debris under the diaphragm, torn diaphragm, or damaged valve seal.", "Valve diaphragm kit, O-rings, bonnet screws if damaged.", "Screwdriver, small brush, channel-lock pliers.", "Medium", "Valve diaphragm", "$10-$40", "$", "Moderate"],
+    [/sprinkler head|spray head|rotor|nozzle/, "Broken body, clogged nozzle, low pressure, or stripped internal gears.", "Matching spray head or rotor, nozzle, swing-pipe fitting, or riser.", "Shovel, sprinkler key, pliers, thread tape.", "Low", "Sprinkler head", "$5-$35", "$", "Easy"],
+    [/controller|timer|station output/, "Power loss, failed transformer or fuse, bad programming, or damaged station output.", "Controller fuse, transformer, or compatible controller if the board failed.", "Multimeter, screwdriver, wire labels.", "High", "Irrigation controller", "$15-$300", "$$$", "Advanced"],
+    [/drip|emitter/, "Clogged filter or emitter, failed regulator, pinched tubing, or incorrect runtime.", "Emitter, filter, regulator, tubing, or fittings as confirmed.", "Flush tool, cutter, punch tool, pressure gauge.", "Low", "Drip components", "$2-$60", "$", "Easy"],
+    [/capacitor/, "Capacitor has weakened, opened, shorted, or bulged from heat and age.", "Correct µF-rated run or start capacitor with equal or higher voltage rating.", "Multimeter with capacitance, insulated screwdriver, needle-nose pliers.", "High", "HVAC capacitor", "$15-$60", "$$", "Advanced"],
+    [/contactor/, "Burned contacts, weak coil, low control voltage, or loose wiring.", "Equivalent contactor with matching poles, coil voltage, and amp rating.", "Multimeter, insulated screwdriver, nut driver.", "High", "HVAC contactor", "$20-$80", "$$", "Advanced"],
+    [/filter|airflow|blower|frozen evaporator/, "Restricted airflow from a dirty filter, coil, blower wheel, duct, or closed register.", "Correct air filter; blower or coil parts only after testing.", "Manometer if available, flashlight, nut driver, coil brush.", "High", "Air filter and blower", "$10-$150", "$$", "Moderate"],
+    [/flame sensor|burners light then shut off/, "Flame sensor contamination, poor grounding, or weak flame signal.", "Flame sensor only if cleaning and electrical checks fail.", "Nut driver, fine abrasive pad, multimeter with microamp function.", "High", "Flame sensor", "$0-$60", "$", "Advanced"],
+    [/compressor|reversing valve|refrigerant|superheat|subcooling/, "Electrical, airflow, refrigerant-charge, restriction, or sealed-system fault.", "Exact component depends on pressure, temperature, and electrical test results.", "Manufacturer data, gauges, temperature probes, meter, and required PPE.", "High", "HVAC sealed system", "$50-$1,500+", "$$$", "Advanced"],
+    [/faucet|cartridge/, "Worn cartridge, washer, seat, O-ring, or mineral buildup.", "Matching faucet cartridge or washer kit and O-rings.", "Adjustable wrench, screwdriver, hex keys, cartridge puller if needed.", "Low", "Faucet cartridge", "$5-$80", "$$", "Easy"],
+    [/toilet|flapper|fill valve/, "Worn flapper, faulty fill valve, poor chain adjustment, or leaking seal.", "Flapper, fill valve, tank bolts, or gasket as needed.", "Adjustable pliers, sponge, screwdriver.", "Low", "Toilet repair parts", "$5-$45", "$", "Easy"],
+    [/water heater/, "Heating element, thermostat, pilot, gas-control, venting, or tank failure.", "Element, thermostat, valve, anode, or complete heater only after diagnosis.", "Multimeter, wrenches, hose, combustion tools where required.", "High", "Water heater", "$20-$900+", "$$$", "Advanced"],
+    [/drain|clog|backup|sewer/, "Hair, grease, roots, foreign material, or a blocked vent or main line.", "Trap washers or cleanout cap; cable head chosen for blockage.", "Plunger, hand auger or drain snake, bucket, gloves.", "Medium", "Drain snake", "$0-$100", "$$", "Moderate"],
+    [/gfci|outlet|receptacle/, "Tripped protection, loose terminal, failed device, moisture, or upstream open connection.", "Correctly rated GFCI or receptacle and cover if testing confirms failure.", "Non-contact tester, multimeter, insulated screwdriver, outlet tester.", "High", "GFCI outlet", "$10-$40", "$", "Advanced"],
+    [/breaker|panel|open neutral|reversed polarity|no ground/, "Overload, short circuit, ground fault, loose connection, wiring defect, or failed breaker.", "Exact panel-listed breaker or wiring repair only after the fault is isolated.", "Clamp meter, multimeter, insulated tools, PPE.", "High", "Circuit breaker", "$15-$150", "$$", "Advanced"],
+    [/battery|will not crank|alternator|starter/, "Weak battery, corroded terminals, poor ground, charging failure, or starter-circuit fault.", "Battery, terminal ends, alternator, fuse, or starter only after test results.", "Digital multimeter, battery tester, socket set, wire brush.", "High", "Car battery", "$10-$450", "$$$", "Moderate"],
+    [/brake|grinding brakes/, "Worn pads, damaged rotor, seized caliper, fluid leak, or air in the hydraulic system.", "Pads, rotors, caliper, hose, or brake fluid as confirmed.", "Jack stands, lug wrench, socket set, caliper tool, torque wrench.", "High", "Brake parts", "$40-$500", "$$$", "Advanced"],
+    [/overheating|coolant/, "Low coolant, leak, failed thermostat, fan, water pump, radiator restriction, or engine fault.", "Coolant, hose, thermostat, fan assembly, water pump, or radiator as tested.", "Cooling-system pressure tester, scan tool, basic hand tools.", "High", "Cooling system", "$15-$700", "$$$", "Advanced"],
+    [/tire|wheel|suspension|steering/, "Wear, imbalance, looseness, damage, or alignment error.", "Tire, bearing, joint, link, bushing, strut, or related hardware after inspection.", "Jack stands, torque wrench, pry bar, tread gauge, alignment equipment as needed.", "High", "Chassis parts", "$10-$900", "$$$", "Advanced"],
+    [/mower|blade|scalped lawn/, "Dull or bent blade, incorrect deck height, uneven terrain, or excessive mowing speed.", "Correct mower blade, spindle, or belt if damaged.", "Socket set, blade holder, torque wrench, safety glasses.", "Medium", "Mower blade", "$20-$150", "$$", "Moderate"],
+    [/plant|shrub|tree|sod|lawn|grass|weed|mulch|soil|drainage/, "Watering, soil, heat, pest, disease, planting-depth, or root-zone problem.", "Plant-specific treatment, mulch, soil amendment, or replacement plant only if necessary.", "Soil probe, pruners, shovel, moisture meter.", "Low", "Plant and soil", "$0-$200", "$$", "Easy"],
+    [/leak|broken mainline|broken lateral|pipe joint|hose bib/, "Cracked pipe or fitting, failed seal, freeze damage, movement, or excessive pressure.", "Matching pipe, pressure-rated coupling, primer and cement, or approved repair fitting.", "Shovel, pipe cutter, deburring tool, wrenches.", "Medium", "Pipe repair fitting", "$10-$120", "$$", "Moderate"]
   ];
 
-  for (const [pattern, c, p, t, s, pic] of rules) {
+  for (const [pattern, c, p, t, s, pic, range, tier, level] of rules) {
     if (pattern.test(text)) {
-      cause = c; parts = p; tools = t; safety = s; picture = pic; break;
+      cause = c;
+      parts = p;
+      tools = t;
+      safety = s;
+      picture = pic;
+      cost = range;
+      costTier = tier;
+      difficulty = level;
+      break;
     }
   }
 
   if (text.includes("gas") || text.includes("fuel smell") || text.includes("shock") || text.includes("panel buzzing")) {
     safety = "High";
+    difficulty = "Advanced";
     note = "Stop work if there is gas odor, active arcing, smoke, severe heat, or exposed live conductors. Use qualified service.";
   }
 
-  return { cause, parts, tools, safety, note, picture };
+  if (safety === "High" && difficulty === "Easy") difficulty = "Moderate";
+  return { cause, parts, tools, safety, note, picture, cost, costTier, difficulty };
 }
 
-function createPartPicture(label, tradeKey) {
+function createPartPicture(label, tradeKey, uniqueKey) {
   const safeLabel = escapeHtml(label.length > 24 ? `${label.slice(0, 24)}…` : label);
   const icon = tradeIcons[tradeKey] || "🛠️";
+  const gradientId = `partGrad-${slugify(uniqueKey)}`;
   return `
     <svg viewBox="0 0 320 190" role="img" aria-label="${safeLabel} part illustration">
       <defs>
-        <linearGradient id="partGrad" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="${gradientId}" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#ff9d2e" />
           <stop offset="100%" stop-color="#ff3c00" />
         </linearGradient>
       </defs>
       <rect x="4" y="4" width="312" height="182" rx="18" fill="#14212b" stroke="#4b6172" stroke-width="3" />
-      <circle cx="80" cy="83" r="49" fill="url(#partGrad)" />
+      <circle cx="80" cy="83" r="49" fill="url(#${gradientId})" />
       <text x="80" y="100" text-anchor="middle" font-size="49">${icon}</text>
       <rect x="146" y="46" width="137" height="18" rx="9" fill="#405568" />
       <rect x="146" y="76" width="111" height="13" rx="6" fill="#2c3f50" />
@@ -575,187 +911,386 @@ function createPartPicture(label, tradeKey) {
     </svg>`;
 }
 
-function renderGuideCard(step, index, tradeKey, tradeTitle = "") {
-  const details = getGuideDetails(step, tradeKey);
-  const safetyClass = `safety-${details.safety.toLowerCase()}`;
-  const tradeLabel = tradeTitle ? `<span class="trade-label">${escapeHtml(tradeTitle)}</span>` : "";
-
-  return `
-    ${tradeLabel}
-    <div class="guide-top">
-      <div class="part-picture">${createPartPicture(details.picture, tradeKey)}</div>
-      <div>
-        <strong>${index + 1}. ${escapeHtml(step.problem)}</strong>
-        <p><b>Symptom:</b> ${escapeHtml(step.symptom)}</p>
-        <p><b>Repair steps:</b> ${escapeHtml(step.fix)}</p>
-      </div>
-    </div>
-    <div class="detail-grid">
-      <div class="detail-box"><b>🎯 Most likely cause</b>${escapeHtml(details.cause)}</div>
-      <div class="detail-box"><b>🧩 Parts possibly needed</b>${escapeHtml(details.parts)}</div>
-      <div class="detail-box"><b>🧰 Tools needed</b>${escapeHtml(details.tools)}</div>
-      <div class="detail-box ${safetyClass}"><b>⚠️ Safety level: ${details.safety}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing." : "Use PPE and isolate the system before repair."}</div>
-    </div>
-    <div class="repair-note"><b>📋 Field note:</b> ${escapeHtml(details.note)}</div><button class="favorite-btn" onclick="toggleFavorite(\`${tradeKey}:${step.problem}\`, this)">⭐ Favorite</button>`;
-}
-
-function showGuide(type) {
-  const panel = document.getElementById("guidePanel");
-  const title = document.getElementById("guideTitle");
-  const count = document.getElementById("guideCount");
-  const steps = document.getElementById("guideSteps");
-  const trade = guides[type];
-
-  if (!trade) return;
-
-  title.textContent = trade.title;
-  count.textContent = `${trade.steps.length} troubleshooting guides`;
-  steps.innerHTML = "";
-
-  trade.steps.forEach((step, index) => {
-    const div = document.createElement("div");
-    div.className = "step guide-card";
-    div.innerHTML = renderGuideCard(step, index, type);
-    steps.appendChild(div);
-  });
-
-  panel.style.display = "block";
-  panel.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function normalizeText(value) {
-  return String(value || "").toLowerCase().trim();
-}
-
-function renderSteps(titleText, matchingSteps, countText) {
-  const panel = document.getElementById("guidePanel");
-  const title = document.getElementById("guideTitle");
-  const count = document.getElementById("guideCount");
-  const steps = document.getElementById("guideSteps");
-
-  title.textContent = titleText;
-  count.textContent = countText;
-  steps.innerHTML = "";
-
-  matchingSteps.forEach((result, index) => {
-    const div = document.createElement("div");
-    div.className = "step guide-card";
-    div.innerHTML = renderGuideCard(result.step, index, result.tradeKey, result.tradeTitle);
-
-    steps.appendChild(div);
-  });
-
-  panel.style.display = "block";
-  panel.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function searchGuides() {
-  const searchInput = document.getElementById("search");
-  const query = normalizeText(searchInput.value);
-  const cards = document.querySelectorAll(".card");
-  const panel = document.getElementById("guidePanel");
-  const title = document.getElementById("guideTitle");
-  const count = document.getElementById("guideCount");
-  const steps = document.getElementById("guideSteps");
-
-  if (!query) {
-    clearSearch();
-    return;
-  }
-
-  const matches = [];
-  const matchingTrades = new Set();
-
+function allGuideResults() {
+  const results = [];
   Object.entries(guides).forEach(([tradeKey, trade]) => {
-    const tradeName = trade.title
-      .replace(/^[^\w]+/, "")
-      .replace(" Troubleshooting", "")
-      .replace(" Basic", "");
-
-    const tradeMatches = normalizeText(`${tradeKey} ${trade.title}`).includes(query);
-
-    trade.steps.forEach(step => {
-      const detail = getGuideDetails(step, tradeKey);
-      const stepText = normalizeText(`${step.problem} ${step.symptom} ${step.fix} ${detail.cause} ${detail.parts} ${detail.tools} ${detail.picture}`);
-
-      if (tradeMatches || stepText.includes(query)) {
-        matches.push({
-          tradeKey,
-          tradeTitle: tradeName,
-          step
-        });
-        matchingTrades.add(tradeKey);
-      }
+    trade.steps.forEach((step, originalIndex) => {
+      const details = getGuideDetails(step, tradeKey);
+      results.push({
+        id: guideId(tradeKey, step),
+        tradeKey,
+        tradeTitle: tradeName(tradeKey),
+        step,
+        originalIndex,
+        details
+      });
     });
   });
+  return results;
+}
 
-  cards.forEach(card => {
-    card.style.display = matchingTrades.has(card.dataset.trade) ? "block" : "none";
-  });
+const guideIndex = allGuideResults();
+const guideMap = new Map(guideIndex.map(result => [result.id, result]));
 
-  if (matches.length === 0) {
-    title.textContent = "🔎 No Results";
-    count.textContent = `No troubleshooting guides matched “${searchInput.value.trim()}”`;
+function searchText(result) {
+  const d = result.details;
+  return normalizeText([
+    result.tradeKey,
+    result.tradeTitle,
+    result.step.problem,
+    result.step.symptom,
+    result.step.fix,
+    d.cause,
+    d.parts,
+    d.tools,
+    d.picture,
+    d.cost,
+    d.costTier,
+    d.difficulty,
+    d.safety
+  ].join(" "));
+}
+
+function getCurrentResults() {
+  let results;
+
+  if (state.view === "favorites") {
+    results = guideIndex.filter(result => favorites.has(result.id));
+  } else if (state.view === "recent") {
+    results = recent.map(id => guideMap.get(id)).filter(Boolean);
+  } else if (state.view === "trade" && state.trade) {
+    results = guideIndex.filter(result => result.tradeKey === state.trade);
+  } else if (state.view === "search" && state.query) {
+    const terms = normalizeText(state.query).split(/\s+/).filter(Boolean);
+    results = guideIndex.filter(result => {
+      const haystack = searchText(result);
+      return terms.every(term => haystack.includes(term));
+    });
+  } else {
+    results = guideIndex.slice();
+  }
+
+  if (state.difficulty !== "all") {
+    results = results.filter(result => result.details.difficulty === state.difficulty);
+  }
+
+  if (state.cost !== "all") {
+    results = results.filter(result => result.details.costTier === state.cost);
+  }
+
+  return results;
+}
+
+function viewTitle() {
+  if (state.view === "favorites") return "⭐ Favorite Guides";
+  if (state.view === "recent") return "🕘 Recently Opened Guides";
+  if (state.view === "trade" && state.trade) return guides[state.trade].title;
+  if (state.view === "search") return `🔎 Search Results for “${state.query}”`;
+  return "🧰 All Troubleshooting Guides";
+}
+
+function activeFilterText() {
+  const filters = [];
+  if (state.difficulty !== "all") filters.push(state.difficulty);
+  if (state.cost !== "all") filters.push(`${state.cost} cost`);
+  return filters.length ? ` • Filtered by ${filters.join(" + ")}` : "";
+}
+
+function renderGuideCard(result, displayIndex) {
+  const { step, details, tradeKey, tradeTitle, id } = result;
+  const saved = favorites.has(id);
+  const safetyClass = `safety-${details.safety.toLowerCase()}`;
+  const difficultyClass = `difficulty-${details.difficulty.toLowerCase()}`;
+
+  return `
+    <article class="guide-card" data-guide-id="${escapeHtml(id)}">
+      <div class="guide-summary">
+        <div class="part-picture">${createPartPicture(details.picture, tradeKey, id)}</div>
+        <div>
+          <span class="trade-label">${escapeHtml(tradeTitle)}</span>
+          <div class="guide-heading-row">
+            <h3 class="guide-title">${displayIndex + 1}. ${escapeHtml(step.problem)}</h3>
+          </div>
+          <p class="guide-symptom"><b>Symptom:</b> ${escapeHtml(step.symptom)}</p>
+          <div class="badge-row">
+            <span class="badge ${difficultyClass}">🧠 ${escapeHtml(details.difficulty)}</span>
+            <span class="badge cost-badge">💵 ${escapeHtml(details.costTier)} • ${escapeHtml(details.cost)}</span>
+            <span class="badge">⚠️ ${escapeHtml(details.safety)} safety</span>
+          </div>
+          <div class="guide-actions">
+            <button class="favorite-button ${saved ? "saved" : ""}" type="button" data-action="favorite" aria-pressed="${saved}" title="Save favorite">${saved ? "★" : "☆"}</button>
+            <button class="small-button open" type="button" data-action="expand" aria-expanded="false">Open Guide</button>
+          </div>
+        </div>
+      </div>
+      <div class="guide-body" hidden>
+        <div class="detail-grid">
+          <div class="detail-box"><b>🔧 Repair steps</b>${escapeHtml(step.fix)}</div>
+          <div class="detail-box"><b>🎯 Most likely cause</b>${escapeHtml(details.cause)}</div>
+          <div class="detail-box"><b>🧩 Parts possibly needed</b>${escapeHtml(details.parts)}</div>
+          <div class="detail-box"><b>🧰 Tools needed</b>${escapeHtml(details.tools)}</div>
+          <div class="detail-box"><b>💵 Typical DIY cost</b>${escapeHtml(details.cost)} in parts or materials. Labor not included.</div>
+          <div class="detail-box ${safetyClass}"><b>⚠️ Safety level: ${escapeHtml(details.safety)}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing. Use qualified service when required." : "Use PPE and isolate the system before repair."}</div>
+        </div>
+        <div class="repair-note"><b>📋 Field note:</b> ${escapeHtml(details.note)}</div>
+        <div class="body-actions">
+          <button class="small-button" type="button" data-action="copy">Copy Guide</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+function renderCurrentView({ scroll = true } = {}) {
+  const panel = document.getElementById("guidePanel");
+  const title = document.getElementById("guideTitle");
+  const count = document.getElementById("guideCount");
+  const steps = document.getElementById("guideSteps");
+  const results = getCurrentResults();
+
+  title.textContent = viewTitle();
+  count.textContent = `${results.length} guide${results.length === 1 ? "" : "s"}${activeFilterText()}`;
+
+  if (!results.length) {
     steps.innerHTML = `
       <div class="no-results">
-        Try a broader term such as <b>leak</b>, <b>pressure</b>, <b>breaker</b>,
-        <b>cooling</b>, <b>battery</b>, or <b>watering</b>.
-      </div>
-    `;
-    panel.style.display = "block";
-    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        No guides match this view. Try clearing a cost or difficulty filter, using a broader search term, or saving a favorite first.
+      </div>`;
+  } else {
+    steps.innerHTML = results.map((result, index) => renderGuideCard(result, index)).join("");
+  }
+
+  panel.style.display = "block";
+  updateActiveViewButtons();
+  bindGuideActions();
+  if (scroll) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function updateActiveViewButtons() {
+  document.querySelectorAll("[data-view]").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === state.view || (button.dataset.view === "all" && state.view === "trade"));
+  });
+}
+
+function showTrade(tradeKey) {
+  if (!guides[tradeKey]) return;
+  state.view = "trade";
+  state.trade = tradeKey;
+  state.query = "";
+  document.getElementById("search").value = "";
+  renderCurrentView();
+}
+
+function runSearch() {
+  const input = document.getElementById("search");
+  const query = input.value.trim();
+  if (!query) {
+    state.view = "all";
+    state.trade = null;
+    state.query = "";
+    renderCurrentView();
     return;
   }
-
-  renderSteps(
-    "🔎 Search Results",
-    matches,
-    `${matches.length} matching guide${matches.length === 1 ? "" : "s"} across ${matchingTrades.size} trade${matchingTrades.size === 1 ? "" : "s"}`
-  );
+  state.view = "search";
+  state.trade = null;
+  state.query = query;
+  renderCurrentView();
 }
 
-function clearSearch() {
-  const searchInput = document.getElementById("search");
-  const cards = document.querySelectorAll(".card");
-  const panel = document.getElementById("guidePanel");
+function setView(view) {
+  state.view = view;
+  state.trade = null;
+  if (view !== "search") state.query = "";
+  if (view !== "search") document.getElementById("search").value = "";
+  renderCurrentView();
+}
 
-  searchInput.value = "";
+function clearEverything() {
+  state.view = "all";
+  state.trade = null;
+  state.query = "";
+  state.difficulty = "all";
+  state.cost = "all";
+  document.getElementById("search").value = "";
+  document.getElementById("difficultyFilter").value = "all";
+  document.getElementById("costFilter").value = "all";
+  document.getElementById("guidePanel").style.display = "none";
+  updateActiveViewButtons();
+  document.getElementById("search").focus();
+}
 
-  cards.forEach(card => {
-    card.style.display = "block";
+function toggleFavorite(id) {
+  if (favorites.has(id)) {
+    favorites.delete(id);
+    showToast("Removed from favorites");
+  } else {
+    favorites.add(id);
+    showToast("Saved to favorites");
+  }
+  saveList(STORAGE.favorites, [...favorites]);
+  updateStats();
+
+  if (state.view === "favorites") {
+    renderCurrentView({ scroll: false });
+  } else {
+    const card = [...document.querySelectorAll(".guide-card")].find(item => item.dataset.guideId === id);
+    const button = card?.querySelector('[data-action="favorite"]');
+    if (button) {
+      const saved = favorites.has(id);
+      button.classList.toggle("saved", saved);
+      button.setAttribute("aria-pressed", String(saved));
+      button.textContent = saved ? "★" : "☆";
+    }
+  }
+}
+
+function addRecent(id) {
+  recent = [id, ...recent.filter(item => item !== id)].slice(0, 12);
+  saveList(STORAGE.recent, recent);
+  updateStats();
+}
+
+function guideCopyText(result) {
+  const d = result.details;
+  return `${result.tradeTitle} - ${result.step.problem}\n\nSymptom: ${result.step.symptom}\nRepair steps: ${result.step.fix}\nMost likely cause: ${d.cause}\nParts: ${d.parts}\nTools: ${d.tools}\nDifficulty: ${d.difficulty}\nTypical DIY cost: ${d.cost}\nSafety: ${d.safety}\nField note: ${d.note}`;
+}
+
+async function copyGuide(id) {
+  const result = guideMap.get(id);
+  if (!result) return;
+  const text = guideCopyText(result);
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast("Guide copied");
+  } catch (error) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+    showToast("Guide copied");
+  }
+}
+
+function bindGuideActions() {
+  document.querySelectorAll(".guide-card").forEach(card => {
+    const id = card.dataset.guideId;
+    const favoriteButton = card.querySelector('[data-action="favorite"]');
+    const expandButton = card.querySelector('[data-action="expand"]');
+    const copyButton = card.querySelector('[data-action="copy"]');
+    const body = card.querySelector(".guide-body");
+
+    favoriteButton?.addEventListener("click", () => toggleFavorite(id));
+    copyButton?.addEventListener("click", () => copyGuide(id));
+    expandButton?.addEventListener("click", () => {
+      const willOpen = body.hidden;
+      body.hidden = !willOpen;
+      expandButton.setAttribute("aria-expanded", String(willOpen));
+      expandButton.textContent = willOpen ? "Close Guide" : "Open Guide";
+      if (willOpen) addRecent(id);
+    });
+  });
+}
+
+function updateStats() {
+  document.getElementById("totalStat").textContent = String(guideIndex.length);
+  document.getElementById("favoriteStat").textContent = String(favorites.size);
+  document.getElementById("recentStat").textContent = String(recent.length);
+}
+
+function updateNetworkStatus() {
+  const status = document.getElementById("networkStatus");
+  const online = navigator.onLine;
+  status.className = `status-chip ${online ? "online" : "offline"}`;
+  status.innerHTML = online
+    ? "<strong>Online:</strong> Search and saved data are ready."
+    : "<strong>Offline:</strong> Embedded guides, favorites, and recent history still work.";
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  clearTimeout(toastTimer);
+  toast.textContent = message;
+  toast.classList.add("show");
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+function verifyGuideCounts() {
+  Object.entries(guides).forEach(([trade, data]) => {
+    if (data.steps.length !== 20) {
+      console.error(`${trade} has ${data.steps.length} guides instead of 20.`);
+    }
+  });
+  if (guideIndex.length !== 120) {
+    console.error(`TradeStack has ${guideIndex.length} total guides instead of 120.`);
+  }
+}
+
+function initialize() {
+  verifyGuideCounts();
+  favorites = new Set([...favorites].filter(id => guideMap.has(id)));
+  recent = recent.filter(id => guideMap.has(id));
+  saveList(STORAGE.favorites, [...favorites]);
+  saveList(STORAGE.recent, recent);
+  updateStats();
+  updateNetworkStatus();
+
+  document.querySelectorAll("[data-trade]").forEach(button => {
+    button.addEventListener("click", () => showTrade(button.dataset.trade));
   });
 
-  panel.style.display = "none";
-  searchInput.focus();
+  document.querySelectorAll("[data-view]").forEach(button => {
+    button.addEventListener("click", () => setView(button.dataset.view));
+  });
+
+  document.getElementById("searchButton").addEventListener("click", runSearch);
+  document.getElementById("clearButton").addEventListener("click", clearEverything);
+  document.getElementById("closePanel").addEventListener("click", () => {
+    document.getElementById("guidePanel").style.display = "none";
+  });
+  document.getElementById("topBtn").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+  document.getElementById("difficultyFilter").addEventListener("change", event => {
+    state.difficulty = event.target.value;
+    renderCurrentView();
+  });
+
+  document.getElementById("costFilter").addEventListener("change", event => {
+    state.cost = event.target.value;
+    renderCurrentView();
+  });
+
+  const search = document.getElementById("search");
+  search.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      runSearch();
+    }
+    if (event.key === "Escape") clearEverything();
+  });
+
+  search.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    const query = search.value.trim();
+    if (!query) {
+      if (state.view === "search") {
+        state.view = "all";
+        state.query = "";
+        document.getElementById("guidePanel").style.display = "none";
+        updateActiveViewButtons();
+      }
+      return;
+    }
+    searchTimer = setTimeout(runSearch, 260);
+  });
+
+  window.addEventListener("online", updateNetworkStatus);
+  window.addEventListener("offline", updateNetworkStatus);
 }
 
-document.getElementById("search").addEventListener("keydown", event => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    searchGuides();
-  }
-
-  if (event.key === "Escape") {
-    clearSearch();
-  }
-});
-
-Object.entries(guides).forEach(([trade, data]) => {
-  if (data.steps.length !== 20) {
-    console.error(`${trade} has ${data.steps.length} guides instead of 20.`);
-  }
-});
-
-const tsFavorites = JSON.parse(localStorage.getItem("tsFavorites")||"[]");
-function toggleFavorite(id,btn){
- let s=new Set(JSON.parse(localStorage.getItem("tsFavorites")||"[]"));
- if(s.has(id)){s.delete(id);btn.textContent="⭐ Favorite";}
- else{s.add(id);btn.textContent="✅ Favorited";}
- localStorage.setItem("tsFavorites",JSON.stringify([...s]));
-}
-
+initialize();
 </script>
-
-<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 </body>
 </html>
