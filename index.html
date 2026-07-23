@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#ff5a00" />
-<title>TradeStack v0.9</title>
+<title>TradeStack v1.0 Photo Edition</title>
 <style>
   :root {
     --bg: #0d151d;
@@ -87,7 +87,7 @@
   }
 
   .status-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-bottom: 14px;
   }
 
@@ -105,7 +105,7 @@
   .status-chip.offline { border-left: 5px solid var(--yellow); }
 
   .stats-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-bottom: 18px;
   }
 
@@ -302,19 +302,164 @@
   }
 
   .part-picture {
+    position: relative;
     min-height: 125px;
     border-radius: 10px;
+    border: 1px solid #4b6172;
     background: linear-gradient(145deg, #31485b, #16222d);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 0;
+    overflow: hidden;
+    color: white;
+  }
+
+  button.part-picture {
+    width: 100%;
+    cursor: zoom-in;
+    text-align: left;
   }
 
   .part-picture svg {
     width: 100%;
     height: 100%;
-    max-height: 130px;
+    max-height: 160px;
+    padding: 8px;
+  }
+
+  .part-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 125px;
+    max-height: 180px;
+    object-fit: cover;
+    background: #14212b;
+  }
+
+  .photo-badge {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    max-width: calc(100% - 16px);
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: rgba(8, 15, 22, 0.86);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    backdrop-filter: blur(4px);
+  }
+
+  .photo-cache-button {
+    margin-top: 9px;
+    padding: 0 11px;
+    min-height: 36px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #ff8c00, #ff3c00);
+    color: white;
+    cursor: pointer;
+    font-weight: 900;
+  }
+
+  .photo-modal[hidden] { display: none; }
+
+  .photo-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.84);
+  }
+
+  .photo-modal-card {
+    position: relative;
+    width: min(920px, 100%);
+    max-height: calc(100vh - 36px);
+    overflow: auto;
+    border: 1px solid #60788d;
+    border-radius: 16px;
+    background: #111c25;
+    box-shadow: 0 24px 70px rgba(0,0,0,.55);
+  }
+
+  .photo-modal-image {
+    display: block;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    background: #071018;
+  }
+
+  .photo-modal-info {
+    padding: 14px 16px 18px;
+  }
+
+  .photo-modal-info h2 {
+    margin: 0 0 7px;
+    color: var(--gold);
+  }
+
+  .photo-modal-info p {
+    margin: 5px 0;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .photo-modal-info a,
+  .photo-credits a {
+    color: #8fc7ff;
+  }
+
+  .photo-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+    background: rgba(10,18,25,.9);
+    color: white;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: 900;
+  }
+
+  .photo-credits {
+    max-width: 940px;
+    margin: 12px auto 0;
+    padding: 0 16px;
+    text-align: left;
+  }
+
+  .photo-credits summary {
+    cursor: pointer;
+    color: #d4dde5;
+    font-weight: 800;
+  }
+
+  .photo-credit-list {
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #34485a;
+    border-radius: 10px;
+    background: #111c25;
+    line-height: 1.45;
+  }
+
+  .photo-credit-list p {
+    margin: 7px 0;
   }
 
   .guide-heading-row {
@@ -504,10 +649,13 @@
     .part-picture { min-height: 155px; }
     .detail-grid { grid-template-columns: 1fr; }
     .status-row { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   @media (max-width: 430px) {
     .stats-grid { grid-template-columns: 1fr; }
+    .photo-modal { padding: 8px; }
+    .photo-modal-card { max-height: calc(100vh - 16px); }
     .filter-row { grid-template-columns: 1fr; }
     .filter-row > :last-child { grid-column: auto; }
     .panel-header { flex-direction: column; }
@@ -518,28 +666,33 @@
 <body>
 
 <div class="release-bar">
-  🚀 TradeStack v0.9 • Favorites • DIY Cost Ranges • Difficulty Filters • Recent Guides • Offline-Ready Data
+  ðŸ“¸ TradeStack v1.0 Photo Edition â€¢ Real Component Photos â€¢ Tap to Enlarge â€¢ Offline Photo Cache
 </div>
 
 <header>
-  <h1>🛠️ TradeStack</h1>
-  <p>120 visual troubleshooting guides with likely causes, parts, tools, repair steps, safety levels, cost ranges, and difficulty ratings.</p>
+  <h1>ðŸ› ï¸ TradeStack</h1>
+  <p>120 visual troubleshooting guides with real component photos, likely causes, parts, tools, repair steps, safety levels, costs, and difficulty ratings.</p>
 </header>
 
 <main class="container">
   <div class="status-row">
-    <div class="status-chip" id="networkStatus"><strong>Checking connection…</strong></div>
+    <div class="status-chip" id="networkStatus"><strong>Checking connectionâ€¦</strong></div>
     <div class="status-chip"><strong>Offline-ready:</strong> All 120 guide records are stored inside this file.</div>
+    <div class="status-chip" id="photoCacheStatus">
+      <strong>Real photos:</strong> Load from Wikimedia Commons with license links and SVG fallbacks.
+      <button class="photo-cache-button" type="button" id="cachePhotosButton">Save Photos Offline</button>
+    </div>
   </div>
 
   <section class="stats-grid" aria-label="TradeStack statistics">
     <div class="stat-card"><span class="stat-value" id="totalStat">120</span><span class="stat-label">Total guides</span></div>
     <div class="stat-card"><span class="stat-value" id="favoriteStat">0</span><span class="stat-label">Saved favorites</span></div>
     <div class="stat-card"><span class="stat-value" id="recentStat">0</span><span class="stat-label">Recently opened</span></div>
+    <div class="stat-card"><span class="stat-value" id="photoStat">0</span><span class="stat-label">Real photo sources</span></div>
   </section>
 
   <div class="search-row">
-    <input class="search-box" id="search" type="search" placeholder="Search problem, symptom, part, tool, or cause…" aria-label="Search all TradeStack troubleshooting guides" autocomplete="off" />
+    <input class="search-box" id="search" type="search" placeholder="Search problem, symptom, part, tool, or causeâ€¦" aria-label="Search all TradeStack troubleshooting guides" autocomplete="off" />
     <button class="primary-button" type="button" id="searchButton">Search</button>
     <button class="secondary-button" type="button" id="clearButton">Clear</button>
   </div>
@@ -547,8 +700,8 @@
   <section class="filter-panel" aria-label="Guide filters">
     <div class="filter-row">
       <button class="filter-button active" type="button" data-view="all">All Guides</button>
-      <button class="filter-button" type="button" data-view="favorites">⭐ Favorites</button>
-      <button class="filter-button" type="button" data-view="recent">🕘 Recent</button>
+      <button class="filter-button" type="button" data-view="favorites">â­ Favorites</button>
+      <button class="filter-button" type="button" data-view="recent">ðŸ•˜ Recent</button>
       <select class="filter-select" id="difficultyFilter" aria-label="Filter by difficulty">
         <option value="all">All Difficulty</option>
         <option value="Easy">Easy</option>
@@ -566,12 +719,12 @@
   </section>
 
   <section class="grid" id="tradeGrid" aria-label="Trade categories">
-    <button class="trade-card" type="button" data-trade="irrigation"><div class="emoji">💧</div><h2>Irrigation</h2><p>Valves, timers, leaks, zones</p></button>
-    <button class="trade-card" type="button" data-trade="hvac"><div class="emoji">❄️</div><h2>HVAC</h2><p>Cooling, heating, airflow</p></button>
-    <button class="trade-card" type="button" data-trade="plumbing"><div class="emoji">🚿</div><h2>Plumbing</h2><p>Leaks, clogs, pressure</p></button>
-    <button class="trade-card" type="button" data-trade="electrical"><div class="emoji">⚡</div><h2>Electrical</h2><p>Power, breakers, outlets</p></button>
-    <button class="trade-card" type="button" data-trade="landscaping"><div class="emoji">🌱</div><h2>Landscaping</h2><p>Plants, trimming, cleanup</p></button>
-    <button class="trade-card" type="button" data-trade="automotive"><div class="emoji">🚗</div><h2>Automotive</h2><p>Basic vehicle checks</p></button>
+    <button class="trade-card" type="button" data-trade="irrigation"><div class="emoji">ðŸ’§</div><h2>Irrigation</h2><p>Valves, timers, leaks, zones</p></button>
+    <button class="trade-card" type="button" data-trade="hvac"><div class="emoji">â„ï¸</div><h2>HVAC</h2><p>Cooling, heating, airflow</p></button>
+    <button class="trade-card" type="button" data-trade="plumbing"><div class="emoji">ðŸš¿</div><h2>Plumbing</h2><p>Leaks, clogs, pressure</p></button>
+    <button class="trade-card" type="button" data-trade="electrical"><div class="emoji">âš¡</div><h2>Electrical</h2><p>Power, breakers, outlets</p></button>
+    <button class="trade-card" type="button" data-trade="landscaping"><div class="emoji">ðŸŒ±</div><h2>Landscaping</h2><p>Plants, trimming, cleanup</p></button>
+    <button class="trade-card" type="button" data-trade="automotive"><div class="emoji">ðŸš—</div><h2>Automotive</h2><p>Basic vehicle checks</p></button>
   </section>
 
   <section class="panel" id="guidePanel" aria-live="polite">
@@ -586,14 +739,32 @@
   </section>
 </main>
 
-<footer>TradeStack v0.9 - Built by Jesse Perez - With assistance from ChatGPT</footer>
+<footer>
+  TradeStack v1.0 Photo Edition - Built by Jesse Perez - With assistance from ChatGPT
+  <details class="photo-credits">
+    <summary>Photo credits and licenses</summary>
+    <div class="photo-credit-list" id="photoCreditsList"></div>
+  </details>
+</footer>
 <div class="toast" id="toast" role="status"></div>
-<button id="topBtn" type="button" aria-label="Back to top">↑</button>
+<button id="topBtn" type="button" aria-label="Back to top">â†‘</button>
+
+<div class="photo-modal" id="photoModal" hidden role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
+  <div class="photo-modal-card">
+    <button class="photo-modal-close" id="photoModalClose" type="button" aria-label="Close photo">Ã—</button>
+    <img class="photo-modal-image" id="photoModalImage" alt="" />
+    <div class="photo-modal-info">
+      <h2 id="photoModalTitle"></h2>
+      <p id="photoModalCredit"></p>
+      <a id="photoModalSource" target="_blank" rel="noopener noreferrer">View original source and license</a>
+    </div>
+  </div>
+</div>
 
 <script>
 const guides = {
   irrigation: {
-    title: "💧 Irrigation Troubleshooting",
+    title: "ðŸ’§ Irrigation Troubleshooting",
     steps: [
       { problem: "Zone won't turn on", symptom: "Nothing happens when the zone starts.", fix: "Check controller programming, station output, field wiring, waterproof splices, solenoid resistance, flow control, and water supply." },
       { problem: "Zone won't turn off", symptom: "Sprinklers continue running after the timer ends.", fix: "Shut off water if needed. Inspect the diaphragm, solenoid, bleed screw, debris under the diaphragm, and damaged valve body." },
@@ -619,7 +790,7 @@ const guides = {
   },
 
   hvac: {
-    title: "❄️ HVAC Troubleshooting",
+    title: "â„ï¸ HVAC Troubleshooting",
     steps: [
       { problem: "AC running but not cooling", symptom: "Air moves, but indoor temperature does not drop.", fix: "Confirm thermostat mode, replace a dirty filter, verify both fans, inspect coils, and check for ice. Refrigerant work requires qualified service." },
       { problem: "Outdoor unit will not run", symptom: "Indoor blower runs, but condenser stays off.", fix: "Check the breaker, disconnect, thermostat call, float switch, contactor coil voltage, capacitor, low-voltage wiring, and overloads." },
@@ -645,7 +816,7 @@ const guides = {
   },
 
   plumbing: {
-    title: "🚿 Plumbing Troubleshooting",
+    title: "ðŸš¿ Plumbing Troubleshooting",
     steps: [
       { problem: "Leaking faucet", symptom: "Water drips from the spout after shutoff.", fix: "Shut off supplies, identify cartridge or washer type, inspect seats and O-rings, replace worn parts, and test." },
       { problem: "Slow sink drain", symptom: "Water drains slowly but does not fully back up.", fix: "Remove and clean the stopper, inspect the trap, use a hand auger, and avoid mixing chemical drain cleaners." },
@@ -671,7 +842,7 @@ const guides = {
   },
 
   electrical: {
-    title: "⚡ Electrical Troubleshooting",
+    title: "âš¡ Electrical Troubleshooting",
     steps: [
       { problem: "Breaker keeps tripping", symptom: "Breaker trips repeatedly after reset.", fix: "Unplug loads, identify overload or short, inspect connected equipment, and do not keep resetting a breaker that trips immediately." },
       { problem: "Outlet has no power", symptom: "A receptacle is dead while others work.", fix: "Check breaker, upstream GFCI, loose connections, switched outlets, and damaged receptacle with power verified off." },
@@ -697,7 +868,7 @@ const guides = {
   },
 
   landscaping: {
-    title: "🌱 Landscaping Troubleshooting",
+    title: "ðŸŒ± Landscaping Troubleshooting",
     steps: [
       { problem: "Brown lawn patches", symptom: "Irregular brown areas appear in turf.", fix: "Check irrigation coverage, soil moisture, pet damage, fungus, grubs, compaction, and mowing height before treating." },
       { problem: "Grass will not grow", symptom: "Seed or sod remains thin or bare.", fix: "Test light, soil condition, irrigation, seed timing, traffic, compaction, and species suitability." },
@@ -723,7 +894,7 @@ const guides = {
   },
 
   automotive: {
-    title: "🚗 Automotive Basic Troubleshooting",
+    title: "ðŸš— Automotive Basic Troubleshooting",
     steps: [
       { problem: "Engine will not crank", symptom: "Turning the key produces silence or one click.", fix: "Check battery voltage, terminals, ground cable, starter relay, park-neutral switch, ignition signal, and starter." },
       { problem: "Engine cranks but will not start", symptom: "Starter turns engine, but it never fires.", fix: "Check fuel level, security light, spark, fuel pressure, injector pulse, crank sensor signal, and diagnostic codes." },
@@ -749,13 +920,71 @@ const guides = {
   }
 };
 
+const photoLibrary = {
+  "Solenoid": { file: "Solenoid valve 2019.jpg", title: "Solenoid valve", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
+  "Valve diaphragm": { file: "Irrigation valve assembly.JPG", title: "Irrigation valve assembly", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
+  "Sprinkler head": { file: "Sprinkler Irrigation - Sprinkler head.JPG", title: "Irrigation sprinkler head", credit: "Anton 17", license: "License listed on source page" },
+  "Irrigation controller": { file: "Gardena irrigation computer.jpg", title: "Irrigation controller", credit: "Wikimedia Commons contributor", license: "CC BY-SA / GFDL; see source" },
+  "Drip components": { file: "Drip emitter.jpg", title: "Drip irrigation emitter", credit: "Alan.ca", license: "Rights released; see source" },
+  "HVAC capacitor": { file: "Motor-Start-Capacitor.jpg", title: "Motor start capacitor", credit: "Elcap", license: "CC0 1.0" },
+  "HVAC contactor": { file: "Telemecanique contactor.JPG", title: "Electrical contactor", credit: "Dmitry G", license: "License listed on source page" },
+  "Air filter and blower": { file: "HVAC air filter.webp", title: "HVAC air filter", credit: "Wikideas1", license: "License listed on source page" },
+  "Flame sensor": { file: "Flame-igniter(top)-and-flame-sensor.jpg", title: "Furnace igniter and flame sensor", credit: "AlexBwineglass", license: "License listed on source page" },
+  "HVAC sealed system": { file: "Air conditioner.jpg", title: "Air-conditioning equipment", credit: "Clariter1990", license: "License listed on source page" },
+  "Faucet cartridge": { file: "Faucet parts.jpg", title: "Faucet repair parts", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
+  "Toilet repair parts": { file: "Toilet valve (2010233506).jpg", title: "Toilet fill valve", credit: "Robbie Sproule", license: "CC BY 2.0" },
+  "Water heater": { file: "Water heater.jpg", title: "Water heater", credit: "Victor Korniyenko", license: "CC BY-SA / GFDL; see source" },
+  "Drain snake": { file: "Plumbers snake 24689.jpg", title: "Plumber's drain snake", credit: "Walter Siegmund", license: "CC BY-SA 3.0 / GFDL" },
+  "GFCI outlet": { file: "GFCI protected outlet (28904168566).jpg", title: "GFCI protected outlet", credit: "dankeck; uploaded by FÃ¦", license: "CC0 1.0" },
+  "Circuit breaker": { file: "Circuit Breaker.png", title: "Circuit breaker", credit: "MebaMCB China", license: "CC0 1.0" },
+  "Car battery": { file: "Photo-CarBattery.jpg", title: "Automotive battery", credit: "Shaddack", license: "Public domain" },
+  "Brake parts": { file: "Brake calipers.jpg", title: "Brake calipers and rotor", credit: "Alison", license: "License listed on source page" },
+  "Cooling system": { file: "Automobile radiator.jpg", title: "Automobile radiator", credit: "Bill Wrigley", license: "Public domain" },
+  "Chassis parts": { file: "Car Tire.jpg", title: "Automotive tire", credit: "Janeset", license: "CC0 1.0" },
+  "Mower blade": { file: "Lawn mower blade.jpg", title: "Rotary mower blade", credit: "Atomicdragon136", license: "CC BY 4.0" },
+  "Plant and soil": { file: "Collmer leaf speck1.jpg", title: "Plant leaf disease symptoms", credit: "Wikimedia Commons contributor", license: "CC0 1.0" },
+  "Pipe repair fitting": { file: "UPVC pipe and fitting.jpg", title: "PVC pipe and fitting", credit: "Mekalshan", license: "License listed on source page" },
+  "trade:irrigation": { file: "Irrigation Sprinkler.jpg", title: "Irrigation sprinkler", credit: "Wikimedia Commons contributor", license: "CC0 1.0" },
+  "trade:hvac": { file: "HVAC.jpg", title: "HVAC equipment", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
+  "trade:plumbing": { file: "Draintrap.jpg", title: "Plumbing drain trap", credit: "Tomwsulcer", license: "CC0 1.0" },
+  "trade:electrical": { file: "Electrical Outlet.jpg", title: "Electrical outlet", credit: "Texas Lane", license: "License listed on source page" },
+  "trade:landscaping": { file: "BrownTurf.jpg", title: "Brown turf symptoms", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
+  "trade:automotive": { file: "Starter motor.JPG", title: "Automotive starter motor", credit: "Y Sekiai", license: "License listed on source page" }
+};
+
+const PHOTO_CACHE_NAME = "tradestack-v10-photo-cache";
+
+function commonsPhotoUrl(fileName) {
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}?width=900`;
+}
+
+function commonsSourceUrl(fileName) {
+  return `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(fileName).replace(/%20/g, "_")}`;
+}
+
+function getPhotoEntry(label, tradeKey) {
+  const key = photoLibrary[label] ? label : `trade:${tradeKey}`;
+  return { key, ...(photoLibrary[key] || {}) };
+}
+
+function uniquePhotoEntries() {
+  const seen = new Set();
+  return Object.entries(photoLibrary)
+    .map(([key, entry]) => ({ key, ...entry }))
+    .filter(entry => {
+      if (seen.has(entry.file)) return false;
+      seen.add(entry.file);
+      return true;
+    });
+}
+
 const tradeIcons = {
-  irrigation: "💧",
-  hvac: "❄️",
-  plumbing: "🚿",
-  electrical: "⚡",
-  landscaping: "🌱",
-  automotive: "🚗"
+  irrigation: "ðŸ’§",
+  hvac: "â„ï¸",
+  plumbing: "ðŸš¿",
+  electrical: "âš¡",
+  landscaping: "ðŸŒ±",
+  automotive: "ðŸš—"
 };
 
 const STORAGE = {
@@ -844,7 +1073,7 @@ function getGuideDetails(step, tradeKey) {
     [/sprinkler head|spray head|rotor|nozzle/, "Broken body, clogged nozzle, low pressure, or stripped internal gears.", "Matching spray head or rotor, nozzle, swing-pipe fitting, or riser.", "Shovel, sprinkler key, pliers, thread tape.", "Low", "Sprinkler head", "$5-$35", "$", "Easy"],
     [/controller|timer|station output/, "Power loss, failed transformer or fuse, bad programming, or damaged station output.", "Controller fuse, transformer, or compatible controller if the board failed.", "Multimeter, screwdriver, wire labels.", "High", "Irrigation controller", "$15-$300", "$$$", "Advanced"],
     [/drip|emitter/, "Clogged filter or emitter, failed regulator, pinched tubing, or incorrect runtime.", "Emitter, filter, regulator, tubing, or fittings as confirmed.", "Flush tool, cutter, punch tool, pressure gauge.", "Low", "Drip components", "$2-$60", "$", "Easy"],
-    [/capacitor/, "Capacitor has weakened, opened, shorted, or bulged from heat and age.", "Correct µF-rated run or start capacitor with equal or higher voltage rating.", "Multimeter with capacitance, insulated screwdriver, needle-nose pliers.", "High", "HVAC capacitor", "$15-$60", "$$", "Advanced"],
+    [/capacitor/, "Capacitor has weakened, opened, shorted, or bulged from heat and age.", "Correct ÂµF-rated run or start capacitor with equal or higher voltage rating.", "Multimeter with capacitance, insulated screwdriver, needle-nose pliers.", "High", "HVAC capacitor", "$15-$60", "$$", "Advanced"],
     [/contactor/, "Burned contacts, weak coil, low control voltage, or loose wiring.", "Equivalent contactor with matching poles, coil voltage, and amp rating.", "Multimeter, insulated screwdriver, nut driver.", "High", "HVAC contactor", "$20-$80", "$$", "Advanced"],
     [/filter|airflow|blower|frozen evaporator/, "Restricted airflow from a dirty filter, coil, blower wheel, duct, or closed register.", "Correct air filter; blower or coil parts only after testing.", "Manometer if available, flashlight, nut driver, coil brush.", "High", "Air filter and blower", "$10-$150", "$$", "Moderate"],
     [/flame sensor|burners light then shut off/, "Flame sensor contamination, poor grounding, or weak flame signal.", "Flame sensor only if cleaning and electrical checks fail.", "Nut driver, fine abrasive pad, multimeter with microamp function.", "High", "Flame sensor", "$0-$60", "$", "Advanced"],
@@ -889,11 +1118,11 @@ function getGuideDetails(step, tradeKey) {
 }
 
 function createPartPicture(label, tradeKey, uniqueKey) {
-  const safeLabel = escapeHtml(label.length > 24 ? `${label.slice(0, 24)}…` : label);
-  const icon = tradeIcons[tradeKey] || "🛠️";
+  const safeLabel = escapeHtml(label.length > 24 ? `${label.slice(0, 24)}â€¦` : label);
+  const icon = tradeIcons[tradeKey] || "ðŸ› ï¸";
   const gradientId = `partGrad-${slugify(uniqueKey)}`;
   return `
-    <svg viewBox="0 0 320 190" role="img" aria-label="${safeLabel} part illustration">
+    <svg viewBox="0 0 320 190" role="img" aria-label="${safeLabel} fallback component illustration">
       <defs>
         <linearGradient id="${gradientId}" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#ff9d2e" />
@@ -907,8 +1136,48 @@ function createPartPicture(label, tradeKey, uniqueKey) {
       <rect x="146" y="76" width="111" height="13" rx="6" fill="#2c3f50" />
       <rect x="146" y="101" width="128" height="13" rx="6" fill="#2c3f50" />
       <text x="160" y="151" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">${safeLabel}</text>
-      <text x="160" y="174" text-anchor="middle" fill="#b8c8d4" font-size="13">PART / COMPONENT GUIDE</text>
+      <text x="160" y="174" text-anchor="middle" fill="#b8c8d4" font-size="13">OFFLINE FALLBACK GUIDE</text>
     </svg>`;
+}
+
+function createPartMedia(label, tradeKey, uniqueKey) {
+  const photo = getPhotoEntry(label, tradeKey);
+  if (!photo.file) {
+    return `<div class="part-picture">${createPartPicture(label, tradeKey, uniqueKey)}</div>`;
+  }
+
+  const url = commonsPhotoUrl(photo.file);
+  const alt = `${photo.title || label} reference photo`;
+  return `
+    <button class="part-picture photo-trigger" type="button" data-photo-key="${escapeHtml(photo.key)}" aria-label="Enlarge ${escapeHtml(alt)}">
+      <img
+        class="part-photo"
+        src="${escapeHtml(url)}"
+        data-photo-url="${escapeHtml(url)}"
+        data-label="${escapeHtml(label)}"
+        data-trade="${escapeHtml(tradeKey)}"
+        data-unique="${escapeHtml(uniqueKey)}"
+        alt="${escapeHtml(alt)}"
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        onerror="handlePhotoError(this)"
+      />
+      <span class="photo-badge">ðŸ“¸ Real photo â€¢ tap to enlarge</span>
+    </button>`;
+}
+
+function handlePhotoError(image) {
+  const holder = image.closest(".part-picture");
+  if (!holder || holder.dataset.fallbackShown === "true") return;
+  holder.dataset.fallbackShown = "true";
+  holder.classList.remove("photo-trigger");
+  holder.removeAttribute("data-photo-key");
+  holder.innerHTML = createPartPicture(
+    image.dataset.label || "Component",
+    image.dataset.trade || "",
+    image.dataset.unique || "fallback"
+  );
 }
 
 function allGuideResults() {
@@ -982,18 +1251,18 @@ function getCurrentResults() {
 }
 
 function viewTitle() {
-  if (state.view === "favorites") return "⭐ Favorite Guides";
-  if (state.view === "recent") return "🕘 Recently Opened Guides";
+  if (state.view === "favorites") return "â­ Favorite Guides";
+  if (state.view === "recent") return "ðŸ•˜ Recently Opened Guides";
   if (state.view === "trade" && state.trade) return guides[state.trade].title;
-  if (state.view === "search") return `🔎 Search Results for “${state.query}”`;
-  return "🧰 All Troubleshooting Guides";
+  if (state.view === "search") return `ðŸ”Ž Search Results for â€œ${state.query}â€`;
+  return "ðŸ§° All Troubleshooting Guides";
 }
 
 function activeFilterText() {
   const filters = [];
   if (state.difficulty !== "all") filters.push(state.difficulty);
   if (state.cost !== "all") filters.push(`${state.cost} cost`);
-  return filters.length ? ` • Filtered by ${filters.join(" + ")}` : "";
+  return filters.length ? ` â€¢ Filtered by ${filters.join(" + ")}` : "";
 }
 
 function renderGuideCard(result, displayIndex) {
@@ -1005,7 +1274,7 @@ function renderGuideCard(result, displayIndex) {
   return `
     <article class="guide-card" data-guide-id="${escapeHtml(id)}">
       <div class="guide-summary">
-        <div class="part-picture">${createPartPicture(details.picture, tradeKey, id)}</div>
+        ${createPartMedia(details.picture, tradeKey, id)}
         <div>
           <span class="trade-label">${escapeHtml(tradeTitle)}</span>
           <div class="guide-heading-row">
@@ -1013,26 +1282,26 @@ function renderGuideCard(result, displayIndex) {
           </div>
           <p class="guide-symptom"><b>Symptom:</b> ${escapeHtml(step.symptom)}</p>
           <div class="badge-row">
-            <span class="badge ${difficultyClass}">🧠 ${escapeHtml(details.difficulty)}</span>
-            <span class="badge cost-badge">💵 ${escapeHtml(details.costTier)} • ${escapeHtml(details.cost)}</span>
-            <span class="badge">⚠️ ${escapeHtml(details.safety)} safety</span>
+            <span class="badge ${difficultyClass}">ðŸ§  ${escapeHtml(details.difficulty)}</span>
+            <span class="badge cost-badge">ðŸ’µ ${escapeHtml(details.costTier)} â€¢ ${escapeHtml(details.cost)}</span>
+            <span class="badge">âš ï¸ ${escapeHtml(details.safety)} safety</span>
           </div>
           <div class="guide-actions">
-            <button class="favorite-button ${saved ? "saved" : ""}" type="button" data-action="favorite" aria-pressed="${saved}" title="Save favorite">${saved ? "★" : "☆"}</button>
+            <button class="favorite-button ${saved ? "saved" : ""}" type="button" data-action="favorite" aria-pressed="${saved}" title="Save favorite">${saved ? "â˜…" : "â˜†"}</button>
             <button class="small-button open" type="button" data-action="expand" aria-expanded="false">Open Guide</button>
           </div>
         </div>
       </div>
       <div class="guide-body" hidden>
         <div class="detail-grid">
-          <div class="detail-box"><b>🔧 Repair steps</b>${escapeHtml(step.fix)}</div>
-          <div class="detail-box"><b>🎯 Most likely cause</b>${escapeHtml(details.cause)}</div>
-          <div class="detail-box"><b>🧩 Parts possibly needed</b>${escapeHtml(details.parts)}</div>
-          <div class="detail-box"><b>🧰 Tools needed</b>${escapeHtml(details.tools)}</div>
-          <div class="detail-box"><b>💵 Typical DIY cost</b>${escapeHtml(details.cost)} in parts or materials. Labor not included.</div>
-          <div class="detail-box ${safetyClass}"><b>⚠️ Safety level: ${escapeHtml(details.safety)}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing. Use qualified service when required." : "Use PPE and isolate the system before repair."}</div>
+          <div class="detail-box"><b>ðŸ”§ Repair steps</b>${escapeHtml(step.fix)}</div>
+          <div class="detail-box"><b>ðŸŽ¯ Most likely cause</b>${escapeHtml(details.cause)}</div>
+          <div class="detail-box"><b>ðŸ§© Parts possibly needed</b>${escapeHtml(details.parts)}</div>
+          <div class="detail-box"><b>ðŸ§° Tools needed</b>${escapeHtml(details.tools)}</div>
+          <div class="detail-box"><b>ðŸ’µ Typical DIY cost</b>${escapeHtml(details.cost)} in parts or materials. Labor not included.</div>
+          <div class="detail-box ${safetyClass}"><b>âš ï¸ Safety level: ${escapeHtml(details.safety)}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing. Use qualified service when required." : "Use PPE and isolate the system before repair."}</div>
         </div>
-        <div class="repair-note"><b>📋 Field note:</b> ${escapeHtml(details.note)}</div>
+        <div class="repair-note"><b>ðŸ“‹ Field note:</b> ${escapeHtml(details.note)}</div>
         <div class="body-actions">
           <button class="small-button" type="button" data-action="copy">Copy Guide</button>
         </div>
@@ -1062,6 +1331,7 @@ function renderCurrentView({ scroll = true } = {}) {
   panel.style.display = "block";
   updateActiveViewButtons();
   bindGuideActions();
+  hydrateVisiblePhotos();
   if (scroll) panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -1138,7 +1408,7 @@ function toggleFavorite(id) {
       const saved = favorites.has(id);
       button.classList.toggle("saved", saved);
       button.setAttribute("aria-pressed", String(saved));
-      button.textContent = saved ? "★" : "☆";
+      button.textContent = saved ? "â˜…" : "â˜†";
     }
   }
 }
@@ -1151,7 +1421,7 @@ function addRecent(id) {
 
 function guideCopyText(result) {
   const d = result.details;
-  return `${result.tradeTitle} - ${result.step.problem}\n\nSymptom: ${result.step.symptom}\nRepair steps: ${result.step.fix}\nMost likely cause: ${d.cause}\nParts: ${d.parts}\nTools: ${d.tools}\nDifficulty: ${d.difficulty}\nTypical DIY cost: ${d.cost}\nSafety: ${d.safety}\nField note: ${d.note}`;
+  return `${result.tradeTitle} - ${result.step.problem}\n\nSymptom: ${result.step.symptom}\nRepair steps: ${result.step.fix}\nMost likely cause: ${d.cause}\nParts: ${d.parts}\nTools: ${d.tools}\nDifficulty: ${d.difficulty}\nTypical DIY cost: ${d.cost}\nSafety: ${d.safety}\nField note: ${d.note}\nPhoto source: ${commonsSourceUrl(getPhotoEntry(d.picture, result.tradeKey).file || "")}`;
 }
 
 async function copyGuide(id) {
@@ -1174,15 +1444,159 @@ async function copyGuide(id) {
   }
 }
 
+function openPhoto(photoKey, currentImageUrl = "") {
+  const photo = photoLibrary[photoKey];
+  if (!photo) return;
+
+  const modal = document.getElementById("photoModal");
+  const image = document.getElementById("photoModalImage");
+  const title = document.getElementById("photoModalTitle");
+  const credit = document.getElementById("photoModalCredit");
+  const source = document.getElementById("photoModalSource");
+
+  image.src = currentImageUrl || commonsPhotoUrl(photo.file);
+  image.alt = `${photo.title} reference photo`;
+  title.textContent = photo.title;
+  credit.textContent = `Photo: ${photo.credit} â€¢ ${photo.license}`;
+  source.href = commonsSourceUrl(photo.file);
+  modal.hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("photoModalClose").focus();
+}
+
+function closePhoto() {
+  const modal = document.getElementById("photoModal");
+  modal.hidden = true;
+  document.body.style.overflow = "";
+  document.getElementById("photoModalImage").removeAttribute("src");
+}
+
+async function resolveCachedPhoto(url) {
+  if (!("caches" in window)) return url;
+  try {
+    const cache = await caches.open(PHOTO_CACHE_NAME);
+    const cached = await cache.match(url);
+    if (cached) {
+      const blob = await cached.blob();
+      return URL.createObjectURL(blob);
+    }
+
+    if (!navigator.onLine) return url;
+    const response = await fetch(url, { mode: "cors", credentials: "omit" });
+    if (!response.ok) return url;
+    await cache.put(url, response.clone());
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.warn("Photo cache unavailable", error);
+    return url;
+  }
+}
+
+async function hydrateVisiblePhotos() {
+  const images = [...document.querySelectorAll("img[data-photo-url]")];
+  await Promise.allSettled(images.map(async image => {
+    const resolved = await resolveCachedPhoto(image.dataset.photoUrl);
+    if (resolved && image.isConnected) image.src = resolved;
+  }));
+  updatePhotoCacheStatus();
+}
+
+async function cacheAllPhotos() {
+  const button = document.getElementById("cachePhotosButton");
+  if (!("caches" in window)) {
+    showToast("Offline photo storage is not supported in this browser");
+    return;
+  }
+  if (!navigator.onLine) {
+    showToast("Connect to the internet before saving photos");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Saving Photosâ€¦";
+  const entries = uniquePhotoEntries();
+  let saved = 0;
+  let failed = 0;
+  const cache = await caches.open(PHOTO_CACHE_NAME);
+
+  for (let index = 0; index < entries.length; index += 4) {
+    const batch = entries.slice(index, index + 4);
+    await Promise.all(batch.map(async entry => {
+      const url = commonsPhotoUrl(entry.file);
+      try {
+        const existing = await cache.match(url);
+        if (!existing) {
+          const response = await fetch(url, { mode: "cors", credentials: "omit" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          await cache.put(url, response.clone());
+        }
+        saved += 1;
+      } catch (error) {
+        failed += 1;
+        console.warn(`Could not cache ${entry.file}`, error);
+      }
+      button.textContent = `Saving ${saved + failed}/${entries.length}`;
+    }));
+  }
+
+  button.disabled = false;
+  button.textContent = "Save Photos Offline";
+  await updatePhotoCacheStatus();
+  showToast(failed ? `${saved} photos saved â€¢ ${failed} used fallbacks` : `All ${saved} photos saved offline`);
+  hydrateVisiblePhotos();
+}
+
+async function updatePhotoCacheStatus() {
+  const status = document.getElementById("photoCacheStatus");
+  const button = document.getElementById("cachePhotosButton");
+  if (!status || !button) return;
+
+  const total = uniquePhotoEntries().length;
+  if (!("caches" in window)) {
+    status.firstElementChild.textContent = "Real photos:";
+    button.textContent = "Browser Cache Unavailable";
+    button.disabled = true;
+    return;
+  }
+
+  try {
+    const cache = await caches.open(PHOTO_CACHE_NAME);
+    let count = 0;
+    for (const entry of uniquePhotoEntries()) {
+      if (await cache.match(commonsPhotoUrl(entry.file))) count += 1;
+    }
+    status.firstElementChild.textContent = count === total
+      ? `Offline photos: ${count}/${total} saved.`
+      : `Real photos: ${count}/${total} saved offline.`;
+  } catch (error) {
+    console.warn("Could not read photo cache", error);
+  }
+}
+
+function populatePhotoCredits() {
+  const list = document.getElementById("photoCreditsList");
+  list.innerHTML = uniquePhotoEntries().map(photo => `
+    <p>
+      <a href="${escapeHtml(commonsSourceUrl(photo.file))}" target="_blank" rel="noopener noreferrer">${escapeHtml(photo.title)}</a>
+      â€” ${escapeHtml(photo.credit)} â€¢ ${escapeHtml(photo.license)}
+    </p>`).join("");
+}
+
 function bindGuideActions() {
   document.querySelectorAll(".guide-card").forEach(card => {
     const id = card.dataset.guideId;
     const favoriteButton = card.querySelector('[data-action="favorite"]');
     const expandButton = card.querySelector('[data-action="expand"]');
     const copyButton = card.querySelector('[data-action="copy"]');
+    const photoButton = card.querySelector(".photo-trigger");
     const body = card.querySelector(".guide-body");
 
     favoriteButton?.addEventListener("click", () => toggleFavorite(id));
+    photoButton?.addEventListener("click", () => {
+      const image = photoButton.querySelector("img");
+      openPhoto(photoButton.dataset.photoKey, image?.src || "");
+    });
     copyButton?.addEventListener("click", () => copyGuide(id));
     expandButton?.addEventListener("click", () => {
       const willOpen = body.hidden;
@@ -1198,6 +1612,7 @@ function updateStats() {
   document.getElementById("totalStat").textContent = String(guideIndex.length);
   document.getElementById("favoriteStat").textContent = String(favorites.size);
   document.getElementById("recentStat").textContent = String(recent.length);
+  document.getElementById("photoStat").textContent = String(uniquePhotoEntries().length);
 }
 
 function updateNetworkStatus() {
@@ -1236,6 +1651,14 @@ function initialize() {
   saveList(STORAGE.recent, recent);
   updateStats();
   updateNetworkStatus();
+  populatePhotoCredits();
+  updatePhotoCacheStatus();
+
+  document.getElementById("cachePhotosButton").addEventListener("click", cacheAllPhotos);
+  document.getElementById("photoModalClose").addEventListener("click", closePhoto);
+  document.getElementById("photoModal").addEventListener("click", event => {
+    if (event.target.id === "photoModal") closePhoto();
+  });
 
   document.querySelectorAll("[data-trade]").forEach(button => {
     button.addEventListener("click", () => showTrade(button.dataset.trade));
@@ -1268,7 +1691,10 @@ function initialize() {
       event.preventDefault();
       runSearch();
     }
-    if (event.key === "Escape") clearEverything();
+    if (event.key === "Escape") {
+      if (!document.getElementById("photoModal").hidden) closePhoto();
+      else clearEverything();
+    }
   });
 
   search.addEventListener("input", () => {
@@ -1286,11 +1712,15 @@ function initialize() {
     searchTimer = setTimeout(runSearch, 260);
   });
 
-  window.addEventListener("online", updateNetworkStatus);
-  window.addEventListener("offline", updateNetworkStatus);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !document.getElementById("photoModal").hidden) closePhoto();
+  });
+
+  window.addEventListener("online", () => { updateNetworkStatus(); updatePhotoCacheStatus(); });
+  window.addEventListener("offline", () => { updateNetworkStatus(); updatePhotoCacheStatus(); });
 }
 
 initialize();
 </script>
 </body>
-</html>
+      </html>
