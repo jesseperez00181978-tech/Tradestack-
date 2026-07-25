@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#ff5a00" />
-<title>TradeStack v1.0 Photo Edition</title>
+<title>TradeStack v1.0 Verified Photo Edition</title>
 <style>
   :root {
     --bg: #0d151d;
@@ -666,20 +666,20 @@
 <body>
 
 <div class="release-bar">
-  ðŸ“¸ TradeStack v1.0 Photo Edition â€¢ Real Component Photos â€¢ Tap to Enlarge â€¢ Offline Photo Cache
+  &#128247; TradeStack v1.0 Verified Photo Edition - Explicit Matches - No Wrong-Trade Fallbacks
 </div>
 
 <header>
-  <h1>ðŸ› ï¸ TradeStack</h1>
-  <p>120 visual troubleshooting guides with real component photos, likely causes, parts, tools, repair steps, safety levels, costs, and difficulty ratings.</p>
+  <h1>&#128736;&#65039; TradeStack</h1>
+  <p>120 troubleshooting guides with verified reference photos only where the image directly matches the part or problem.</p>
 </header>
 
 <main class="container">
   <div class="status-row">
-    <div class="status-chip" id="networkStatus"><strong>Checking connectionâ€¦</strong></div>
+    <div class="status-chip" id="networkStatus"><strong>Checking connection...</strong></div>
     <div class="status-chip"><strong>Offline-ready:</strong> All 120 guide records are stored inside this file.</div>
     <div class="status-chip" id="photoCacheStatus">
-      <strong>Real photos:</strong> Load from Wikimedia Commons with license links and SVG fallbacks.
+      <strong>Verified photos:</strong> Exact guide-to-photo assignments with illustrated fallbacks when no accurate photo is available.
       <button class="photo-cache-button" type="button" id="cachePhotosButton">Save Photos Offline</button>
     </div>
   </div>
@@ -688,11 +688,11 @@
     <div class="stat-card"><span class="stat-value" id="totalStat">120</span><span class="stat-label">Total guides</span></div>
     <div class="stat-card"><span class="stat-value" id="favoriteStat">0</span><span class="stat-label">Saved favorites</span></div>
     <div class="stat-card"><span class="stat-value" id="recentStat">0</span><span class="stat-label">Recently opened</span></div>
-    <div class="stat-card"><span class="stat-value" id="photoStat">0</span><span class="stat-label">Real photo sources</span></div>
+    <div class="stat-card"><span class="stat-value" id="photoStat">0</span><span class="stat-label">Verified photo guides</span></div>
   </section>
 
   <div class="search-row">
-    <input class="search-box" id="search" type="search" placeholder="Search problem, symptom, part, tool, or causeâ€¦" aria-label="Search all TradeStack troubleshooting guides" autocomplete="off" />
+    <input class="search-box" id="search" type="search" placeholder="Search problem, symptom, part, tool, or cause..." aria-label="Search all TradeStack troubleshooting guides" autocomplete="off" />
     <button class="primary-button" type="button" id="searchButton">Search</button>
     <button class="secondary-button" type="button" id="clearButton">Clear</button>
   </div>
@@ -700,8 +700,8 @@
   <section class="filter-panel" aria-label="Guide filters">
     <div class="filter-row">
       <button class="filter-button active" type="button" data-view="all">All Guides</button>
-      <button class="filter-button" type="button" data-view="favorites">â­ Favorites</button>
-      <button class="filter-button" type="button" data-view="recent">ðŸ•˜ Recent</button>
+      <button class="filter-button" type="button" data-view="favorites">&#9733; Favorites</button>
+      <button class="filter-button" type="button" data-view="recent">&#128336; Recent</button>
       <select class="filter-select" id="difficultyFilter" aria-label="Filter by difficulty">
         <option value="all">All Difficulty</option>
         <option value="Easy">Easy</option>
@@ -719,12 +719,12 @@
   </section>
 
   <section class="grid" id="tradeGrid" aria-label="Trade categories">
-    <button class="trade-card" type="button" data-trade="irrigation"><div class="emoji">ðŸ’§</div><h2>Irrigation</h2><p>Valves, timers, leaks, zones</p></button>
-    <button class="trade-card" type="button" data-trade="hvac"><div class="emoji">â„ï¸</div><h2>HVAC</h2><p>Cooling, heating, airflow</p></button>
-    <button class="trade-card" type="button" data-trade="plumbing"><div class="emoji">ðŸš¿</div><h2>Plumbing</h2><p>Leaks, clogs, pressure</p></button>
-    <button class="trade-card" type="button" data-trade="electrical"><div class="emoji">âš¡</div><h2>Electrical</h2><p>Power, breakers, outlets</p></button>
-    <button class="trade-card" type="button" data-trade="landscaping"><div class="emoji">ðŸŒ±</div><h2>Landscaping</h2><p>Plants, trimming, cleanup</p></button>
-    <button class="trade-card" type="button" data-trade="automotive"><div class="emoji">ðŸš—</div><h2>Automotive</h2><p>Basic vehicle checks</p></button>
+    <button class="trade-card" type="button" data-trade="irrigation"><div class="emoji">&#128167;</div><h2>Irrigation</h2><p>Valves, timers, leaks, zones</p></button>
+    <button class="trade-card" type="button" data-trade="hvac"><div class="emoji">&#10052;&#65039;</div><h2>HVAC</h2><p>Cooling, heating, airflow</p></button>
+    <button class="trade-card" type="button" data-trade="plumbing"><div class="emoji">&#128703;</div><h2>Plumbing</h2><p>Leaks, clogs, pressure</p></button>
+    <button class="trade-card" type="button" data-trade="electrical"><div class="emoji">&#9889;</div><h2>Electrical</h2><p>Power, breakers, outlets</p></button>
+    <button class="trade-card" type="button" data-trade="landscaping"><div class="emoji">&#127793;</div><h2>Landscaping</h2><p>Plants, trimming, cleanup</p></button>
+    <button class="trade-card" type="button" data-trade="automotive"><div class="emoji">&#128663;</div><h2>Automotive</h2><p>Basic vehicle checks</p></button>
   </section>
 
   <section class="panel" id="guidePanel" aria-live="polite">
@@ -740,18 +740,18 @@
 </main>
 
 <footer>
-  TradeStack v1.0 Photo Edition - Built by Jesse Perez - With assistance from ChatGPT
+  TradeStack v1.0 Verified Photo Edition - Built by Jesse Perez - With assistance from ChatGPT
   <details class="photo-credits">
     <summary>Photo credits and licenses</summary>
     <div class="photo-credit-list" id="photoCreditsList"></div>
   </details>
 </footer>
 <div class="toast" id="toast" role="status"></div>
-<button id="topBtn" type="button" aria-label="Back to top">â†‘</button>
+<button id="topBtn" type="button" aria-label="Back to top">&#8593;</button>
 
 <div class="photo-modal" id="photoModal" hidden role="dialog" aria-modal="true" aria-labelledby="photoModalTitle">
   <div class="photo-modal-card">
-    <button class="photo-modal-close" id="photoModalClose" type="button" aria-label="Close photo">Ã—</button>
+    <button class="photo-modal-close" id="photoModalClose" type="button" aria-label="Close photo">X</button>
     <img class="photo-modal-image" id="photoModalImage" alt="" />
     <div class="photo-modal-info">
       <h2 id="photoModalTitle"></h2>
@@ -764,7 +764,7 @@
 <script>
 const guides = {
   irrigation: {
-    title: "ðŸ’§ Irrigation Troubleshooting",
+    title: "Irrigation Troubleshooting",
     steps: [
       { problem: "Zone won't turn on", symptom: "Nothing happens when the zone starts.", fix: "Check controller programming, station output, field wiring, waterproof splices, solenoid resistance, flow control, and water supply." },
       { problem: "Zone won't turn off", symptom: "Sprinklers continue running after the timer ends.", fix: "Shut off water if needed. Inspect the diaphragm, solenoid, bleed screw, debris under the diaphragm, and damaged valve body." },
@@ -790,7 +790,7 @@ const guides = {
   },
 
   hvac: {
-    title: "â„ï¸ HVAC Troubleshooting",
+    title: "HVAC Troubleshooting",
     steps: [
       { problem: "AC running but not cooling", symptom: "Air moves, but indoor temperature does not drop.", fix: "Confirm thermostat mode, replace a dirty filter, verify both fans, inspect coils, and check for ice. Refrigerant work requires qualified service." },
       { problem: "Outdoor unit will not run", symptom: "Indoor blower runs, but condenser stays off.", fix: "Check the breaker, disconnect, thermostat call, float switch, contactor coil voltage, capacitor, low-voltage wiring, and overloads." },
@@ -816,7 +816,7 @@ const guides = {
   },
 
   plumbing: {
-    title: "ðŸš¿ Plumbing Troubleshooting",
+    title: "Plumbing Troubleshooting",
     steps: [
       { problem: "Leaking faucet", symptom: "Water drips from the spout after shutoff.", fix: "Shut off supplies, identify cartridge or washer type, inspect seats and O-rings, replace worn parts, and test." },
       { problem: "Slow sink drain", symptom: "Water drains slowly but does not fully back up.", fix: "Remove and clean the stopper, inspect the trap, use a hand auger, and avoid mixing chemical drain cleaners." },
@@ -842,7 +842,7 @@ const guides = {
   },
 
   electrical: {
-    title: "âš¡ Electrical Troubleshooting",
+    title: "Electrical Troubleshooting",
     steps: [
       { problem: "Breaker keeps tripping", symptom: "Breaker trips repeatedly after reset.", fix: "Unplug loads, identify overload or short, inspect connected equipment, and do not keep resetting a breaker that trips immediately." },
       { problem: "Outlet has no power", symptom: "A receptacle is dead while others work.", fix: "Check breaker, upstream GFCI, loose connections, switched outlets, and damaged receptacle with power verified off." },
@@ -868,7 +868,7 @@ const guides = {
   },
 
   landscaping: {
-    title: "ðŸŒ± Landscaping Troubleshooting",
+    title: "Landscaping Troubleshooting",
     steps: [
       { problem: "Brown lawn patches", symptom: "Irregular brown areas appear in turf.", fix: "Check irrigation coverage, soil moisture, pet damage, fungus, grubs, compaction, and mowing height before treating." },
       { problem: "Grass will not grow", symptom: "Seed or sod remains thin or bare.", fix: "Test light, soil condition, irrigation, seed timing, traffic, compaction, and species suitability." },
@@ -894,7 +894,7 @@ const guides = {
   },
 
   automotive: {
-    title: "ðŸš— Automotive Basic Troubleshooting",
+    title: "Automotive Basic Troubleshooting",
     steps: [
       { problem: "Engine will not crank", symptom: "Turning the key produces silence or one click.", fix: "Check battery voltage, terminals, ground cable, starter relay, park-neutral switch, ignition signal, and starter." },
       { problem: "Engine cranks but will not start", symptom: "Starter turns engine, but it never fires.", fix: "Check fuel level, security light, spark, fuel pressure, injector pulse, crank sensor signal, and diagnostic codes." },
@@ -935,21 +935,53 @@ const photoLibrary = {
   "Toilet repair parts": { file: "Toilet valve (2010233506).jpg", title: "Toilet fill valve", credit: "Robbie Sproule", license: "CC BY 2.0" },
   "Water heater": { file: "Water heater.jpg", title: "Water heater", credit: "Victor Korniyenko", license: "CC BY-SA / GFDL; see source" },
   "Drain snake": { file: "Plumbers snake 24689.jpg", title: "Plumber's drain snake", credit: "Walter Siegmund", license: "CC BY-SA 3.0 / GFDL" },
-  "GFCI outlet": { file: "GFCI protected outlet (28904168566).jpg", title: "GFCI protected outlet", credit: "dankeck; uploaded by FÃ¦", license: "CC0 1.0" },
+  "GFCI outlet": { file: "GFCI protected outlet (28904168566).jpg", title: "GFCI protected outlet", credit: "dankeck; uploaded by Fae", license: "CC0 1.0" },
   "Circuit breaker": { file: "Circuit Breaker.png", title: "Circuit breaker", credit: "MebaMCB China", license: "CC0 1.0" },
+  "Electrical outlet": { file: "Electrical Outlet.jpg", title: "Electrical outlet", credit: "Texas Lane", license: "License listed on source page" },
   "Car battery": { file: "Photo-CarBattery.jpg", title: "Automotive battery", credit: "Shaddack", license: "Public domain" },
+  "Starter motor": { file: "Starter motor.JPG", title: "Automotive starter motor", credit: "Y Sekiai", license: "License listed on source page" },
   "Brake parts": { file: "Brake calipers.jpg", title: "Brake calipers and rotor", credit: "Alison", license: "License listed on source page" },
   "Cooling system": { file: "Automobile radiator.jpg", title: "Automobile radiator", credit: "Bill Wrigley", license: "Public domain" },
   "Chassis parts": { file: "Car Tire.jpg", title: "Automotive tire", credit: "Janeset", license: "CC0 1.0" },
   "Mower blade": { file: "Lawn mower blade.jpg", title: "Rotary mower blade", credit: "Atomicdragon136", license: "CC BY 4.0" },
   "Plant and soil": { file: "Collmer leaf speck1.jpg", title: "Plant leaf disease symptoms", credit: "Wikimedia Commons contributor", license: "CC0 1.0" },
-  "Pipe repair fitting": { file: "UPVC pipe and fitting.jpg", title: "PVC pipe and fitting", credit: "Mekalshan", license: "License listed on source page" },
-  "trade:irrigation": { file: "Irrigation Sprinkler.jpg", title: "Irrigation sprinkler", credit: "Wikimedia Commons contributor", license: "CC0 1.0" },
-  "trade:hvac": { file: "HVAC.jpg", title: "HVAC equipment", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
-  "trade:plumbing": { file: "Draintrap.jpg", title: "Plumbing drain trap", credit: "Tomwsulcer", license: "CC0 1.0" },
-  "trade:electrical": { file: "Electrical Outlet.jpg", title: "Electrical outlet", credit: "Texas Lane", license: "License listed on source page" },
-  "trade:landscaping": { file: "BrownTurf.jpg", title: "Brown turf symptoms", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
-  "trade:automotive": { file: "Starter motor.JPG", title: "Automotive starter motor", credit: "Y Sekiai", license: "License listed on source page" }
+  "Brown turf": { file: "BrownTurf.jpg", title: "Brown turf symptoms", credit: "Wikimedia Commons contributor", license: "License listed on source page" },
+  "Pipe repair fitting": { file: "UPVC pipe and fitting.jpg", title: "PVC pipe and fitting", credit: "Mekalshan", license: "License listed on source page" }
+};
+
+// Photos are assigned by exact guide ID. There is deliberately no trade-level fallback.
+// When an exact match is unavailable, TradeStack uses the clean illustrated card instead.
+const photoAssignments = {
+  "irrigation::solenoid-failure": "Solenoid",
+  "irrigation::valve-leaking": "Valve diaphragm",
+  "irrigation::broken-sprinkler-head": "Sprinkler head",
+  "irrigation::controller-not-working": "Irrigation controller",
+  "irrigation::emitter-clogged": "Drip components",
+  "irrigation::broken-lateral-line": "Pipe repair fitting",
+
+  "hvac::bad-capacitor": "HVAC capacitor",
+  "hvac::contactor-failure": "HVAC contactor",
+  "hvac::weak-airflow-from-vents": "Air filter and blower",
+  "hvac::burners-light-then-shut-off": "Flame sensor",
+
+  "plumbing::leaking-faucet": "Faucet cartridge",
+  "plumbing::running-toilet": "Toilet repair parts",
+  "plumbing::water-heater-leaking": "Water heater",
+  "plumbing::slow-sink-drain": "Drain snake",
+
+  "electrical::breaker-keeps-tripping": "Circuit breaker",
+  "electrical::outlet-has-no-power": "Electrical outlet",
+  "electrical::gfci-will-not-reset": "GFCI outlet",
+
+  "landscaping::brown-lawn-patches": "Brown turf",
+  "landscaping::fungal-disease": "Plant and soil",
+  "landscaping::mower-cutting-unevenly": "Mower blade",
+
+  "automotive::engine-will-not-crank": "Starter motor",
+  "automotive::battery-keeps-dying": "Car battery",
+  "automotive::engine-overheating": "Cooling system",
+  "automotive::grinding-brakes": "Brake parts",
+  "automotive::tire-losing-air": "Chassis parts"
 };
 
 const PHOTO_CACHE_NAME = "tradestack-v10-photo-cache";
@@ -962,29 +994,24 @@ function commonsSourceUrl(fileName) {
   return `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(fileName).replace(/%20/g, "_")}`;
 }
 
-function getPhotoEntry(label, tradeKey) {
-  const key = photoLibrary[label] ? label : `trade:${tradeKey}`;
-  return { key, ...(photoLibrary[key] || {}) };
+function getPhotoEntry(guideKey) {
+  const key = photoAssignments[guideKey];
+  if (!key || !photoLibrary[key]) return null;
+  return { key, ...photoLibrary[key] };
 }
 
 function uniquePhotoEntries() {
-  const seen = new Set();
-  return Object.entries(photoLibrary)
-    .map(([key, entry]) => ({ key, ...entry }))
-    .filter(entry => {
-      if (seen.has(entry.file)) return false;
-      seen.add(entry.file);
-      return true;
-    });
+  const usedKeys = [...new Set(Object.values(photoAssignments))];
+  return usedKeys.map(key => ({ key, ...photoLibrary[key] })).filter(entry => entry.file);
 }
 
 const tradeIcons = {
-  irrigation: "ðŸ’§",
-  hvac: "â„ï¸",
-  plumbing: "ðŸš¿",
-  electrical: "âš¡",
-  landscaping: "ðŸŒ±",
-  automotive: "ðŸš—"
+  irrigation: "IRR",
+  hvac: "HVAC",
+  plumbing: "PLB",
+  electrical: "ELEC",
+  landscaping: "LAND",
+  automotive: "AUTO"
 };
 
 const STORAGE = {
@@ -1056,70 +1083,132 @@ function tradeName(tradeKey) {
 }
 
 function getGuideDetails(step, tradeKey) {
-  const text = normalizeText(`${step.problem} ${step.symptom} ${step.fix}`);
-  let cause = "Wear, damage, loose connections, blockage, incorrect adjustment, or loss of power/flow.";
-  let parts = "Inspect first; replace only the failed component.";
-  let tools = "Flashlight, gloves, basic hand tools, and the correct test tool for the trade.";
-  let safety = "Medium";
-  let note = "Confirm the failure before buying parts. Compare model numbers, sizes, ratings, and connection types.";
-  let picture = step.problem;
-  let cost = "$10-$75";
-  let costTier = "$$";
-  let difficulty = "Moderate";
+  const problem = normalizeText(step.problem);
+  const defaults = {
+    irrigation: [
+      "Water supply, controller output, field wiring, valve condition, pressure, or blockage.",
+      "Replace only the failed valve, wire connector, nozzle, fitting, sensor, or controller part.",
+      "Multimeter, pressure gauge, shovel, wire tools, pliers, and screwdrivers as needed.",
+      "Medium", "$5-$100", "$$", "Moderate"
+    ],
+    hvac: [
+      "Airflow, control voltage, motor components, condensate drainage, or refrigerant-system performance.",
+      "Filter or tested electrical/mechanical component only after diagnosis.",
+      "Multimeter, temperature probes, hand tools, and manufacturer service data.",
+      "High", "$15-$300+", "$$$", "Advanced"
+    ],
+    plumbing: [
+      "Worn seals, blockage, pressure problems, failed valves, leaking joints, or fixture damage.",
+      "Correct seal, cartridge, valve, fitting, trap part, or drain-cleaning component.",
+      "Wrenches, pliers, screwdrivers, bucket, plunger, and hand auger as needed.",
+      "Medium", "$5-$150", "$$", "Moderate"
+    ],
+    electrical: [
+      "Loss of power, overload, short circuit, loose connection, failed device, or wiring fault.",
+      "Correctly rated listed device or wiring repair only after the fault is identified.",
+      "Non-contact tester, multimeter, outlet tester, insulated tools, and PPE.",
+      "High", "$10-$150", "$$", "Advanced"
+    ],
+    landscaping: [
+      "Watering, soil, weather, mowing, planting depth, pest, disease, or drainage conditions.",
+      "Plant-specific treatment, soil amendment, irrigation correction, mulch, seed, sod, or mower part.",
+      "Soil probe, moisture meter, pruners, shovel, rake, and mower tools as needed.",
+      "Low", "$0-$200", "$$", "Easy"
+    ],
+    automotive: [
+      "Electrical, fuel, cooling, braking, tire, suspension, drivetrain, or engine-management fault.",
+      "Replace only the component confirmed by inspection, scan data, or electrical/mechanical testing.",
+      "Digital multimeter, scan tool, jack stands, torque wrench, and system-specific test tools.",
+      "High", "$15-$500+", "$$$", "Advanced"
+    ]
+  };
 
-  const rules = [
-    [/solenoid/, "Failed irrigation solenoid or damaged waterproof splice.", "Replacement solenoid and waterproof wire connectors.", "Multimeter, wire strippers, adjustable pliers, screwdriver.", "Medium", "Solenoid", "$15-$45", "$$", "Moderate"],
-    [/diaphragm|zone won't turn off|valve leaking/, "Debris under the diaphragm, torn diaphragm, or damaged valve seal.", "Valve diaphragm kit, O-rings, bonnet screws if damaged.", "Screwdriver, small brush, channel-lock pliers.", "Medium", "Valve diaphragm", "$10-$40", "$", "Moderate"],
-    [/sprinkler head|spray head|rotor|nozzle/, "Broken body, clogged nozzle, low pressure, or stripped internal gears.", "Matching spray head or rotor, nozzle, swing-pipe fitting, or riser.", "Shovel, sprinkler key, pliers, thread tape.", "Low", "Sprinkler head", "$5-$35", "$", "Easy"],
-    [/controller|timer|station output/, "Power loss, failed transformer or fuse, bad programming, or damaged station output.", "Controller fuse, transformer, or compatible controller if the board failed.", "Multimeter, screwdriver, wire labels.", "High", "Irrigation controller", "$15-$300", "$$$", "Advanced"],
-    [/drip|emitter/, "Clogged filter or emitter, failed regulator, pinched tubing, or incorrect runtime.", "Emitter, filter, regulator, tubing, or fittings as confirmed.", "Flush tool, cutter, punch tool, pressure gauge.", "Low", "Drip components", "$2-$60", "$", "Easy"],
-    [/capacitor/, "Capacitor has weakened, opened, shorted, or bulged from heat and age.", "Correct ÂµF-rated run or start capacitor with equal or higher voltage rating.", "Multimeter with capacitance, insulated screwdriver, needle-nose pliers.", "High", "HVAC capacitor", "$15-$60", "$$", "Advanced"],
-    [/contactor/, "Burned contacts, weak coil, low control voltage, or loose wiring.", "Equivalent contactor with matching poles, coil voltage, and amp rating.", "Multimeter, insulated screwdriver, nut driver.", "High", "HVAC contactor", "$20-$80", "$$", "Advanced"],
-    [/filter|airflow|blower|frozen evaporator/, "Restricted airflow from a dirty filter, coil, blower wheel, duct, or closed register.", "Correct air filter; blower or coil parts only after testing.", "Manometer if available, flashlight, nut driver, coil brush.", "High", "Air filter and blower", "$10-$150", "$$", "Moderate"],
-    [/flame sensor|burners light then shut off/, "Flame sensor contamination, poor grounding, or weak flame signal.", "Flame sensor only if cleaning and electrical checks fail.", "Nut driver, fine abrasive pad, multimeter with microamp function.", "High", "Flame sensor", "$0-$60", "$", "Advanced"],
-    [/compressor|reversing valve|refrigerant|superheat|subcooling/, "Electrical, airflow, refrigerant-charge, restriction, or sealed-system fault.", "Exact component depends on pressure, temperature, and electrical test results.", "Manufacturer data, gauges, temperature probes, meter, and required PPE.", "High", "HVAC sealed system", "$50-$1,500+", "$$$", "Advanced"],
-    [/faucet|cartridge/, "Worn cartridge, washer, seat, O-ring, or mineral buildup.", "Matching faucet cartridge or washer kit and O-rings.", "Adjustable wrench, screwdriver, hex keys, cartridge puller if needed.", "Low", "Faucet cartridge", "$5-$80", "$$", "Easy"],
-    [/toilet|flapper|fill valve/, "Worn flapper, faulty fill valve, poor chain adjustment, or leaking seal.", "Flapper, fill valve, tank bolts, or gasket as needed.", "Adjustable pliers, sponge, screwdriver.", "Low", "Toilet repair parts", "$5-$45", "$", "Easy"],
-    [/water heater/, "Heating element, thermostat, pilot, gas-control, venting, or tank failure.", "Element, thermostat, valve, anode, or complete heater only after diagnosis.", "Multimeter, wrenches, hose, combustion tools where required.", "High", "Water heater", "$20-$900+", "$$$", "Advanced"],
-    [/drain|clog|backup|sewer/, "Hair, grease, roots, foreign material, or a blocked vent or main line.", "Trap washers or cleanout cap; cable head chosen for blockage.", "Plunger, hand auger or drain snake, bucket, gloves.", "Medium", "Drain snake", "$0-$100", "$$", "Moderate"],
-    [/gfci|outlet|receptacle/, "Tripped protection, loose terminal, failed device, moisture, or upstream open connection.", "Correctly rated GFCI or receptacle and cover if testing confirms failure.", "Non-contact tester, multimeter, insulated screwdriver, outlet tester.", "High", "GFCI outlet", "$10-$40", "$", "Advanced"],
-    [/breaker|panel|open neutral|reversed polarity|no ground/, "Overload, short circuit, ground fault, loose connection, wiring defect, or failed breaker.", "Exact panel-listed breaker or wiring repair only after the fault is isolated.", "Clamp meter, multimeter, insulated tools, PPE.", "High", "Circuit breaker", "$15-$150", "$$", "Advanced"],
-    [/battery|will not crank|alternator|starter/, "Weak battery, corroded terminals, poor ground, charging failure, or starter-circuit fault.", "Battery, terminal ends, alternator, fuse, or starter only after test results.", "Digital multimeter, battery tester, socket set, wire brush.", "High", "Car battery", "$10-$450", "$$$", "Moderate"],
-    [/brake|grinding brakes/, "Worn pads, damaged rotor, seized caliper, fluid leak, or air in the hydraulic system.", "Pads, rotors, caliper, hose, or brake fluid as confirmed.", "Jack stands, lug wrench, socket set, caliper tool, torque wrench.", "High", "Brake parts", "$40-$500", "$$$", "Advanced"],
-    [/overheating|coolant/, "Low coolant, leak, failed thermostat, fan, water pump, radiator restriction, or engine fault.", "Coolant, hose, thermostat, fan assembly, water pump, or radiator as tested.", "Cooling-system pressure tester, scan tool, basic hand tools.", "High", "Cooling system", "$15-$700", "$$$", "Advanced"],
-    [/tire|wheel|suspension|steering/, "Wear, imbalance, looseness, damage, or alignment error.", "Tire, bearing, joint, link, bushing, strut, or related hardware after inspection.", "Jack stands, torque wrench, pry bar, tread gauge, alignment equipment as needed.", "High", "Chassis parts", "$10-$900", "$$$", "Advanced"],
-    [/mower|blade|scalped lawn/, "Dull or bent blade, incorrect deck height, uneven terrain, or excessive mowing speed.", "Correct mower blade, spindle, or belt if damaged.", "Socket set, blade holder, torque wrench, safety glasses.", "Medium", "Mower blade", "$20-$150", "$$", "Moderate"],
-    [/plant|shrub|tree|sod|lawn|grass|weed|mulch|soil|drainage/, "Watering, soil, heat, pest, disease, planting-depth, or root-zone problem.", "Plant-specific treatment, mulch, soil amendment, or replacement plant only if necessary.", "Soil probe, pruners, shovel, moisture meter.", "Low", "Plant and soil", "$0-$200", "$$", "Easy"],
-    [/leak|broken mainline|broken lateral|pipe joint|hose bib/, "Cracked pipe or fitting, failed seal, freeze damage, movement, or excessive pressure.", "Matching pipe, pressure-rated coupling, primer and cement, or approved repair fitting.", "Shovel, pipe cutter, deburring tool, wrenches.", "Medium", "Pipe repair fitting", "$10-$120", "$$", "Moderate"]
-  ];
+  let [cause, parts, tools, safety, cost, costTier, difficulty] = defaults[tradeKey] || defaults.irrigation;
+  let note = "Confirm the failure before buying parts. Match model numbers, sizes, ratings, and connection types.";
 
-  for (const [pattern, c, p, t, s, pic, range, tier, level] of rules) {
-    if (pattern.test(text)) {
+  const rulesByTrade = {
+    irrigation: [
+      [/zone won't turn on|solenoid failure/, "Failed solenoid, damaged waterproof splice, open common wire, closed flow control, or missing controller output.", "Replacement solenoid, waterproof wire connectors, or valve parts after testing.", "Multimeter, wire strippers, waterproof connectors, pliers, screwdriver.", "Medium", "$10-$60", "$$", "Moderate"],
+      [/zone won't turn off|valve leaking/, "Debris under the diaphragm, torn diaphragm, loose bleed screw, damaged seal, or stuck solenoid.", "Diaphragm kit, O-rings, solenoid, or complete valve if the body is damaged.", "Screwdriver, small brush, pliers, bucket, valve key.", "Medium", "$10-$80", "$$", "Moderate"],
+      [/low water pressure|high water pressure|uneven sprinkler coverage/, "Supply pressure, leaks, restrictions, incorrect nozzles, blocked spray, or too many heads on the zone.", "Pressure regulator, matched nozzles, damaged head, filter, valve, or pipe repair as confirmed.", "Pressure gauge, catch cans, shovel, nozzle tool, pliers.", "Low", "$0-$100", "$$", "Moderate"],
+      [/broken sprinkler head|clogged nozzle|rotor won't rotate|spray head won't pop up/, "Broken body, clogged screen/nozzle, low pressure, buried head, or stripped rotor gears.", "Matching spray body, rotor, nozzle, riser, swing joint, or filter screen.", "Shovel, sprinkler key, pliers, thread tape, small brush.", "Low", "$5-$40", "$", "Easy"],
+      [/controller not working|rain sensor failure/, "Power loss, failed transformer or fuse, incorrect programming, damaged station output, sensor wiring, or dead wireless battery.", "Fuse, transformer, rain-sensor battery, compatible sensor, or controller after testing.", "Multimeter, screwdriver, wire labels, small jumper wire.", "High", "$5-$300", "$$$", "Advanced"],
+      [/broken lateral line|broken mainline|backflow preventer leaking/, "Cracked pipe/fitting, failed seal, freeze damage, movement, excessive pressure, or debris in the backflow assembly.", "Matching pressure-rated pipe/fittings, repair coupling, seals, or certified backflow service parts.", "Shovel, pipe cutter, deburring tool, wrenches, primer and cement where approved.", "Medium", "$10-$200+", "$$$", "Moderate"],
+      [/drip system not working|emitter clogged/, "Clogged filter/emitter, failed regulator, pinched tubing, closed valve, or incorrect runtime.", "Emitter, filter, regulator, tubing, punch-in fitting, or flush cap.", "Tubing cutter, emitter punch, pressure gauge, flush tool.", "Low", "$2-$60", "$", "Easy"],
+      [/wire short|open wire/, "Cut insulation, corroded splice, broken conductor, shared-common failure, or shorted solenoid.", "Irrigation wire, waterproof connectors, replacement solenoid if resistance testing confirms failure.", "Multimeter, wire locator if available, wire strippers, waterproof connectors.", "Medium", "$5-$100", "$$", "Advanced"]
+    ],
+    hvac: [
+      [/bad capacitor/, "Weak, open, shorted, or heat-damaged capacitor causing a motor or compressor to start poorly.", "Correct uF-rated capacitor with the same capacitance and equal or higher voltage rating.", "Capacitance meter, insulated screwdriver, needle-nose pliers, PPE.", "High", "$15-$60", "$$", "Advanced"],
+      [/contactor failure/, "Burned contacts, weak coil, low control voltage, loose terminals, or mechanical sticking.", "Equivalent contactor with matching poles, coil voltage, and amp rating.", "Multimeter, insulated screwdriver, nut driver, PPE.", "High", "$20-$80", "$$", "Advanced"],
+      [/frozen evaporator coil|weak airflow from vents|indoor blower will not run|duct leak|furnace overheating/, "Restricted airflow from the filter, coil, blower wheel, ductwork, registers, or motor problem.", "Correct filter, tested blower component, duct repair material, or coil cleaning supplies.", "Manometer if available, multimeter, flashlight, nut driver, coil brush.", "High", "$10-$300+", "$$$", "Moderate"],
+      [/gas furnace will not ignite|burners light then shut off/, "Igniter, flame sensor, grounding, gas supply, pressure switch, condensate, or venting problem.", "Igniter or flame sensor only after testing; other gas-control parts require qualified diagnosis.", "Multimeter, microamp meter function, nut driver, combustion/venting tools where required.", "High", "$0-$250+", "$$$", "Advanced"],
+      [/compressor will not start|reversing valve problem|high superheat|high subcooling|ac running but not cooling|dirty condenser coil|heat pump blows cool air/, "Airflow, electrical supply, capacitor/contactor, refrigerant charge, restriction, coil condition, or sealed-system fault.", "Exact part depends on voltage, resistance, temperature, and pressure test results.", "Manufacturer data, multimeter, temperature probes, gauges, coil-cleaning tools, PPE.", "High", "$15-$1,500+", "$$$", "Advanced"],
+      [/outdoor unit will not run|thermostat calls but nothing happens|system short cycles/, "Breaker/disconnect, float safety, transformer/fuse, thermostat wiring, control board, contactor, or equipment protection is interrupting operation.", "Fuse, low-voltage wiring repair, float switch, contactor, thermostat, or tested control part.", "Multimeter, insulated hand tools, thermostat jumper, manufacturer wiring diagram.", "High", "$5-$300+", "$$$", "Advanced"],
+      [/water leaking near indoor unit/, "Blocked condensate drain/trap, failed pump, cracked pan, disconnected line, or coil icing.", "Drain fittings, trap, condensate pump, pan treatment, or damaged drain pan as confirmed.", "Wet vacuum, tubing brush, bucket, level, hand tools.", "Medium", "$5-$200", "$$", "Moderate"]
+    ],
+    plumbing: [
+      [/leaking faucet|leaking shower valve|leaking hose bib/, "Worn cartridge, washer, seat, packing, O-ring, vacuum breaker, or freeze damage.", "Matching cartridge/washer kit, O-rings, packing, vacuum breaker, or replacement sillcock.", "Adjustable wrench, screwdrivers, hex keys, cartridge puller if needed.", "Low", "$5-$120", "$$", "Easy"],
+      [/clogged toilet/, "Paper or foreign-object blockage in the trapway or branch drain.", "Usually no parts; flange plunger, toilet auger, or closet seal if the toilet must be removed.", "Flange plunger, toilet auger, bucket, gloves.", "Low", "$0-$75", "$", "Easy"],
+      [/slow sink drain|multiple drains backing up|sewer odor indoors/, "Hair, grease, roots, foreign material, dry trap, blocked vent, failed seal, or main-line obstruction.", "Trap washers, cleanout cap, wax seal, or drain-cable head selected for the blockage.", "Plunger, hand auger/drain snake, bucket, inspection light, gloves.", "Medium", "$0-$150+", "$$", "Moderate"],
+      [/running toilet|toilet leaking at base/, "Worn flapper/fill valve, poor chain adjustment, failed wax/gasket seal, loose mounting, or damaged flange.", "Flapper, fill valve, tank gasket, wax ring, closet bolts, or flange repair kit.", "Adjustable pliers, sponge, screwdriver, level, wrench.", "Low", "$5-$80", "$$", "Easy"],
+      [/water heater not heating|water heater leaking/, "Failed element/thermostat, pilot/gas-control problem, leaking fitting/relief valve, or failed tank.", "Element, thermostat, valve, anode, fitting, or complete heater only after diagnosis.", "Multimeter, wrenches, hose, gas/combustion tools where required.", "High", "$20-$900+", "$$$", "Advanced"],
+      [/low water pressure|high water pressure|noisy pipes|water hammer/, "Restricted aerator/valve, regulator failure, excessive static pressure, loose piping, or quick-closing valve shock.", "Aerator, pressure-reducing valve, expansion tank, pipe supports, or water-hammer arrestor.", "Pressure gauge, wrenches, pliers, pipe supports.", "Medium", "$0-$250", "$$$", "Moderate"],
+      [/leaking pipe joint|frozen pipe/, "Failed joint, split pipe, freeze damage, movement, corrosion, or excessive pressure.", "Matching pipe, approved coupling, fittings, primer/cement, solder/press parts, or insulation.", "Pipe cutter, deburring tool, wrenches, thawing equipment approved for the pipe material.", "Medium", "$10-$200+", "$$$", "Moderate"],
+      [/garbage disposal jammed|garbage disposal dead/, "Mechanical jam, tripped overload/GFCI, failed switch, loose plug/wiring, or failed motor.", "No parts for a simple jam; switch, cord, disposer, or mounting/seal parts after testing.", "Manufacturer wrench, tongs, multimeter, screwdriver, bucket.", "Medium", "$0-$250", "$$$", "Moderate"],
+      [/sump pump not working/, "Loss of power, stuck float, blocked intake/discharge, failed check valve, or failed motor.", "Float switch, check valve, discharge fitting, backup power, or pump after testing.", "Bucket, wet vacuum, multimeter, screwdrivers, wrenches.", "High", "$10-$350", "$$$", "Moderate"]
+    ],
+    electrical: [
+      [/breaker keeps tripping|breaker will not reset|panel buzzing|generator not feeding circuits/, "Overload, short circuit, ground fault, loose/arcing connection, transfer/interlock error, or failed listed breaker.", "Exact panel-listed breaker or wiring repair only after the circuit fault is isolated.", "Clamp meter, multimeter, insulated tools, PPE; panel work requires qualified service.", "High", "$15-$250+", "$$$", "Advanced"],
+      [/outlet has no power|gfci will not reset|outdoor outlet dead|warm outlet or switch|half the room lost power|open neutral|reversed polarity|no ground/, "Tripped protection, failed device, moisture, loose terminal, open upstream connection, or wiring defect.", "Correctly rated receptacle/GFCI, weather cover, connector, or wiring repair after testing.", "Non-contact tester, multimeter, outlet tester, insulated screwdriver, PPE.", "High", "$10-$100", "$$", "Advanced"],
+      [/switch does not work|light fixture stays on/, "Failed switch, loose terminal, incorrect switched-hot routing, smart-control setting, or downstream connection problem.", "Correctly rated switch/control or wiring repair after testing.", "Non-contact tester, multimeter, insulated screwdriver, wire connectors.", "High", "$5-$100", "$$", "Advanced"],
+      [/ceiling fan will not run/, "Loss of power, failed pull-chain/remote receiver/capacitor, loose wiring, or motor obstruction.", "Battery, pull-chain switch, receiver, fan capacitor, or fan assembly after testing.", "Non-contact tester, multimeter, insulated tools, ladder.", "High", "$5-$250", "$$$", "Advanced"],
+      [/doorbell not working/, "Failed button, transformer, chime, low-voltage wiring, or insufficient smart-doorbell power.", "Button, transformer, chime, wire, or compatible power kit after testing.", "Multimeter, screwdriver, low-voltage wire tools.", "Medium", "$5-$100", "$$", "Moderate"],
+      [/smoke detector chirping/, "Low battery, dust, end-of-life warning, lost hardwired power, or incompatible replacement unit.", "Correct battery or listed replacement detector matching the system.", "Step ladder, vacuum/soft brush, voltage tester for hardwired units.", "Medium", "$5-$60", "$", "Easy"],
+      [/lights flicker/, "Loose lamp/fixture/switch/neutral, overloaded circuit, dimmer incompatibility, or utility-service issue.", "Lamp, compatible dimmer, fixture, connector, or wiring/service repair after diagnosis.", "Multimeter, non-contact tester, insulated tools; widespread flicker needs professional inspection.", "High", "$5-$250+", "$$$", "Advanced"],
+      [/burning smell|appliance shocks user/, "Overheating insulation, loose/arcing connection, damaged cord, moisture, missing ground, or leakage current.", "Do not replace parts blindly; disconnect equipment and repair the confirmed electrical fault.", "Do not energize for casual testing. Use qualified electrical service and appropriate test equipment.", "High", "$20-$300+", "$$$", "Advanced", "Stop use immediately if there is smoke, arcing, severe heat, or shock." ]
+    ],
+    landscaping: [
+      [/brown lawn patches|grass will not grow|scalped lawn|new sod failing/, "Irrigation coverage, soil contact, compaction, mowing height, heat, pet damage, disease, or unsuitable turf species.", "Seed/sod, soil amendment, irrigation correction, mower blade, or targeted treatment after diagnosis.", "Soil probe, moisture meter, catch cans, rake, mower tools.", "Low", "$0-$250", "$$$", "Easy"],
+      [/yellow leaves|wilting plants|overwatered plants|underwatered plants|shrub not flowering|plant pest damage|fungal disease|salt damage/, "Watering, drainage, root health, sunlight, nutrients, pests, disease, salt, or seasonal stress.", "Plant-specific treatment, emitter correction, mulch, soil amendment, or replacement only if necessary.", "Soil probe, hand lens, pruners, moisture meter, clean hand tools.", "Low", "$0-$100", "$$", "Easy"],
+      [/tree leaning|tree planted too deep/, "Poor planting depth, unstable root ball, saturated soil, wind exposure, buried root flare, or improper staking.", "Stake/tie materials, mulch correction, soil work, or replanting materials.", "Shovel, level, hand pruners, staking tools.", "Medium", "$0-$200", "$$", "Moderate"],
+      [/weeds returning|mulch washing away|soil compaction|poor drainage/, "Bare soil, seed bank, runoff, slope, irrigation overspray, traffic, compaction, or grading problem.", "Mulch/edging, soil amendment, drainage material, seed, or labeled weed-control product if appropriate.", "Rake, shovel, aerator, level, soil probe.", "Low", "$0-$300", "$$$", "Moderate"],
+      [/mower cutting unevenly/, "Unequal tire pressure, unlevel deck, bent/dull blade, worn spindle, buildup, or excessive mowing speed.", "Correct blade, spindle, belt, tire repair, or deck hardware after inspection.", "Tire gauge, socket set, blade holder, torque wrench, safety glasses.", "Medium", "$0-$150", "$$", "Moderate"],
+      [/hedge has bare interior/, "Repeated surface shearing blocked light from the interior and encouraged dense outer growth.", "Usually no parts; selective pruning and gradual restoration are required.", "Bypass pruners, loppers, hedge shears, eye protection.", "Low", "$0-$80", "$", "Moderate"]
+    ],
+    automotive: [
+      [/engine will not crank|battery keeps dying|alternator not charging/, "Weak battery, corroded terminals, poor ground, charging fault, parasitic draw, relay/neutral-safety fault, or starter problem.", "Battery, terminal ends, cable, fuse, alternator, relay, or starter only after test results.", "Digital multimeter, battery tester, clamp meter, socket set, wire brush.", "High", "$10-$500+", "$$$", "Moderate"],
+      [/engine cranks but will not start|rough idle|engine misfire|check engine light/, "Fuel, spark, air, compression, sensor input, wiring, vacuum leak, or engine-management fault.", "Code-specific sensor, ignition, injector, hose, wiring, or mechanical part only after diagnosis.", "Scan tool, multimeter, spark/fuel/compression test tools, smoke tester if available.", "High", "$0-$800+", "$$$", "Advanced"],
+      [/engine overheating|coolant leak/, "Low coolant, hose/radiator leak, thermostat, fan, water pump, restriction, cap, or internal engine fault.", "Coolant, hose, cap, thermostat, fan, pump, radiator, or gasket only after testing.", "Cooling-system pressure tester, scan tool, hand tools; never open a hot system.", "High", "$15-$1,500+", "$$$", "Advanced"],
+      [/oil pressure warning/, "Low oil, leak, failed sender, wiring problem, pickup restriction, worn pump, or internal engine wear.", "Oil/filter, sender, wiring repair, pump, or engine repair only after actual pressure testing.", "Mechanical oil-pressure gauge, scan tool, multimeter, hand tools.", "High", "$10-$2,000+", "$$$", "Advanced", "Shut the engine off immediately until actual oil pressure is verified."],
+      [/brake pedal feels soft|vehicle pulls while braking|grinding brakes/, "Fluid leak/air, worn pads/rotors, seized caliper, damaged hose, master-cylinder fault, tire pressure, or suspension issue.", "Pads, rotors, caliper, hose, fluid, wheel cylinder, or master cylinder after inspection.", "Jack stands, torque wrench, brake tools, line wrench, bleeding equipment.", "High", "$40-$800+", "$$$", "Advanced", "Do not drive if braking is weak, grinding, or fluid is leaking."],
+      [/steering wheel vibration|tire losing air|suspension clunk/, "Tire imbalance/damage, wheel runout, bearing/joint/bushing/strut wear, loose hardware, or alignment problem.", "Tire, valve stem, wheel, bearing, link, joint, bushing, strut, or hardware after inspection.", "Jack stands, torque wrench, pry bar, tread gauge, dial indicator/alignment tools as needed.", "High", "$10-$1,000+", "$$$", "Advanced"],
+      [/transmission slipping|car will not shift from park/, "Low/incorrect fluid, internal wear, solenoid/control fault, brake-switch/interlock problem, wiring, or module fault.", "Fluid/filter, brake switch, interlock part, solenoid, wiring repair, or transmission service after diagnosis.", "Scan tool, multimeter, hand tools, manufacturer fluid-level procedure.", "High", "$10-$3,000+", "$$$", "Advanced"],
+      [/ac not cold/, "Low refrigerant from a leak, compressor/control fault, fan problem, restriction, cabin filter, or blend-door issue.", "Filter, seal, tested control/component, or refrigerant-system repair after leak diagnosis.", "Temperature probes, scan tool, multimeter, refrigerant equipment and certification where required.", "High", "$15-$1,500+", "$$$", "Advanced"],
+      [/fuel smell/, "Loose cap, leaking line/tank/injector seal, evaporative-system fault, or spilled fuel.", "Cap, seal, hose/line, injector O-ring, tank, or EVAP part only after locating the leak.", "Inspection light rated for the environment, scan tool, fuel-pressure/leak test equipment.", "High", "$10-$1,500+", "$$$", "Advanced", "Do not smoke or create sparks. Stop driving if the odor is strong or liquid fuel is visible."]
+    ]
+  };
+
+  for (const rule of rulesByTrade[tradeKey] || []) {
+    const [pattern, c, p, t, s, range, tier, level, specialNote] = rule;
+    if (pattern.test(problem)) {
       cause = c;
       parts = p;
       tools = t;
       safety = s;
-      picture = pic;
       cost = range;
       costTier = tier;
       difficulty = level;
+      if (specialNote) note = specialNote;
       break;
     }
   }
 
-  if (text.includes("gas") || text.includes("fuel smell") || text.includes("shock") || text.includes("panel buzzing")) {
-    safety = "High";
-    difficulty = "Advanced";
-    note = "Stop work if there is gas odor, active arcing, smoke, severe heat, or exposed live conductors. Use qualified service.";
-  }
-
-  if (safety === "High" && difficulty === "Easy") difficulty = "Moderate";
-  return { cause, parts, tools, safety, note, picture, cost, costTier, difficulty };
+  return { cause, parts, tools, safety, note, picture: step.problem, cost, costTier, difficulty };
 }
 
 function createPartPicture(label, tradeKey, uniqueKey) {
-  const safeLabel = escapeHtml(label.length > 24 ? `${label.slice(0, 24)}â€¦` : label);
-  const icon = tradeIcons[tradeKey] || "ðŸ› ï¸";
+  const safeLabel = escapeHtml(label.length > 24 ? `${label.slice(0, 24)}...` : label);
+  const icon = tradeIcons[tradeKey] || "TOOLS";
   const gradientId = `partGrad-${slugify(uniqueKey)}`;
   return `
     <svg viewBox="0 0 320 190" role="img" aria-label="${safeLabel} fallback component illustration">
@@ -1131,39 +1220,40 @@ function createPartPicture(label, tradeKey, uniqueKey) {
       </defs>
       <rect x="4" y="4" width="312" height="182" rx="18" fill="#14212b" stroke="#4b6172" stroke-width="3" />
       <circle cx="80" cy="83" r="49" fill="url(#${gradientId})" />
-      <text x="80" y="100" text-anchor="middle" font-size="49">${icon}</text>
+      <text x="80" y="93" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="800">${icon}</text>
       <rect x="146" y="46" width="137" height="18" rx="9" fill="#405568" />
       <rect x="146" y="76" width="111" height="13" rx="6" fill="#2c3f50" />
       <rect x="146" y="101" width="128" height="13" rx="6" fill="#2c3f50" />
       <text x="160" y="151" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="700">${safeLabel}</text>
-      <text x="160" y="174" text-anchor="middle" fill="#b8c8d4" font-size="13">OFFLINE FALLBACK GUIDE</text>
+      <text x="160" y="174" text-anchor="middle" fill="#b8c8d4" font-size="13">ILLUSTRATED GUIDE</text>
     </svg>`;
 }
 
-function createPartMedia(label, tradeKey, uniqueKey) {
-  const photo = getPhotoEntry(label, tradeKey);
-  if (!photo.file) {
-    return `<div class="part-picture">${createPartPicture(label, tradeKey, uniqueKey)}</div>`;
+function createPartMedia(result) {
+  const { id, tradeKey, step } = result;
+  const photo = getPhotoEntry(id);
+  if (!photo || !photo.file) {
+    return `<div class="part-picture">${createPartPicture(step.problem, tradeKey, id)}</div>`;
   }
 
   const url = commonsPhotoUrl(photo.file);
-  const alt = `${photo.title || label} reference photo`;
+  const alt = `${photo.title} reference photo for ${step.problem}`;
   return `
     <button class="part-picture photo-trigger" type="button" data-photo-key="${escapeHtml(photo.key)}" aria-label="Enlarge ${escapeHtml(alt)}">
       <img
         class="part-photo"
         src="${escapeHtml(url)}"
         data-photo-url="${escapeHtml(url)}"
-        data-label="${escapeHtml(label)}"
+        data-label="${escapeHtml(step.problem)}"
         data-trade="${escapeHtml(tradeKey)}"
-        data-unique="${escapeHtml(uniqueKey)}"
+        data-unique="${escapeHtml(id)}"
         alt="${escapeHtml(alt)}"
         loading="lazy"
         decoding="async"
         referrerpolicy="no-referrer"
         onerror="handlePhotoError(this)"
       />
-      <span class="photo-badge">ðŸ“¸ Real photo â€¢ tap to enlarge</span>
+      <span class="photo-badge">REAL REFERENCE PHOTO - TAP TO ENLARGE</span>
     </button>`;
 }
 
@@ -1251,18 +1341,18 @@ function getCurrentResults() {
 }
 
 function viewTitle() {
-  if (state.view === "favorites") return "â­ Favorite Guides";
-  if (state.view === "recent") return "ðŸ•˜ Recently Opened Guides";
+  if (state.view === "favorites") return "Favorite Guides";
+  if (state.view === "recent") return "Recently Opened Guides";
   if (state.view === "trade" && state.trade) return guides[state.trade].title;
-  if (state.view === "search") return `ðŸ”Ž Search Results for â€œ${state.query}â€`;
-  return "ðŸ§° All Troubleshooting Guides";
+  if (state.view === "search") return `Search Results for "${state.query}"`;
+  return "All Troubleshooting Guides";
 }
 
 function activeFilterText() {
   const filters = [];
   if (state.difficulty !== "all") filters.push(state.difficulty);
   if (state.cost !== "all") filters.push(`${state.cost} cost`);
-  return filters.length ? ` â€¢ Filtered by ${filters.join(" + ")}` : "";
+  return filters.length ? ` - Filtered by ${filters.join(" + ")}` : "";
 }
 
 function renderGuideCard(result, displayIndex) {
@@ -1274,7 +1364,7 @@ function renderGuideCard(result, displayIndex) {
   return `
     <article class="guide-card" data-guide-id="${escapeHtml(id)}">
       <div class="guide-summary">
-        ${createPartMedia(details.picture, tradeKey, id)}
+        ${createPartMedia(result)}
         <div>
           <span class="trade-label">${escapeHtml(tradeTitle)}</span>
           <div class="guide-heading-row">
@@ -1282,26 +1372,26 @@ function renderGuideCard(result, displayIndex) {
           </div>
           <p class="guide-symptom"><b>Symptom:</b> ${escapeHtml(step.symptom)}</p>
           <div class="badge-row">
-            <span class="badge ${difficultyClass}">ðŸ§  ${escapeHtml(details.difficulty)}</span>
-            <span class="badge cost-badge">ðŸ’µ ${escapeHtml(details.costTier)} â€¢ ${escapeHtml(details.cost)}</span>
-            <span class="badge">âš ï¸ ${escapeHtml(details.safety)} safety</span>
+            <span class="badge ${difficultyClass}">Difficulty: ${escapeHtml(details.difficulty)}</span>
+            <span class="badge cost-badge">DIY cost: ${escapeHtml(details.costTier)} - ${escapeHtml(details.cost)}</span>
+            <span class="badge">Safety: ${escapeHtml(details.safety)}</span>
           </div>
           <div class="guide-actions">
-            <button class="favorite-button ${saved ? "saved" : ""}" type="button" data-action="favorite" aria-pressed="${saved}" title="Save favorite">${saved ? "â˜…" : "â˜†"}</button>
+            <button class="favorite-button ${saved ? "saved" : ""}" type="button" data-action="favorite" aria-pressed="${saved}" title="Save favorite">${saved ? "\u2605" : "\u2606"}</button>
             <button class="small-button open" type="button" data-action="expand" aria-expanded="false">Open Guide</button>
           </div>
         </div>
       </div>
       <div class="guide-body" hidden>
         <div class="detail-grid">
-          <div class="detail-box"><b>ðŸ”§ Repair steps</b>${escapeHtml(step.fix)}</div>
-          <div class="detail-box"><b>ðŸŽ¯ Most likely cause</b>${escapeHtml(details.cause)}</div>
-          <div class="detail-box"><b>ðŸ§© Parts possibly needed</b>${escapeHtml(details.parts)}</div>
-          <div class="detail-box"><b>ðŸ§° Tools needed</b>${escapeHtml(details.tools)}</div>
-          <div class="detail-box"><b>ðŸ’µ Typical DIY cost</b>${escapeHtml(details.cost)} in parts or materials. Labor not included.</div>
-          <div class="detail-box ${safetyClass}"><b>âš ï¸ Safety level: ${escapeHtml(details.safety)}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing. Use qualified service when required." : "Use PPE and isolate the system before repair."}</div>
+          <div class="detail-box"><b>Repair steps</b>${escapeHtml(step.fix)}</div>
+          <div class="detail-box"><b>Most likely cause</b>${escapeHtml(details.cause)}</div>
+          <div class="detail-box"><b>Parts possibly needed</b>${escapeHtml(details.parts)}</div>
+          <div class="detail-box"><b>Tools needed</b>${escapeHtml(details.tools)}</div>
+          <div class="detail-box"><b>Typical DIY cost</b>${escapeHtml(details.cost)} in parts or materials. Labor not included.</div>
+          <div class="detail-box ${safetyClass}"><b>Safety level: ${escapeHtml(details.safety)}</b>${details.safety === "High" ? "Disconnect power, fuel, pressure, or water before testing. Use qualified service when required." : "Use PPE and isolate the system before repair."}</div>
         </div>
-        <div class="repair-note"><b>ðŸ“‹ Field note:</b> ${escapeHtml(details.note)}</div>
+        <div class="repair-note"><b>Field note:</b> ${escapeHtml(details.note)}</div>
         <div class="body-actions">
           <button class="small-button" type="button" data-action="copy">Copy Guide</button>
         </div>
@@ -1408,7 +1498,7 @@ function toggleFavorite(id) {
       const saved = favorites.has(id);
       button.classList.toggle("saved", saved);
       button.setAttribute("aria-pressed", String(saved));
-      button.textContent = saved ? "â˜…" : "â˜†";
+      button.textContent = saved ? "\u2605" : "\u2606";
     }
   }
 }
@@ -1421,7 +1511,9 @@ function addRecent(id) {
 
 function guideCopyText(result) {
   const d = result.details;
-  return `${result.tradeTitle} - ${result.step.problem}\n\nSymptom: ${result.step.symptom}\nRepair steps: ${result.step.fix}\nMost likely cause: ${d.cause}\nParts: ${d.parts}\nTools: ${d.tools}\nDifficulty: ${d.difficulty}\nTypical DIY cost: ${d.cost}\nSafety: ${d.safety}\nField note: ${d.note}\nPhoto source: ${commonsSourceUrl(getPhotoEntry(d.picture, result.tradeKey).file || "")}`;
+  const photo = getPhotoEntry(result.id);
+  const photoLine = photo ? `\nPhoto source: ${commonsSourceUrl(photo.file)}` : "";
+  return `${result.tradeTitle} - ${result.step.problem}\n\nSymptom: ${result.step.symptom}\nRepair steps: ${result.step.fix}\nMost likely cause: ${d.cause}\nParts: ${d.parts}\nTools: ${d.tools}\nDifficulty: ${d.difficulty}\nTypical DIY cost: ${d.cost}\nSafety: ${d.safety}\nField note: ${d.note}${photoLine}`;
 }
 
 async function copyGuide(id) {
@@ -1457,7 +1549,7 @@ function openPhoto(photoKey, currentImageUrl = "") {
   image.src = currentImageUrl || commonsPhotoUrl(photo.file);
   image.alt = `${photo.title} reference photo`;
   title.textContent = photo.title;
-  credit.textContent = `Photo: ${photo.credit} â€¢ ${photo.license}`;
+  credit.textContent = `Photo: ${photo.credit} | ${photo.license}`;
   source.href = commonsSourceUrl(photo.file);
   modal.hidden = false;
   document.body.style.overflow = "hidden";
@@ -1514,7 +1606,7 @@ async function cacheAllPhotos() {
   }
 
   button.disabled = true;
-  button.textContent = "Saving Photosâ€¦";
+  button.textContent = "Saving Photos...";
   const entries = uniquePhotoEntries();
   let saved = 0;
   let failed = 0;
@@ -1543,7 +1635,7 @@ async function cacheAllPhotos() {
   button.disabled = false;
   button.textContent = "Save Photos Offline";
   await updatePhotoCacheStatus();
-  showToast(failed ? `${saved} photos saved â€¢ ${failed} used fallbacks` : `All ${saved} photos saved offline`);
+  showToast(failed ? `${saved} photos saved - ${failed} used fallbacks` : `All ${saved} photos saved offline`);
   hydrateVisiblePhotos();
 }
 
@@ -1579,7 +1671,7 @@ function populatePhotoCredits() {
   list.innerHTML = uniquePhotoEntries().map(photo => `
     <p>
       <a href="${escapeHtml(commonsSourceUrl(photo.file))}" target="_blank" rel="noopener noreferrer">${escapeHtml(photo.title)}</a>
-      â€” ${escapeHtml(photo.credit)} â€¢ ${escapeHtml(photo.license)}
+      - ${escapeHtml(photo.credit)} | ${escapeHtml(photo.license)}
     </p>`).join("");
 }
 
@@ -1612,7 +1704,7 @@ function updateStats() {
   document.getElementById("totalStat").textContent = String(guideIndex.length);
   document.getElementById("favoriteStat").textContent = String(favorites.size);
   document.getElementById("recentStat").textContent = String(recent.length);
-  document.getElementById("photoStat").textContent = String(uniquePhotoEntries().length);
+  document.getElementById("photoStat").textContent = String(Object.keys(photoAssignments).length);
 }
 
 function updateNetworkStatus() {
@@ -1641,6 +1733,16 @@ function verifyGuideCounts() {
   if (guideIndex.length !== 120) {
     console.error(`TradeStack has ${guideIndex.length} total guides instead of 120.`);
   }
+
+  const usage = {};
+  Object.entries(photoAssignments).forEach(([id, key]) => {
+    if (!guideMap.has(id)) console.error(`Photo assignment points to missing guide: ${id}`);
+    if (!photoLibrary[key]) console.error(`Photo assignment uses missing photo key: ${key}`);
+    usage[key] = (usage[key] || 0) + 1;
+  });
+  Object.entries(usage).forEach(([key, count]) => {
+    if (count > 1) console.error(`Photo ${key} is assigned ${count} times; each verified source should appear once.`);
+  });
 }
 
 function initialize() {
@@ -1723,4 +1825,4 @@ function initialize() {
 initialize();
 </script>
 </body>
-      </html>
+</html>
