@@ -1,288 +1,10 @@
-===== server.mjs =====
-
-import express from "express";
-import OpenAI from "openai";
-import "dotenv/config";
-
-const app = express();
-const port = Number(process.env.PORT || 3000);
-
-if (!process.env.OPENAI_API_KEY) {
-  console.warn("WARNING: OPENAI_API_KEY is not set.");
-}
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-app.use(express.json({ limit: "12mb" }));
-app.use(express.static("public"));
-
-const diagnosisSchema = {
-  type: "object",
-  additionalProperties: false,
-  required: [
-    "action",
-    "confidence",
-    "trade",
-    "headline",
-    "direct_answer",
-    "likely_causes",
-    "checks",
-    "safety_note",
-    "sources"
-  ],
-  properties: {
-    action: {
-      type: "string",
-      enum: ["diagnose", "guides"]
-    },
-    confidence: {
-      type: "string",
-      enum: ["high", "medium", "low"]
-    },
-    trade: {
-      type: "string",
-      enum: [
-        "irrigation",
-        "hvac",
-        "plumbing",
-        "electrical",
-        "landscaping",
-        "automotive",
-        ""
-      ]
-    },
-    headline: {
-      type: "string"
-    },
-    direct_answer: {
-      type: "string"
-    },
-    likely_causes: {
-      type: "array",
-      items: { type: "string" },
-      maxItems: 5
-    },
-    checks: {
-      type: "array",
-      items: { type: "string" },
-      maxItems: 6
-    },
-    safety_note: {
-      type: "string"
-    },
-    sources: {
-      type: "array",
-      maxItems: 5,
-      items: {
-        type: "object",
-        additionalProperties: false,
-        required: ["title", "url", "source_type"],
-        properties: {
-          title: { type: "string" },
-          url: { type: "string" },
-          source_type: {
-            type: "string",
-            enum: [
-              "manufacturer",
-              "official_code_or_safety",
-              "trade_reference",
-              "other"
-            ]
-          }
-        }
-      }
-    }
-  }
-};
-
-const SYSTEM_PROMPT = `
-You are TradeStack AI, a professional troubleshooting assistant for field trades.
-
-MISSION
-Give one direct, useful troubleshooting answer to the exact problem the user described.
-Do not dump a list of unrelated guide titles.
-Do not pretend a symptom label is a diagnosis.
-
-SOURCE PRIORITY
-1. Official manufacturer installation, service, troubleshooting, or product documentation for the identified equipment/model.
-2. Official safety/code/government material when relevant.
-3. Reputable trade/technical references.
-4. General model knowledge only to connect the evidence; never present unsupported guesses as facts.
-
-SEARCH BEHAVIOR
-Use web search when manufacturer/model-specific or authoritative technical documentation could materially improve the answer.
-Prefer official manufacturer domains and primary documentation.
-If a photo contains a readable model/nameplate, use it to search for the model's documentation.
-
-DIAGNOSTIC BEHAVIOR
-- Diagnose the FAULT, not merely the equipment category.
-- Example: a ventilation fan with NO POWER is primarily an electrical supply/control/wiring fault until voltage is confirmed at the fan.
-- Example: a powered ventilation fan with weak airflow is primarily an airflow/mechanical/ventilation fault.
-- Separate upstream supply/control problems from downstream component failures.
-- Order checks so the technician verifies simple/upstream causes before condemning expensive parts.
-- Be technically precise. For example, a true short circuit normally causes protective devices to trip; an open/loose connection can cause a dead load without a trip.
-- If evidence is insufficient, contradictory, or the diagnosis would be speculative, set confidence="low", action="guides", and say what additional information would be needed. NEVER GUESS.
-- If confidence is medium, keep claims qualified.
-- If confidence is high, still avoid claiming certainty unless evidence actually establishes it.
-
-SAFETY
-Do not encourage bypassing safety devices, energized work without appropriate qualifications/PPE/procedures, or defeating lockout/tagout.
-For mains electrical, gas, refrigerant, combustion, high-pressure, or other hazardous work, include an appropriate concise safety note.
-
-OUTPUT
-Return one structured answer only.
-"likely_causes" must contain causes relevant to THIS exact symptom.
-"checks" must contain the diagnostic order for THIS exact symptom.
-"sources" must contain only sources actually relied on. Prefer primary sources.
-If confidence is low, action must be "guides".
-`;
-
-function buildUserContent(problem, imageDataUrl) {
-  const content = [
-    {
-      type: "input_text",
-      text:
-        `Technician problem:\n${problem}\n\n` +
-        `Follow the TradeStack rules. Search trusted sources when useful. ` +
-        `Give one diagnosis path, not unrelated possibilities.`
-    }
-  ];
-
-  if (
-    typeof imageDataUrl === "string" &&
-    /^data:image\/(png|jpeg|jpg|webp);base64,/i.test(imageDataUrl)
-  ) {
-    content.push({
-      type: "input_image",
-      image_url: imageDataUrl
-    });
-  }
-
-  return content;
-}
-
-app.post("/api/tradestack-ai", async (req, res) => {
-  try {
-    const problem = String(req.body?.problem || "").trim();
-    const imageDataUrl = req.body?.imageDataUrl || null;
-
-    if (!problem) {
-      return res.status(400).json({ error: "Describe the problem first." });
-    }
-
-    if (problem.length > 4000) {
-      return res.status(400).json({ error: "Problem description is too long." });
-    }
-
-    const response = await client.responses.create({
-      model: process.env.OPENAI_MODEL || "gpt-5.6",
-      instructions: SYSTEM_PROMPT,
-      tools: [
-        {
-          type: "web_search",
-          search_context_size: "medium"
-        }
-      ],
-      input: [
-        {
-          role: "user",
-          content: buildUserContent(problem, imageDataUrl)
-        }
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          name: "tradestack_diagnosis",
-          strict: true,
-          schema: diagnosisSchema
-        },
-        verbosity: "low"
-      }
-    });
-
-    let parsed;
-    try {
-      parsed = JSON.parse(response.output_text);
-    } catch {
-      throw new Error("Model returned an invalid structured response.");
-    }
-
-    // Server-enforced safety rule:
-    if (parsed.confidence === "low") {
-      parsed.action = "guides";
-    }
-
-    // Server-enforced quality rule:
-    // Never send an empty "diagnose" response.
-    if (
-      parsed.action === "diagnose" &&
-      (!parsed.direct_answer || !Array.isArray(parsed.checks) || parsed.checks.length === 0)
-    ) {
-      parsed.action = "guides";
-      parsed.confidence = "low";
-      parsed.direct_answer =
-        "I do not have enough reliable information to diagnose this problem. Use the troubleshooting guides.";
-    }
-
-    res.json(parsed);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error:
-        "TradeStack AI could not complete a reliable diagnosis. Use the troubleshooting guides instead."
-    });
-  }
-});
-
-app.get("/api/health", (_req, res) => {
-  res.json({
-    ok: true,
-    model: process.env.OPENAI_MODEL || "gpt-5.6"
-  });
-});
-
-app.listen(port, () => {
-  console.log(`TradeStack AI running at http://localhost:${port}`);
-});
-
-
-===== package.json =====
-
-{
-  "name": "tradestack-ai",
-  "version": "1.4.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "start": "node server.mjs",
-    "dev": "node --watch server.mjs"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "openai": "^6.0.0"
-  }
-}
-
-===== .env.example =====
-
-# Never put this key in public/index.html or your APK.
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-5.6
-PORT=3000
-
-
-===== public/index.html =====
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#9e1b32" />
-<title>TradeStack v1.4 Connected AI Crimson Working Version</title>
+<title>TradeStack v1.3.5 Crimson Working Version</title>
 <style>
   :root {
     --bg: #0d151d;
@@ -803,51 +525,6 @@ PORT=3000
     line-height: 1.4;
   }
 
-
-  .ai-source-list {
-    margin-top: 10px;
-    display: grid;
-    gap: 7px;
-  }
-
-  .ai-source-link {
-    display: block;
-    padding: 9px 10px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    color: #f0c9cf;
-    background: #111a23;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-  }
-
-  .ai-source-link:hover,
-  .ai-source-link:focus-visible {
-    border-color: #d7263d;
-    color: #fff;
-  }
-
-  .ai-confidence {
-    display: inline-block;
-    margin-top: 7px;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: rgba(158,27,50,.18);
-    color: #f0c9cf;
-    border: 1px solid rgba(215,38,61,.35);
-    font-size: .76rem;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
-
-  .ai-loading {
-    padding: 12px;
-    border-radius: 11px;
-    background: rgba(158,27,50,.12);
-    border: 1px solid rgba(158,27,50,.35);
-    color: #f0c9cf;
-  }
-
 .ai-disclaimer {
     color: #9fb1bf;
     font-size: .76rem;
@@ -1366,7 +1043,7 @@ PORT=3000
 <body>
 
 <div class="release-bar">
-  &#128247; TradeStack v1.4 Connected AI Crimson Working Version - 109 Reviewed Photos / 11 Blocked Mismatches
+  &#128247; TradeStack v1.3.5 Crimson Working Version - 109 Reviewed Photos / 11 Blocked Mismatches
 </div>
 
 <header>
@@ -1434,7 +1111,7 @@ PORT=3000
       </div>
 
       <div class="ai-result" id="aiResult" aria-live="polite"></div>
-      <p class="ai-disclaimer">TradeStack AI uses a secure server connection for source-grounded troubleshooting. When uncertain, TradeStack guides â€” it does not guess. Always follow lockout/tagout, manufacturer instructions, applicable codes, and qualified-service requirements for hazardous work.</p>
+      <p class="ai-disclaimer">TradeStack AI Preview uses the 120 built-in guides on this device. When uncertain, TradeStack guides â€” it does not guess. It does not replace lockout/tagout, electrical testing procedures, manufacturer instructions, or qualified service for hazardous work.</p>
     </div>
   </section>
 
@@ -1482,7 +1159,7 @@ PORT=3000
 </main>
 
 <footer>
-  TradeStack v1.4 Connected AI Crimson Working Version - Built by Jesse Perez - With assistance from ChatGPT
+  TradeStack v1.3.5 Crimson Working Version - Built by Jesse Perez - With assistance from ChatGPT
   <details class="photo-credits">
     <summary>Photo credits and licenses</summary>
     <div class="photo-credit-list" id="photoCreditsList"></div>
@@ -2290,91 +1967,6 @@ function openAiGuide(tradeKey, index) {
   }, 80);
 }
 
-
-function aiImageDataUrl() {
-  const img = document.getElementById("aiPhotoImage");
-  if (!img || !img.src || !img.src.startsWith("data:image/")) return null;
-  return img.src;
-}
-
-function renderConnectedAiAnswer(data) {
-  const result = document.getElementById("aiResult");
-  if (!result) return;
-
-  if (!data || data.action === "guides" || data.confidence === "low") {
-    const trade = data && data.trade ? data.trade : "";
-    const reason = data && data.direct_answer
-      ? aiEscape(data.direct_answer)
-      : "Iâ€™m not confident enough to diagnose this reliably.";
-    result.innerHTML =
-      `<div class="ai-status"><strong>Use the troubleshooting guides.</strong><br>${reason}</div>` +
-      aiGuideFallbackHtml(trade);
-    return;
-  }
-
-  const causes = Array.isArray(data.likely_causes) ? data.likely_causes : [];
-  const checks = Array.isArray(data.checks) ? data.checks : [];
-  const sources = Array.isArray(data.sources) ? data.sources : [];
-
-  const causesHtml = causes.length
-    ? `<div class="ai-diagnosis">
-        <div class="ai-diagnosis-title">Most likely causes</div>
-        <ol>${causes.map(x => `<li>${aiEscape(x)}</li>`).join("")}</ol>
-      </div>`
-    : "";
-
-  const checksHtml = checks.length
-    ? `<div class="ai-diagnosis">
-        <div class="ai-diagnosis-title">What to check first</div>
-        <ol>${checks.map(x => `<li>${aiEscape(x)}</li>`).join("")}</ol>
-      </div>`
-    : "";
-
-  const sourcesHtml = sources.length
-    ? `<div class="ai-diagnosis">
-        <div class="ai-diagnosis-title">Sources used</div>
-        <div class="ai-source-list">
-          ${sources.map(s => {
-            const title = aiEscape(s.title || s.url || "Technical source");
-            const url = String(s.url || "");
-            if (!/^https?:\/\//i.test(url)) return "";
-            return `<a class="ai-source-link" href="${aiEscape(url)}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-          }).join("")}
-        </div>
-      </div>`
-    : "";
-
-  result.innerHTML = `
-    <div class="ai-status">
-      <strong>${aiEscape(data.headline || "TradeStack AI diagnosis")}</strong><br>
-      ${aiEscape(data.direct_answer || "")}
-      <div class="ai-confidence">${aiEscape(data.confidence || "unknown")} confidence Â· ${aiEscape(data.trade || "trade unknown")}</div>
-    </div>
-    ${causesHtml}
-    ${checksHtml}
-    ${data.safety_note ? `<div class="ai-diagnosis-note">${aiEscape(data.safety_note)}</div>` : ""}
-    ${sourcesHtml}
-  `;
-}
-
-async function diagnoseWithTradeStackBackend(problem) {
-  const response = await fetch("/api/tradestack-ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      problem,
-      imageDataUrl: aiImageDataUrl()
-    })
-  });
-
-  if (!response.ok) {
-    const body = await response.json().catch(() => ({}));
-    throw new Error(body.error || `Server error ${response.status}`);
-  }
-
-  return response.json();
-}
-
 function initTradeStackAi() {
   const toggle = document.getElementById("aiToggleButton");
   const panel = document.getElementById("tradeStackAiPanel");
@@ -2394,34 +1986,9 @@ function initTradeStackAi() {
     if (opening) setTimeout(() => input.focus(), 50);
   });
 
-  diagnose.addEventListener("click", async () => {
+  diagnose.addEventListener("click", () => {
     const query = input.value.trim();
-
-    if (!query) {
-      renderAiMatches([], query);
-      return;
-    }
-
-    diagnose.disabled = true;
-    const oldText = diagnose.textContent;
-    diagnose.textContent = "DIAGNOSING...";
-    result.innerHTML = '<div class="ai-loading"><strong>TradeStack AI is checking the problem and trusted technical sources...</strong></div>';
-
-    try {
-      const data = await diagnoseWithTradeStackBackend(query);
-      renderConnectedAiAnswer(data);
-    } catch (error) {
-      console.error("TradeStack AI backend error", error);
-
-      // SAFE failure mode: never silently fall back to a guessed diagnosis.
-      const tradeHint = aiTradeHint(query);
-      result.innerHTML =
-        `<div class="ai-status"><strong>Connected AI is unavailable right now.</strong><br>${aiEscape(error.message || "Unable to reach the troubleshooting service.")}<br>Rather than guess, use the troubleshooting guides.</div>` +
-        aiGuideFallbackHtml(tradeHint);
-    } finally {
-      diagnose.disabled = false;
-      diagnose.textContent = oldText;
-    }
+    renderAiMatches(aiGuideCandidates(query), query);
   });
 
   input.addEventListener("keydown", (event) => {
@@ -3285,4 +2852,4 @@ initialize();
 if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initTradeStackAi, { once: true }); } else { initTradeStackAi(); }
 </script>
 </body>
-      </html>
+        </html>
