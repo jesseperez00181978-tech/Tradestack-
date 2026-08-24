@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#9e1b32" />
-<title>TradeStack v1.2 Crimson Working Version</title>
+<title>TradeStack v1.3.3 Crimson Working Version</title>
 <style>
   :root {
     --bg: #0d151d;
@@ -238,6 +238,265 @@
   }
 
   .quick-trade-button:active { transform: scale(0.97); }
+
+  /* TradeStack AI */
+  .ai-launch-card {
+    margin: 14px 0 18px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(215, 38, 61, 0.48);
+    background:
+      radial-gradient(circle at 90% 0%, rgba(215, 38, 61, 0.15), transparent 42%),
+      linear-gradient(145deg, #182430, #111a23);
+    box-shadow: 0 10px 24px rgba(0,0,0,.24);
+  }
+
+  .ai-launch-top {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .ai-launch-copy { min-width: 0; flex: 1; }
+
+  .ai-launch-title {
+    margin: 0;
+    font-size: 1.08rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  .ai-launch-sub {
+    margin: 5px 0 0;
+    color: var(--muted);
+    line-height: 1.45;
+    font-size: .9rem;
+  }
+
+  .ai-open-button,
+  .ai-action-button {
+    border: 1px solid #d7263d;
+    color: #fff;
+    background: linear-gradient(135deg, #9e1b32, #5e0b18);
+    border-radius: 11px;
+    padding: 11px 15px;
+    min-height: 44px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(215,38,61,.22);
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+
+  .ai-open-button {
+    animation: aiCrimsonPulse 2.5s ease-in-out infinite;
+    white-space: nowrap;
+  }
+
+  .ai-open-button:hover,
+  .ai-action-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px rgba(215,38,61,.42);
+  }
+
+  @keyframes aiCrimsonPulse {
+    0%,100% { box-shadow: 0 0 5px rgba(215,38,61,.18); }
+    50% { box-shadow: 0 0 18px rgba(215,38,61,.48); }
+  }
+
+  .ai-panel {
+    margin-top: 14px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 14px;
+  }
+
+  .ai-panel[hidden] { display: none !important; }
+
+  .ai-field-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #f7d9df;
+    font-weight: 800;
+    font-size: .88rem;
+  }
+
+  .ai-problem-input {
+    width: 100%;
+    min-height: 104px;
+    resize: vertical;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #0d151d;
+    color: var(--text);
+    padding: 12px;
+    line-height: 1.45;
+  }
+
+  .ai-problem-input:focus {
+    outline: 3px solid rgba(215,38,61,.28);
+    border-color: #d7263d;
+  }
+
+  .ai-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: end;
+  }
+
+  .ai-photo-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px dashed #8b4653;
+    border-radius: 11px;
+    color: #f0c9cf;
+    background: rgba(94,11,24,.18);
+    cursor: pointer;
+    font-weight: 800;
+  }
+
+  .ai-photo-label input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ai-photo-preview {
+    display: none;
+    margin-top: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #0d151d;
+  }
+
+  .ai-photo-preview.active { display: block; }
+
+  .ai-photo-preview img {
+    display: block;
+    width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+    background: #081018;
+  }
+
+  .ai-photo-note {
+    padding: 8px 10px;
+    color: var(--muted);
+    font-size: .8rem;
+  }
+
+  .ai-result {
+    margin-top: 12px;
+    min-height: 0;
+  }
+
+  .ai-status {
+    border-radius: 11px;
+    padding: 11px 12px;
+    color: #e9cbd1;
+    background: rgba(158,27,50,.12);
+    border: 1px solid rgba(158,27,50,.35);
+    line-height: 1.45;
+  }
+
+  .ai-match-list {
+    display: grid;
+    gap: 9px;
+    margin-top: 10px;
+  }
+
+  .ai-match {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--border);
+    border-left: 4px solid #9e1b32;
+    border-radius: 11px;
+    padding: 11px 12px;
+    background: #182430;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .ai-match:hover,
+  .ai-match:focus-visible {
+    border-color: #d7263d;
+    background: #1d2a36;
+  }
+
+  .ai-match strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .ai-match-meta {
+    color: #e2aab5;
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+
+  .ai-match-symptom {
+    display: block;
+    color: var(--muted);
+    margin-top: 4px;
+    font-size: .86rem;
+    line-height: 1.35;
+  }
+
+  
+  .ai-fallback-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-top: 10px;
+  }
+
+  .ai-guide-button {
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid #d7263d;
+    border-radius: 11px;
+    padding: 11px 14px;
+    background: linear-gradient(135deg, #9e1b32, #5e0b18);
+    color: #fff;
+    font-weight: 900;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .ai-guide-button:hover,
+  .ai-guide-button:focus-visible {
+    box-shadow: 0 0 16px rgba(215,38,61,.42);
+    outline: none;
+  }
+
+.ai-disclaimer {
+    color: #9fb1bf;
+    font-size: .76rem;
+    margin: 10px 0 0;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 520px) {
+    .ai-toolbar { grid-template-columns: 1fr; }
+    .ai-action-button { width: 100%; }
+    .ai-open-button { width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ai-open-button { animation: none; }
+  }
+
 
   @media (max-width: 760px) {
     .quick-trades { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -739,7 +998,7 @@
 <body>
 
 <div class="release-bar">
-  &#128247; TradeStack v1.2 Crimson Working Version - 109 Reviewed Photos / 11 Blocked Mismatches
+  &#128247; TradeStack v1.3.3 Crimson Working Version - 109 Reviewed Photos / 11 Blocked Mismatches
 </div>
 
 <header>
@@ -779,6 +1038,38 @@
     <button class="quick-trade-button" type="button" data-trade="landscaping" aria-label="Open Landscaping guides"><span class="quick-icon">&#127793;</span><span class="quick-label">Landscaping</span></button>
     <button class="quick-trade-button" type="button" data-trade="automotive" aria-label="Open Automotive guides"><span class="quick-icon">&#128663;</span><span class="quick-label">Automotive</span></button>
   </nav>
+
+  <section class="ai-launch-card" id="tradeStackAiCard" aria-labelledby="tradeStackAiTitle">
+    <div class="ai-launch-top">
+      <div class="ai-launch-copy">
+        <h2 class="ai-launch-title" id="tradeStackAiTitle">&#129302; TradeStack AI</h2>
+        <p class="ai-launch-sub">Can't find the problem? Describe what the equipment is doing and TradeStack will find the closest troubleshooting guides.</p>
+      </div>
+      <button class="ai-open-button" id="aiToggleButton" type="button" aria-expanded="false" aria-controls="tradeStackAiPanel">ASK TRADESTACK AI</button>
+    </div>
+
+    <div class="ai-panel" id="tradeStackAiPanel" hidden>
+      <label class="ai-field-label" for="aiProblemInput">What are you working on?</label>
+      <textarea class="ai-problem-input" id="aiProblemInput" placeholder="Example: Rooftop ventilator runs, but it barely moves air and the motor gets hot."></textarea>
+
+      <div class="ai-toolbar">
+        <label class="ai-photo-label" for="aiPhotoInput">
+          <span>&#128247; Add equipment photo</span>
+          <input id="aiPhotoInput" type="file" accept="image/*">
+        </label>
+        <button class="ai-action-button" id="aiDiagnoseButton" type="button">FIND LIKELY GUIDES</button>
+      </div>
+
+      <div class="ai-photo-preview" id="aiPhotoPreview">
+        <img id="aiPhotoImage" alt="Selected equipment photo preview">
+        <div class="ai-photo-note">Photo attached locally. Image diagnosis will activate when the secure TradeStack AI backend is connected.</div>
+      </div>
+
+      <div class="ai-result" id="aiResult" aria-live="polite"></div>
+      <p class="ai-disclaimer">TradeStack AI Preview uses the 120 built-in guides on this device. When uncertain, TradeStack guides â€” it does not guess. It does not replace lockout/tagout, electrical testing procedures, manufacturer instructions, or qualified service for hazardous work.</p>
+    </div>
+  </section>
+
 
   <section class="filter-panel" aria-label="Guide filters">
     <div class="filter-row">
@@ -823,7 +1114,7 @@
 </main>
 
 <footer>
-  TradeStack v1.2 Crimson Working Version - Built by Jesse Perez - With assistance from ChatGPT
+  TradeStack v1.3.3 Crimson Working Version - Built by Jesse Perez - With assistance from ChatGPT
   <details class="photo-credits">
     <summary>Photo credits and licenses</summary>
     <div class="photo-credit-list" id="photoCreditsList"></div>
@@ -1245,6 +1536,404 @@ function uniquePhotoEntries() {
   const usedKeys = [...new Set(Object.values(photoAssignments))];
   return usedKeys.map(key => ({ key, ...photoLibrary[key] })).filter(entry => entry.file);
 }
+
+
+const TRADESTACK_AI_STOP_WORDS = new Set([
+  "the","and","for","with","that","this","from","into","when","what","where","have","has","had",
+  "but","not","are","was","were","will","would","could","should","can","cant","can't","does","doing",
+  "its","it's","very","just","like","some","there","their","then","than","about","after","before",
+  "problem","issue","working","work","equipment","unit","system","help","please"
+]);
+
+function aiTokens(value) {
+  return normalizeText(value)
+    .replace(/[^a-z0-9\s-]+/g, " ")
+    .split(/\s+/)
+    .map(token => token.replace(/^-+|-+$/g, ""))
+    .filter(token => token.length > 2 && !TRADESTACK_AI_STOP_WORDS.has(token));
+}
+
+function aiTradeHint(text) {
+  const t = normalizeText(text);
+
+  // FAULT-FIRST classification:
+  // Route by the problem being diagnosed before using the equipment name.
+  const electricalFaults = [
+    "no power","dead","no voltage","lost power","won't turn on","wont turn on",
+    "doesn't turn on","doesnt turn on","not turning on","breaker trips","tripped breaker",
+    "blows fuse","short circuit","wire short","open wire","no electricity"
+  ];
+  if (electricalFaults.some(term => t.includes(term))) return "electrical";
+
+  const hvacFaults = [
+    "weak airflow","low airflow","barely moves air","not moving air","poor airflow",
+    "not cooling","not heating","hot air","cold air","motor overheats","motor gets hot",
+    "fan runs slow","blower runs slow"
+  ];
+  if (hvacFaults.some(term => t.includes(term))) return "hvac";
+
+  const irrigationFaults = [
+    "zone won't","zone wont","sprinkler","irrigation","drip line","emitter",
+    "rotor","spray head","nozzle","backflow","rain sensor"
+  ];
+  if (irrigationFaults.some(term => t.includes(term))) return "irrigation";
+
+  const plumbingFaults = [
+    "toilet","faucet","sink","drain","sewer","water heater","garbage disposal",
+    "water hammer","pipe leak","plumbing"
+  ];
+  if (plumbingFaults.some(term => t.includes(term))) return "plumbing";
+
+  const automotiveFaults = [
+    "car","truck","vehicle","engine","brake","battery","alternator","starter",
+    "tire","suspension","fuel pump"
+  ];
+  if (automotiveFaults.some(term => t.includes(term))) return "automotive";
+
+  const landscapingFaults = [
+    "lawn","grass","tree","shrub","weed","soil","mulch","mower","plant","landscape"
+  ];
+  if (landscapingFaults.some(term => t.includes(term))) return "landscaping";
+
+  // Equipment context only if the fault itself didn't already determine the trade.
+  const hvacEquipment = [
+    "ventilator","exhaust fan","bathroom fan","restroom fan","roof fan","rooftop fan",
+    "blower","air handler","furnace","heat pump","condenser","evaporator","coil",
+    "compressor","thermostat","duct"
+  ];
+  if (hvacEquipment.some(term => t.includes(term))) return "hvac";
+
+  const electricalEquipment = [
+    "outlet","receptacle","gfci","breaker panel","breaker","light switch",
+    "electrical panel","circuit","junction box"
+  ];
+  if (electricalEquipment.some(term => t.includes(term))) return "electrical";
+
+  return null;
+}
+
+
+function aiSpecialDiagnostic(query) {
+  const q = normalizeText(query);
+
+  const isVentilator = [
+    "ventilator","exhaust fan","bathroom fan","restroom fan","roof fan","rooftop fan"
+  ].some(term => q.includes(term));
+
+  if (!isVentilator) return null;
+
+  const noPower = [
+    "no power","dead","won't turn on","wont turn on","doesn't turn on","doesnt turn on",
+    "not turning on","no voltage","lost power"
+  ].some(term => q.includes(term));
+
+  const weakAir = [
+    "barely moves air","low airflow","weak airflow","not moving air",
+    "poor airflow","fan runs slow"
+  ].some(term => q.includes(term));
+
+  if (noPower) {
+    return {
+      trade: "electrical",
+      title: "Electrical",
+      exact: true,
+      summary: "The equipment is a ventilator, but the fault being diagnosed is loss of power. Start on the electrical supply side first.",
+      checks: [
+        "Confirm the wall switch, timer, occupancy sensor, or other control is calling for the fan to run.",
+        "Check the branch-circuit breaker and any GFCI protection that may feed the circuit.",
+        "Verify voltage entering and leaving the wall switch or control.",
+        "Verify voltage at the fan's junction box or connection point.",
+        "Inspect for loose, burned, corroded, or disconnected conductors and terminals.",
+        "If correct voltage reaches the fan and it still will not run, the fault moves downstream to the fan motor or internal components."
+      ]
+    };
+  }
+
+  if (weakAir) {
+    return {
+      trade: "hvac",
+      title: "HVAC / Ventilation",
+      exact: true,
+      summary: "The ventilator has power and runs, so the fault is now airflow/mechanical rather than supply power.",
+      checks: [
+        "Confirm the fan wheel or blade is actually turning and turning in the correct direction.",
+        "Inspect the grille, wheel/blade, duct, and damper for dirt or blockage.",
+        "Check for a slipping belt on belt-driven units.",
+        "Listen for bearing drag and verify the motor is not overheating.",
+        "Compare airflow again after removing obvious restrictions."
+      ]
+    };
+  }
+
+  return {
+    trade: "hvac",
+    title: "HVAC / Ventilation",
+    exact: false,
+    summary: "TradeStack recognizes ventilation equipment, but it needs the fault: no power, weak airflow, noise, overheating, or intermittent operation.",
+    checks: []
+  };
+}
+
+function aiGuideCandidates(query) {
+  const tokens = aiTokens(query);
+  const tradeHint = aiTradeHint(query);
+  const results = [];
+
+  Object.entries(guides).forEach(([tradeKey, trade]) => {
+    trade.steps.forEach((step, index) => {
+      const haystack = normalizeText([
+        step.problem,
+        step.symptom,
+        step.fix,
+        trade.title
+      ].join(" "));
+      let score = 0;
+
+      tokens.forEach(token => {
+        if (normalizeText(step.problem).includes(token)) score += 7;
+        if (normalizeText(step.symptom).includes(token)) score += 5;
+        if (normalizeText(step.fix).includes(token)) score += 3;
+        if (haystack.includes(token)) score += 1;
+      });
+
+      if (tradeHint === tradeKey) score += 22;
+      else if (tradeHint && tradeHint !== tradeKey) score -= 20;
+
+      // Small diagnostic synonym boosts for common field language.
+      const q = normalizeText(query);
+      const boosts = [
+        [["barely moves air","low airflow","weak airflow"], ["airflow","blower","filter","fan"], 8],
+        [["motor gets hot","motor hot","overheating motor"], ["motor","blower","fan"], 7],
+        [["won't turn on","wont turn on","no power","dead"], ["no power","outlet","breaker","gfci","switch","wire","circuit"], 12],
+        [["breaker trips","tripped breaker","blows fuse"], ["breaker","short","wire","circuit"], 12],
+        [["won't turn off","wont turn off","keeps running"], ["won't turn off","continues running"], 7],
+        [["leak","leaking","water coming out"], ["leak","leaking","broken"], 5]
+      ];
+      boosts.forEach(([needles, targets, points]) => {
+        if (needles.some(n => q.includes(n)) && targets.some(t => haystack.includes(t))) score += points;
+      });
+
+      if (score > 0) {
+        results.push({ tradeKey, trade, step, index, score });
+      }
+    });
+  });
+
+  return results.sort((a,b) => b.score - a.score).slice(0, 5);
+}
+
+function aiEscape(value) {
+  return escapeHtml(value);
+}
+
+
+function aiConfidence(matches, query) {
+  const tradeHint = aiTradeHint(query);
+  if (!matches.length) return { level: "low", tradeHint, score: 0 };
+
+  const sameTrade = tradeHint ? matches.filter(m => m.tradeKey === tradeHint) : matches;
+  const top = sameTrade[0] || matches[0];
+  const second = sameTrade[1] || matches[1];
+  const topScore = top ? top.score : 0;
+  const gap = top && second ? top.score - second.score : topScore;
+
+  // Conservative by design: low confidence should fall back to curated guides.
+  if (topScore >= 35 && gap >= 5) return { level: "high", tradeHint, score: topScore };
+  if (topScore >= 22) return { level: "medium", tradeHint, score: topScore };
+  return { level: "low", tradeHint, score: topScore };
+}
+
+function aiGuideFallbackHtml(tradeHint) {
+  const label = tradeHint ? `${tradeName(tradeHint)} Troubleshooting Guides` : "All Troubleshooting Guides";
+  const tradeAttr = tradeHint ? ` data-ai-fallback-trade="${aiEscape(tradeHint)}"` : ' data-ai-fallback-trade=""';
+  return `
+    <div class="ai-fallback-actions">
+      <button class="ai-guide-button" type="button"${tradeAttr}>
+        OPEN ${aiEscape(label.toUpperCase())}
+      </button>
+    </div>
+  `;
+}
+
+function openAiFallbackGuides(tradeKey) {
+  state.query = "";
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) searchInput.value = "";
+
+  if (tradeKey && guides[tradeKey]) {
+    state.view = "trade";
+    state.trade = tradeKey;
+  } else {
+    state.view = "home";
+    state.trade = null;
+  }
+
+  renderCurrentView();
+
+  setTimeout(() => {
+    const target = document.getElementById("app") || document.querySelector("main");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 60);
+}
+
+function renderAiMatches(matches, query) {
+  const result = document.getElementById("aiResult");
+  if (!result) return;
+
+  if (!normalizeText(query)) {
+    result.innerHTML = '<div class="ai-status">Describe the symptom first. Tell me what it is doing, what changed, and anything you already checked.</div>';
+    return;
+  }
+
+  const special = aiSpecialDiagnostic(query);
+
+  if (special) {
+    const checks = special.checks.length
+      ? `<div class="ai-match-list">
+          <div class="ai-match" style="cursor:default">
+            <span class="ai-match-meta">WHAT TO CHECK FIRST</span>
+            <strong>${aiEscape(special.title)}</strong>
+            <span class="ai-match-symptom">${special.checks.map((c,i) => `${i+1}. ${aiEscape(c)}`).join("<br>")}</span>
+          </div>
+        </div>`
+      : "";
+
+    const sameTradeMatches = matches
+      .filter(m => m.tradeKey === special.trade && m.score >= 16)
+      .slice(0, 3);
+
+    const matchCards = sameTradeMatches.length
+      ? `<div class="ai-match-list">
+          ${sameTradeMatches.map((m, idx) => `
+            <button class="ai-match" type="button" data-ai-trade="${aiEscape(m.tradeKey)}" data-ai-index="${m.index}">
+              <span class="ai-match-meta">${idx === 0 ? "CLOSEST EXISTING GUIDE Â· " : ""}${aiEscape(tradeName(m.tradeKey))}</span>
+              <strong>${aiEscape(m.step.problem)}</strong>
+              <span class="ai-match-symptom">${aiEscape(m.step.symptom)}</span>
+            </button>
+          `).join("")}
+        </div>`
+      : `<div class="ai-status" style="margin-top:10px"><strong>No exact built-in guide for this equipment/fault yet.</strong><br>TradeStack will not force an unrelated guide just to fill this space.</div>${aiGuideFallbackHtml(special.trade)}`;
+
+    result.innerHTML =
+      `<div class="ai-status">
+        <strong>Likely trade: ${aiEscape(special.title)}</strong><br>
+        ${aiEscape(special.summary)}
+      </div>` +
+      checks +
+      matchCards;
+    return;
+  }
+
+  if (!matches.length) {
+    const hint = aiTradeHint(query);
+    result.innerHTML =
+      '<div class="ai-status"><strong>Iâ€™m not confident enough to diagnose this reliably.</strong><br>Rather than guess, use the TradeStack troubleshooting guides.</div>' +
+      aiGuideFallbackHtml(hint);
+    return;
+  }
+
+  const confidence = aiConfidence(matches, query);
+  if (confidence.level === "low") {
+    result.innerHTML =
+      '<div class="ai-status"><strong>Iâ€™m not confident enough to diagnose this reliably.</strong><br>Rather than give you a questionable answer, Iâ€™m sending you to the troubleshooting guides.</div>' +
+      aiGuideFallbackHtml(confidence.tradeHint);
+    return;
+  }
+
+  const topTrade = matches[0].tradeKey;
+  const intro = `<div class="ai-status"><strong>Closest match${matches.length > 1 ? "es" : ""} found.</strong><br>I think this is most likely in <strong>${aiEscape(tradeName(topTrade))}</strong>. Tap a result to open that guide.</div>`;
+  const cards = matches.map((m, idx) => `
+    <button class="ai-match" type="button" data-ai-trade="${aiEscape(m.tradeKey)}" data-ai-index="${m.index}">
+      <span class="ai-match-meta">${idx === 0 ? "BEST MATCH Â· " : ""}${aiEscape(tradeName(m.tradeKey))}</span>
+      <strong>${aiEscape(m.step.problem)}</strong>
+      <span class="ai-match-symptom">${aiEscape(m.step.symptom)}</span>
+    </button>
+  `).join("");
+
+  result.innerHTML = intro + `<div class="ai-match-list">${cards}</div>`;
+}
+
+function openAiGuide(tradeKey, index) {
+  const trade = guides[tradeKey];
+  if (!trade || !trade.steps[index]) return;
+  state.view = "trade";
+  state.trade = tradeKey;
+  state.query = "";
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) searchInput.value = "";
+  renderCurrentView();
+  setTimeout(() => {
+    const targetId = guideId(tradeKey, trade.steps[index]);
+    const card = document.querySelector(`[data-guide-id="${CSS.escape(targetId)}"]`);
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      const details = card.querySelector("details");
+      if (details) details.open = true;
+    }
+  }, 80);
+}
+
+function initTradeStackAi() {
+  const toggle = document.getElementById("aiToggleButton");
+  const panel = document.getElementById("tradeStackAiPanel");
+  const diagnose = document.getElementById("aiDiagnoseButton");
+  const input = document.getElementById("aiProblemInput");
+  const photoInput = document.getElementById("aiPhotoInput");
+  const preview = document.getElementById("aiPhotoPreview");
+  const photoImage = document.getElementById("aiPhotoImage");
+  const result = document.getElementById("aiResult");
+  if (!toggle || !panel || !diagnose || !input || !result) return;
+
+  toggle.addEventListener("click", () => {
+    const opening = panel.hidden;
+    panel.hidden = !opening;
+    toggle.setAttribute("aria-expanded", String(opening));
+    toggle.textContent = opening ? "CLOSE TRADESTACK AI" : "ASK TRADESTACK AI";
+    if (opening) setTimeout(() => input.focus(), 50);
+  });
+
+  diagnose.addEventListener("click", () => {
+    const query = input.value.trim();
+    renderAiMatches(aiGuideCandidates(query), query);
+  });
+
+  input.addEventListener("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      diagnose.click();
+    }
+  });
+
+  result.addEventListener("click", (event) => {
+    const fallback = event.target.closest("[data-ai-fallback-trade]");
+    if (fallback) {
+      openAiFallbackGuides(fallback.dataset.aiFallbackTrade || "");
+      return;
+    }
+
+    const button = event.target.closest("[data-ai-trade][data-ai-index]");
+    if (!button) return;
+    openAiGuide(button.dataset.aiTrade, Number(button.dataset.aiIndex));
+  });
+
+  if (photoInput && preview && photoImage) {
+    photoInput.addEventListener("change", () => {
+      const file = photoInput.files && photoInput.files[0];
+      if (!file) {
+        preview.classList.remove("active");
+        photoImage.removeAttribute("src");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        photoImage.src = reader.result;
+        preview.classList.add("active");
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
 
 const tradeIcons = {
   irrigation: "IRR",
@@ -2065,6 +2754,8 @@ function initialize() {
 }
 
 initialize();
+
+if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initTradeStackAi, { once: true }); } else { initTradeStackAi(); }
 </script>
 </body>
         </html>
