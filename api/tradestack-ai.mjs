@@ -260,11 +260,26 @@ export default async function handler(req, res) {
     });
 
     const raw = await openaiResponse.json().catch(() => ({}));
-    if (!openaiResponse.ok) {
-      const message = raw?.error?.message || `OpenAI error ${openaiResponse.status}`;
-      console.error("OpenAI error", openaiResponse.status, message);
-      return res.status(502).json({ error: "TradeStack AI could not reach the diagnostic model." });
-    }
+  if (!openaiResponse.ok) {
+  const message = raw?.error?.message || `OpenAI error ${openaiResponse.status}`;
+  const code = raw?.error?.code || "";
+  const type = raw?.error?.type || "";
+
+  console.error("OpenAI error", {
+    status: openaiResponse.status,
+    type,
+    code,
+    message
+  });
+
+  return res.status(502).json({
+    error: "TradeStack AI could not reach the diagnostic model.",
+    openai_status: openaiResponse.status,
+    openai_type: type,
+    openai_code: code,
+    openai_message: message
+  });
+  }  
 
     const text = extractOutputText(raw);
     let parsed;
