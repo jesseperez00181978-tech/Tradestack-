@@ -2209,17 +2209,8 @@ async function diagnoseWithTradeStackBackend(problem) {
   });
 if (!response.ok) {
   const body = await response.json().catch(() => ({}));
-
-  const details = [
-    body.openai_status ? `Status: ${body.openai_status}` : "",
-    body.openai_code ? `Code: ${body.openai_code}` : "",
-    body.openai_type ? `Type: ${body.openai_type}` : "",
-    body.openai_message ? `Message: ${body.openai_message}` : ""
-  ].filter(Boolean).join(" | ");
-
-  throw new Error(
-    details || body.error || `Server error ${response.status}`
-  );
+throw new Error(body.error || `Server error ${response.status}`);
+  
   }
   
 
