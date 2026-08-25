@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/tradestack-ai.mjs": {
+      "maxDuration": 60
+    }
+  }
+}
