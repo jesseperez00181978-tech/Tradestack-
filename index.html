@@ -2209,9 +2209,13 @@ async function diagnoseWithTradeStackBackend(problem) {
   });
 if (!response.ok) {
   const body = await response.json().catch(() => ({}));
-throw new Error(body.error || `Server error ${response.status}`);
-  
-  }
+
+  throw new Error(
+    body.openai_message ||
+    body.error ||
+    `Server error ${response.status}`
+  );
+}
   
 
   return response.json();
