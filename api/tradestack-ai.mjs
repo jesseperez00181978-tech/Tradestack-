@@ -105,10 +105,16 @@ function allowRequest(key) {
 }
 
 function allowedOrigins() {
-  return String(process.env.FRONTEND_ORIGIN || "")
+  const configured = String(process.env.FRONTEND_ORIGIN || "")
     .split(",")
-    .map(x => x.trim())
+    .map(x => x.trim().replace(/\/+$/, ""))
     .filter(Boolean);
+
+  const builtIn = [
+    "https://jesseperez00181978-tech.github.io"
+  ];
+
+  return [...new Set([...configured, ...builtIn])];
 }
 
 function setCors(req, res) {
