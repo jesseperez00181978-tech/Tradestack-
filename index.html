@@ -2130,7 +2130,7 @@ async function updatePhotoCacheStatus() {
     for (const entry of uniquePhotoEntries()) {
       if (await cache.match(commonsPhotoUrl(entry.file))) count += 1;
     }
-    status.firstElementChild.textContent = count === total
+    status.firstElementChild.textContent = "Photo accuracy:";
       ? `Offline photos: ${count}/${total} saved.`
       : `Real photos: ${count}/${total} saved offline.`;
   } catch (error) {
