@@ -753,7 +753,7 @@
     <div class="status-chip"><strong>Offline-ready:</strong> All 140 guide records are stored inside this file.</div>
     <div class="status-chip" id="photoCacheStatus">
       <strong>Photo accuracy:</strong> Only reviewed reference photos are shown. Guides with questionable or unresolved mappings use an illustration until a trustworthy photo is approved.
-      <button class="photo-cache-button" type="button" id="cachePhotosButton">Save Photos Offline</button>
+      
     </div>
   </div>
 
@@ -2229,7 +2229,7 @@ function initialize() {
   populatePhotoCredits();
   updatePhotoCacheStatus();
 
-  document.getElementById("cachePhotosButton").addEventListener("click", cacheAllPhotos);
+  
   document.getElementById("photoModalClose").addEventListener("click", closePhoto);
   document.getElementById("photoModal").addEventListener("click", event => {
     if (event.target.id === "photoModal") closePhoto();
