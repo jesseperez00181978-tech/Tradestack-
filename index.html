@@ -2090,8 +2090,9 @@ async function cacheAllPhotos() {
       try {
         const existing = await cache.match(url);
         if (!existing) {
-          const response = await fetch(url, { mode: "cors", credentials: "omit" });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const response = await fetch(url, { mode: "cors", credentials: "omit" });await cache.put(url, response.clone());
+          }
+          
           await cache.put(url, response.clone());
         }
         saved += 1;
