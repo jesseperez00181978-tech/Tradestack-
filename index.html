@@ -737,19 +737,30 @@
     .filter-row > :last-child { grid-column: auto; }
     .panel-header { flex-direction: column; }
     .close-button { width: 100%; }
-  }
+ }
+.release-bar{display:none}
+.newHero{background:#080808;text-align:center;padding:75px 20px 55px;box-shadow:none}
+.toolbox{width:104px;height:72px;background:#08d9ef;margin:0 auto 28px;border-radius:6px;position:relative}
+.toolbox:before{content:"";position:absolute;width:38px;height:16px;background:#08d9ef;top:-14px;left:33px;border-radius:5px 5px 0 0}
+.newHero h1{margin:0;font-size:58px;background:linear-gradient(90deg,#2196ff,#00e5e8,#7066ff);-webkit-background-clip:text;color:transparent}
+.ver{font-size:56px;color:#00d9ef;margin-top:20px}.newHero p{font-size:24px;color:#c7d0dd;line-height:1.3;margin-top:32px}
+
+  
+  
 </style>
 </head>
 <body>
 
-<div class="release-bar">
-  &#128247; TradeStack v1.5 • 140 Guides • 7 Trades - 140 Reviewed Photos 
-</div>
 
-<header>
-  <h1>🧰 TradeStack <span style="color:#00e5ff;">v1.5</span></h1>
-  <p>140 troubleshooting guides with accuracy-audited reference photos. Questionable mappings now fall back to illustrations instead of showing misleading images.</p>
-</header>
+
+
+
+  <header class="newHero">
+<div class="toolbox"></div>
+<h1>TradeStack</h1>
+<div class="ver">v1.5</div>
+<p>140 troubleshooting guides with<br>reviewed reference photos</p>
+  </header>
 
 <main class="container">
   <div class="status-row">
