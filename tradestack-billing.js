@@ -6,7 +6,7 @@
   const active=()=>Date.now()<Math.min(activeUntil,verifiedUntil);
   async function api(body) {
     const r=await fetch(ENDPOINT,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(25000)});
-    const j=await r.json();
+    const j=await r.json().catch(()=>({error:'Subscription service is unavailable. Please try again later.'}));
     if(!r.ok) throw Error(j.error||'Subscriptions are being set up. Please try again later.');
     return j;
   }
@@ -69,7 +69,31 @@
     restoreButton.onclick=async()=>{sub.disabled=true;restoreButton.disabled=true;try{status.textContent=await restore()?'Premium restored. Your extra tools are ready.':'No active Premium subscription found for this Google Play account.';}catch(e){message(e);}finally{update();restoreButton.disabled=false;}};
     (async()=>{try{const price=await prepare();root.querySelector('#tsPrice').textContent=price+' / month';const restored=await restore();status.textContent=restored?'Premium is active.':'Subscribe with your Google Play account.';update();}catch(e){ready=false;message(e);update();}})();
   }
-  window.TradeStackPremium={active,mount,restore};
+  function open() {
+    let dialog=document.getElementById('tsPremiumDialog');
+    if(!dialog){
+      dialog=document.createElement('dialog');
+      dialog.id='tsPremiumDialog';
+      dialog.setAttribute('aria-labelledby','tsPremiumTitle');
+      dialog.style.cssText='width:min(92vw,480px);box-sizing:border-box;max-height:85vh;overflow:auto;border:1px solid #40515b;border-radius:16px;background:#101820;color:#f4f7f8;padding:22px;';
+      dialog.innerHTML='<h2 id="tsPremiumTitle">TradeStack Premium</h2><p>Your core guides stay free. Premium adds advanced trade guides and extra field tools.</p><div data-billing></div><form method="dialog"><button style="margin-top:18px;padding:10px 18px">Close</button></form>';
+      document.body.appendChild(dialog);
+    }
+    if(!dialog.open) dialog.showModal();
+    mount(dialog.querySelector('[data-billing]'));
+  }
+  window.TradeStackPremium={active,mount,restore,open};
+  const hub=document.querySelector('.premium-hub-head');
+  if(hub){
+    const button=document.createElement('button');
+    button.type='button';button.id='tsPremiumPlans';button.textContent='Subscribe / Restore Premium';
+    button.style.cssText='margin-top:16px;padding:13px 18px;border:1px solid #ffd166;border-radius:10px;background:#ffd166;color:#101820;font-size:16px;font-weight:700;cursor:pointer;';
+    button.onclick=open;hub.appendChild(button);
+  }
+  document.addEventListener('click',event=>{
+    const button=event.target.closest('[data-tsai-premium]');
+    if(button){event.preventDefault();event.stopImmediatePropagation();window.TradeStackAI?.close();open();}
+  },true);
   // A localStorage flag is not proof of payment. Restore from Play after each launch.
   restore().catch(()=>{});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)restore().catch(()=>{});});
