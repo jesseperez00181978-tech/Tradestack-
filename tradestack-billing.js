@@ -109,3 +109,13 @@
   script.dataset.tradestackElectricalTools = 'true';
   document.head.appendChild(script);
 })();
+
+// Load TradeStack landscaping & irrigation calculators.
+(() => {
+  if (document.querySelector('script[data-tradestack-landscaping-tools]')) return;
+  const script = document.createElement('script');
+  script.src = 'tradestack-landscaping-tools.js';
+  script.defer = true;
+  script.dataset.tradestackLandscapingTools = 'true';
+  document.head.appendChild(script);
+})();
