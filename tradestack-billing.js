@@ -99,3 +99,13 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)restore().catch(()=>{});});
   setInterval(()=>{if(!document.hidden)restore().catch(()=>{});},4*60*1000);
 })();
+
+// Load TradeStack electrical field calculators without changing the main index.html bundle.
+(() => {
+  if (document.querySelector('script[data-tradestack-electrical-tools]')) return;
+  const script = document.createElement('script');
+  script.src = 'tradestack-electrical-tools.js';
+  script.defer = true;
+  script.dataset.tradestackElectricalTools = 'true';
+  document.head.appendChild(script);
+})();
