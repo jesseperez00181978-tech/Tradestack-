@@ -1,5 +1,9 @@
 (() => {
   'use strict';
+  const AI_ENDPOINT='https://tradestack-bice.vercel.app/api/tradestack-ai';
+  let aiMeta=document.querySelector('meta[name="tradestack-ai-endpoint"]');
+  if(!aiMeta){aiMeta=document.createElement('meta');aiMeta.name='tradestack-ai-endpoint';document.head.appendChild(aiMeta);}
+  aiMeta.content=AI_ENDPOINT;
   const ENDPOINT='https://tradestack-bice.vercel.app/api/tradestack-billing';
   const METHOD='https://play.google.com/billing', PRODUCT='tradestack_premium';
   let service, connecting, restoring, item, ready=false, busy=false, activeUntil=0, verifiedUntil=0;
