@@ -2,7 +2,7 @@
   'use strict';
   const ENDPOINT='https://tradestack-bice.vercel.app/api/tradestack-billing';
   const METHOD='https://play.google.com/billing', PRODUCT='tradestack_premium';
-  let service, item, ready=false, busy=false, activeUntil=0, verifiedUntil=0;
+  let service, connecting, restoring, item, ready=false, busy=false, activeUntil=0, verifiedUntil=0;
   const active=()=>Date.now()<Math.min(activeUntil,verifiedUntil);
   async function api(body) {
     const r=await fetch(ENDPOINT,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(25000)});
@@ -11,27 +11,43 @@
     return j;
   }
   async function connect() {
-    if(!window.getDigitalGoodsService || !window.PaymentRequest) throw Error('Open TradeStack installed from Google Play to subscribe or restore purchases.');
-    service=await window.getDigitalGoodsService(METHOD);
-    return service;
+    if(service) return service;
+    if(!window.getDigitalGoodsService) throw Error('Open TradeStack installed from Google Play to restore purchases. Use the Google account that purchased Premium.');
+    if(!connecting) connecting=window.getDigitalGoodsService(METHOD).then(value=>service=value).finally(()=>{connecting=null;});
+    return connecting;
   }
-  async function verify(token) {
-    const j=await api({purchaseToken:token});
-    activeUntil=j.active===true&&j.productId===PRODUCT?Number(j.expiresAt)||0:0;
+  function setEntitlement(result) {
+    activeUntil=result?.active===true&&result.productId===PRODUCT?Number(result.expiresAt)||0:0;
     verifiedUntil=Date.now()+5*60*1000;
     window.dispatchEvent(new CustomEvent('tradestack-premium-change',{detail:{active:active()}}));
     return active();
   }
+  async function verify(token) {
+    return setEntitlement(await api({purchaseToken:token}));
+  }
   async function restore() {
-    const purchases=await (await connect()).listPurchases();
-    const matching=purchases.filter(p=>p.itemId===PRODUCT);
-    if(!matching.length) {activeUntil=0;return false;}
-    for(const p of matching) if(await verify(p.purchaseToken)) return true;
-    return false;
+    // Share one lookup between launch, dialog, and visibility events.
+    if(restoring) return restoring;
+    restoring=(async()=>{
+      const purchases=await (await connect()).listPurchases();
+      const matching=purchases.filter(p=>p.itemId===PRODUCT&&p.purchaseToken);
+      let failure;
+      for(const p of matching) {
+        try {
+          const result=await api({purchaseToken:p.purchaseToken});
+          if(result.active===true&&result.productId===PRODUCT&&Number(result.expiresAt)>Date.now()) return setEntitlement(result);
+        } catch(error) {failure=error;}
+      }
+      // An old invalid token must not prevent checking another active purchase.
+      if(failure) throw failure;
+      return setEntitlement(null);
+    })();
+    try {return await restoring;} finally {restoring=null;}
   }
   async function prepare() {
     ready=false;
     await connect();
+    if(!window.PaymentRequest) throw Error('Google Play checkout is unavailable. You can still use Restore purchases.');
     const config=await api();
     if(config.ready!==true || config.productId!==PRODUCT) throw Error('Subscriptions are being set up. Please try again later.');
     const details=await service.getDetails([PRODUCT]);
@@ -67,7 +83,18 @@
     const message=e=>{status.textContent=e.message||'Google Play billing is unavailable. Open the installed Play Store app and try again.';};
     sub.onclick=async()=>{sub.disabled=true;restoreButton.disabled=true;status.textContent='Waiting for Google Play…';try{await purchase();status.textContent='Premium is active. Your extra tools are ready.';}catch(e){message(e);}finally{update();restoreButton.disabled=false;}};
     restoreButton.onclick=async()=>{sub.disabled=true;restoreButton.disabled=true;try{status.textContent=await restore()?'Premium restored. Your extra tools are ready.':'No active Premium subscription found for this Google Play account.';}catch(e){message(e);}finally{update();restoreButton.disabled=false;}};
-    (async()=>{try{const price=await prepare();root.querySelector('#tsPrice').textContent=price+' / month';const restored=await restore();status.textContent=restored?'Premium is active.':'Subscribe with your Google Play account.';update();}catch(e){ready=false;message(e);update();}})();
+    (async()=>{
+      restoreButton.disabled=true;
+      // Restoring an existing purchase does not require a purchasable monthly offer.
+      try {
+        const restored=await restore();
+        status.textContent=restored?'Premium is active.':'No active Premium subscription found for this Google Play account.';
+      } catch(e) {message(e);}
+      finally {restoreButton.disabled=false;update();}
+      try {const price=await prepare();root.querySelector('#tsPrice').textContent=price+' / month';}
+      catch(e) {ready=false;root.querySelector('#tsPrice').textContent=e.message;}
+      update();
+    })();
   }
   function open() {
     let dialog=document.getElementById('tsPremiumDialog');
