@@ -1,6 +1,9 @@
 (() => {
   'use strict';
-  const AI_ENDPOINT='https://tradestack-bice.vercel.app/api/tradestack-ai';
+  const AI_BASE='https://tradestack-bice.vercel.app';
+  const AI_ENDPOINT=AI_BASE+'/api/tradestack-ai';
+  window.TRADESTACK_AI_BASE_URL=AI_BASE;
+  window.TRADESTACK_AI_ENDPOINT=AI_ENDPOINT;
   let aiMeta=document.querySelector('meta[name="tradestack-ai-endpoint"]');
   if(!aiMeta){aiMeta=document.createElement('meta');aiMeta.name='tradestack-ai-endpoint';document.head.appendChild(aiMeta);}
   aiMeta.content=AI_ENDPOINT;
@@ -20,11 +23,17 @@
     if(!connecting) connecting=window.getDigitalGoodsService(METHOD).then(value=>service=value).finally(()=>{connecting=null;});
     return connecting;
   }
+  function syncPremiumState() {
+    const unlocked=active();
+    window.TRADESTACK_PREMIUM_ACTIVE=unlocked;
+    window.dispatchEvent(new CustomEvent('tradestack-premium-change',{detail:{active:unlocked}}));
+    try{window.TradeStackAI?.configure?.({});}catch{}
+    return unlocked;
+  }
   function setEntitlement(result) {
     activeUntil=result?.active===true&&result.productId===PRODUCT?Number(result.expiresAt)||0:0;
     verifiedUntil=Date.now()+5*60*1000;
-    window.dispatchEvent(new CustomEvent('tradestack-premium-change',{detail:{active:active()}}));
-    return active();
+    return syncPremiumState();
   }
   async function verify(token) {
     return setEntitlement(await api({purchaseToken:token}));
