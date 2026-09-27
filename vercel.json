@@ -6,5 +6,11 @@
     "api/tradestack-ai-paid.mjs": {
       "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/tradestack-ai",
+      "destination": "/api/tradestack-ai-paid"
+    }
+  ]
 }
